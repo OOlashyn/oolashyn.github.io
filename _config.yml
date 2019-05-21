@@ -1,2 +1,3 @@
 name: Oleksandr Olashyn, D365 Developer
 markdown: kramdown
+permalink: /blog/:year/:month/:day/:title
