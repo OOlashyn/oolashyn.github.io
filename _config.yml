@@ -1,3 +1,42 @@
-name: Oleksandr Olashyn, D365 Developer
+name: My personal blog - Oleksandr Olashyn
+email: aleksanderolashyn@gmail.com
+permalink: ':title/'
+
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "" # the base hostname & protocol for your site, e.g. http://example.com
+
+# Author settings
+author: Oleksandr Olashyn # add your name
+author-pic: face-min.jpg
+author-pic-full: face.jpg
+about-author: My name is Oleksandr Olashyn. I’m a full-time Dynamics 365 Developer.
+
+# Contact links
+email: aleksanderolashyn@gmail.com # Add your Email address
+website: "oolashyn.github.io" # Add your website, do not add http://
+linkedin: oleksandrolashyn # Add your Linkedin handle
+github: oolashyn # Add your Github handle
+
+# Newsletter
+mailchimp: # Add your MailChimp form identifier.
+
+# Disqus
+discus_identifier: # Add your discus identifier
+
+# Tracker
+analytics: # Google Analytics
+
+# Paginate
+paginate: 6
+paginate_path: /page:num/
+
+# Build settings
 markdown: kramdown
-permalink: /blog/:year/:month/:day/:title
+
+plugins:
+  - jekyll-paginate
+  - jekyll-feed
+  - jekyll-sitemap
+
+include: [_pages]
+exclude: ["node_modules", "gulpfile.js", "package.json", "yarn.lock", "package-lock.json", "assets/css/sass/"]
