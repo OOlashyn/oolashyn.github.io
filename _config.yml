@@ -1,6 +1,7 @@
 name: My personal blog - Oleksandr Olashyn
 email: aleksanderolashyn@gmail.com
 permalink: ':title/'
+title: Dancing with CRM
 
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
@@ -21,7 +22,7 @@ github: oolashyn # Add your Github handle
 mailchimp: # Add your MailChimp form identifier.
 
 # Disqus
-discus_identifier: # Add your discus identifier
+discus_identifier: dancingwithcrm # Add your discus identifier
 
 # Tracker
 analytics: UA-141204351-1
