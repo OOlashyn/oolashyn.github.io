@@ -3,7 +3,8 @@ layout: post
 title:  Simple chat window for VA on D365 Portals
 date:   2019-06-01 20:00:20 +0300
 description: Simple chat window for Virtual Agent on D365 Portals
-img: 2019-06-01-chatbox.jpg 
+img: 2019-06-01-chatbox.jpg
+image: 2019-06-01-chatbox.jpg
 tags: [Portal]
 ---
 Microsoft just released Virtual Agent for Dynamics 365 in public preview. So my task was to check out what is it and how we can use it. And to be honest it is quite cool and easy to use. Therefore, I created my chatbot and tested it - everything works great! Next thing to do was to deploy it and we are ready to present simple POC on a Portal. Just copy code from Deploy page and we are ready to go, right? No, unfortunately not. As for now link to a chatbot is just an iframe and will not render as simple chat window with open/close button on your website. So I have built small chat window for POC. You can see how it looks in a small video down below. I will share my code and step by step guide how to create one. So let’s start.
