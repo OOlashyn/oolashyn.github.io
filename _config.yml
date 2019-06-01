@@ -2,9 +2,10 @@ name: My personal blog - Oleksandr Olashyn
 email: aleksanderolashyn@gmail.com
 permalink: ':title/'
 title: Dancing with CRM
+description: Oleksandr's Olashyn personal blog.
 
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
+url: "https://www.dancingwithcrm.com" # the base hostname & protocol for your site, e.g. http://example.com
 
 # Author settings
 author: Oleksandr Olashyn # add your name
@@ -14,9 +15,16 @@ about-author: My name is Oleksandr Olashyn. I’m a full-time Dynamics 365 Devel
 
 # Contact links
 email: aleksanderolashyn@gmail.com # Add your Email address
-website: "oolashyn.github.io" # Add your website, do not add http://
+website: "www.dancingwithcrm.com" # Add your website, do not add http://
 linkedin: oleksandrolashyn # Add your Linkedin handle
 github: oolashyn # Add your Github handle
+
+#Social
+social:
+  name: Oleksandr Olashyn
+  links:
+    - https://www.linkedin.com/in/oleksandrolashyn
+    - https://github.com/oolashyn
 
 # Newsletter
 mailchimp: # Add your MailChimp form identifier.
@@ -26,6 +34,9 @@ discus_identifier: dancingwithcrm # Add your discus identifier
 
 # Tracker
 analytics: UA-141204351-1
+
+#Google verification
+google-site-verification: googlef755d5fd81eb0bf8.html
 
 # Paginate
 paginate: 6
@@ -38,6 +49,7 @@ plugins:
   - jekyll-paginate
   - jekyll-feed
   - jekyll-sitemap
+  - jekyll-seo-tag
 
 include: [_pages]
 exclude: ["node_modules", "gulpfile.js", "package.json", "yarn.lock", "package-lock.json", "assets/css/sass/"]
