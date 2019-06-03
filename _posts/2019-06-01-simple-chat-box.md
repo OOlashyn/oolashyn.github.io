@@ -5,9 +5,12 @@ date:   2019-06-01 20:00:20 +0300
 description: Simple chat window for Virtual Agent on D365 Portals
 img: 2019-06-01-chatbox.jpg
 image: /assets/img/2019-06-01-chatbox.jpg
+youtubeId: 'Ov-5grG89-Y'
 tags: [Portal]
 ---
 Microsoft just released Virtual Agent for Dynamics 365 in public preview. So my task was to check out what is it and how we can use it. And to be honest it is quite cool and easy to use. Therefore, I created my chatbot and tested it - everything works great! Next thing to do was to deploy it and we are ready to present simple POC on a Portal. Just copy code from Deploy page and we are ready to go, right? No, unfortunately not. As for now link to a chatbot is just an iframe and will not render as simple chat window with open/close button on your website. So I have built small chat window for POC. You can see how it looks in a small video down below. I will share my code and step by step guide how to create one. So let’s start.
+
+{% include youtubePlayer.html id=page.youtubeId %}
 
 First we will need to create a button with chat icon. We want our button to be simple and self-explanatory. As for me, the best design is round button with message icon inside of it. In addition, it should be fixed on one place of the screen (for example right bottom corner) and flow over current web site. We will use default style from Bootstrap from our Portal to make it more consistent ('btn' and 'btn-primary' classes on a button). For message icon we will use comment icon from glyphicon, as it is already included with your bootstrap.
 
