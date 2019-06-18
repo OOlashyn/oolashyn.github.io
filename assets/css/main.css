@@ -1315,6 +1315,11 @@ pre code {
   height: 100%;
 }
 
+.center-image {
+  margin: 0 auto;
+  display: block;
+}
+
 .newsletter {
   text-align: center;
   margin-top: 30px;
