@@ -11,19 +11,19 @@ url: "https://www.dancingwithcrm.com" # the base hostname & protocol for your si
 author: Oleksandr Olashyn # add your name
 author-pic: face-min.jpg
 author-pic-full: face.jpg
-about-author: My name is Oleksandr Olashyn. I’m Dynamics 365 Developer located in Kyiv, Ukraine.
+about-author: My name is Oleksandr Olashyn. I’m a Dynamics 365 Developer located in Kyiv, Ukraine.
 
 # Contact links
-email: aleksanderolashyn@gmail.com # Add your Email address
 website: "www.dancingwithcrm.com" # Add your website, do not add http://
-linkedin: oleksandrolashyn # Add your Linkedin handle
+linkedin: dancingwithcrm # Add your Linkedin handle
 github: oolashyn # Add your Github handle
+twitter: '@dancingwithcrm'
 
 #Social
 social:
   name: Oleksandr Olashyn
   links:
-    - https://www.linkedin.com/in/oleksandrolashyn
+    - https://www.linkedin.com/in/dancingwithcrm
     - https://github.com/oolashyn
 
 # Newsletter

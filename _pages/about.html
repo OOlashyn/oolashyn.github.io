@@ -15,8 +15,6 @@ permalink: /about/
       <ul class="contact-list">
       {% if site.email %}
         <li class="email"><a href="mailto:{{site.email}}"><i class="fa fa-envelope-o"></i></a></li>
-      {% else %}
-        <li class="email"><a href="mailto:example.adam@blog.com"><i class="fa fa-envelope-o" aria-hidden="true"></i></a></li>
       {% endif %}
 
       {% if site.website %}
@@ -33,8 +31,9 @@ permalink: /about/
 
       {% if site.github %}
         <li class="github"><a href="http://github.com/{{site.github}}" target="_blank"><i class="fa fa-github"></i></a></li>
-      {% else %}
-        <li class="github"><a href="http://github.com/artemsheludko" target="_blank"><i class="fa fa-github" aria-hidden="true"></i></a></li>
+      {% endif %}
+      {% if site.twitter %}
+        <li class="twitter"><a href="https://twitter.com/{{site.twitter}}" target="_blank"><i class="fa fa-twitter"></i></a></li>
       {% endif %}
       </ul>
     </section> <!-- End About Body-->
