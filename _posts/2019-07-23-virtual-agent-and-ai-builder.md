@@ -92,8 +92,12 @@ Then add Action and select your Flow (Get Sentiment). Put SampleText as input fo
 
 ![Flow Action]({{site.baseurl}}/assets/img/2019-07-23-flow-action.jpg){: .center-image }
 
-That's it. You can see how it works in a gif below. I hope you found this article useful.
+That's it. You can see how it works in a gif below.
 
 ![PW Ep2]({{site.baseurl}}/assets/videos/pw-ep2.gif){: .center-gif }
+
+I hope you found this article useful. Next time I will talk about the Portals.
+
+![PW Ep2 Wheel]({{site.baseurl}}/assets/videos/pw-ep2-wheel.gif){: .center-gif }
 
 [model-docs]: https://docs.microsoft.com/en-us/ai-builder/text-classification-overview
