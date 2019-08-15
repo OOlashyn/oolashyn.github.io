@@ -12,7 +12,7 @@ Some time ago I wrote a blog post about tracking PowerApps Portals with Azure Ap
 
 You might say that Canvas Apps has its own analytics. And that is correct. However, it is limited and sometimes we really need to have a more sophisticated tool for gathering analytics.
 
-We will use Flow to connect PowerApps and Azure Function. As an alternative and more complex scenario, we could create a custom connection that would point directly to Azure Function and eliminate dependency to Flow, but I wanted to make this blog post as simple as I could. I will also create a sample Canvas App to demonstrate how it works.
+To send events to Azure Application Insights we will use Azure Functions. And we will use Flow to connect PowerApps and Azure Functions. As an alternative and more complex scenario, we could create a custom connection that would point directly to Azure Function and eliminate dependency to Flow, but I wanted to make this blog post as simple as I could. I will also create a sample Canvas App to demonstrate how it works.
 
 You will need to create Azure App Insights to use it to monitor your app. To find how to do it please refer to [official documnetation][create-app-ins].
 
