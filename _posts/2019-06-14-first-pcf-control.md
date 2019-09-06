@@ -10,6 +10,10 @@ tags: [PCF, D365]
 ---
 In April Microsoft made PowerApps Control Framework available for public preview. It was great news for me as a developer. But unfortunately, I wasn't able to start playing with it back then. So week ago when I had some spare time I decided to check what this framework can offer.
 
+**Update from August 8, 2019** Version 1.0.0 finally here with PDF Support (see demo below).
+
+![Demo](https://github.com/OOlashyn/PCF-AttachmentGalleryControl/blob/master/Screenshots/gallery-v1.gif?raw=true)
+
 My idea was simple - let's build gallery control with fullscreen preview of the image and related note information. I built it some time ago as webresource and I thought that build it in PCF would be an easy task. And obviously, I was wrong. But let's start from the beginning.
 
 The first thing that I need to retrieve was entity name and record id. Well, I thought it should be easy and MS should provide me with some tools do to so. Nope. They don't. So I start googling. And found [this][nish-article] article by [Nishant Rana](https://nishantrana.me/). In his control he uses Xrm.Page to get it. Easy and obvious. But after further inspection, I found that context object contains a property called page. And in that property, you can find both entityid and entityname. Also, you can find appId there.
