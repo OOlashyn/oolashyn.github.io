@@ -895,7 +895,6 @@ pre code {
 /* = = = = = = = = = = Header Styles = = = = = = = = = = */
 .main-header {
   font-family: 'Lato', sans-serif;
-  padding: 15px 0;
   background-color: #fff;
   -webkit-box-shadow: 0px -5px 15px rgba(0, 0, 0, 0.3);
           box-shadow: 0px -5px 15px rgba(0, 0, 0, 0.3);
@@ -1299,10 +1298,22 @@ pre code {
   left: 2.5%;
   bottom: 10%;
   color: #fff;
+  z-index: 2;
 }
 
 .recent-box .recent-list .recent-item:hover {
   opacity: 0.8;
+}
+
+.recent-box .recent-list .recent-item::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
 }
 
 .embed-container {
