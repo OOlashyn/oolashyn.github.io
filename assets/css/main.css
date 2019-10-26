@@ -1560,6 +1560,55 @@ pre code {
           transform: scale(1.3);
 }
 
+/* = = = = = = = = = = Projects Page Styles = = = = = = = = = = */
+.projects-container {
+  margin: 0 0 50px;
+}
+
+.projects-main-header {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.projects-video {
+  max-width: 100%;
+}
+
+.project-ext-link {
+  padding-left: 10px;
+}
+
+.projects-title {
+  margin-bottom: 10px;
+}
+
+.projects-description {
+  padding-bottom: 20px;
+}
+
+.projects-card {
+  border-radius: 15px;
+  padding: 15px 35px 35px 35px;
+  margin: 20px 0 40px 0;
+  /* Add shadows to create the "card" effect */
+  -webkit-box-shadow: 0px 1px 8px 2px rgba(0, 0, 0, 0.3);
+          box-shadow: 0px 1px 8px 2px rgba(0, 0, 0, 0.3);
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+}
+
+/* On mouse-over, add a deeper shadow */
+.projects-card:hover {
+  -webkit-box-shadow: 0 2px 16px 4px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 2px 16px 4px rgba(0, 0, 0, 0.3);
+}
+
 /* = = = = = = = = = = Tags Styles = = = = = = = = = = */
 .blog-tags {
   margin: 100px 0 100px;
