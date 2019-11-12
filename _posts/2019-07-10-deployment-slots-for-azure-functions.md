@@ -5,7 +5,7 @@ date:   2019-07-10 18:39:20 +0300
 description: Overview of the Azure Deployment Slots for Azure Functions
 img: 2019-07-05-azure-func-logo.jpg
 image: /assets/img/2019-07-05-azure-func-logo.jpg
-tags: [AZURE, D365]
+tags: [Azure, D365]
 ---
 
 There are a lot of different ways to integrate Dynamics with different systems - Flow, KingswaySoft SSIS, Scribe, Azure Functions, etc. All of them can suit a different kind of scenarios and might be not applicable to others. For one of our integrations, we are using Azure Functions. It is a simple API that can be used by 3rd party systems. Last week I got a task - provide an API for the testing purpose that should be connected to our dev Dynamics instance. And that API should be the same as we already have. After some searching, I found an answer - Azure Deployment Slots.

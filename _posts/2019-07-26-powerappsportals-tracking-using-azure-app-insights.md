@@ -5,7 +5,7 @@ date:   2019-07-26 22:25:20 +0300
 description: How to use Azure Application Insights to track PowerApps Portals page traffic
 img: 2019-07-26-web-search.jpg
 image: /assets/img/2019-07-26-web-search.jpg
-tags: [D365, Portals, Azure]
+tags: [D365, Portal, Azure]
 ---
 
 Last week I received a request - enable simple analytic functionality for PowerApps Portal like last login details and page views. To be honest I thought that it can be done easily inside the portal itself as I clearly remember reading something like that. And to my surprise, it is not possible to do something like that anymore - all of those features were deprecated. So how can we track all that necessary data? Azure Application Insights to the rescue.
