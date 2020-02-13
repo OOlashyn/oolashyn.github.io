@@ -15,6 +15,8 @@ Unfortunately what unites all of the methods presented above is that they are no
 
 But there might be a solution that sort of supported and will work (only for Model-Driven app),
 
+**UPDATE** - please do not use this method in your production instance. Microsoft said that using URL can have incosistant behavior and other side effects.
+
 ## Solution
 
 Let's step back and think what else do we have for our disposal that contains necessary info and are available through browser methods only? If you guessed page URL you are right.
