@@ -15,7 +15,7 @@ Unfortunately what unites all of the methods presented above is that they are no
 
 But there might be a solution that sort of supported and will work (only for Model-Driven app),
 
-**UPDATE** - please do not use this method in your production instance. Microsoft said that using URL can have incosistant behavior and other side effects.
+**UPDATE** - please do not use this method in your production instance. Microsoft said that using URL can have inconsistant behavior and other side effects.
 
 ## Solution
 
