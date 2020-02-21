@@ -5,7 +5,7 @@ date:   2020-02-13 18:01:20 +0100
 description:  Find how to create Component Library
 img: 2020-02-13-library.jpg
 image: /assets/img/2020-02-13-library.jpg
-tags: [D365, POWERAPPS]
+tags: [D365, PowerApps]
 ---
 ## Introduction
 
