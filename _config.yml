@@ -27,7 +27,7 @@ social:
     - https://github.com/oolashyn
 
 # Newsletter
-mailchimp: # Add your MailChimp form identifier.
+mailchimp: https://dancingwithcrm.us4.list-manage.com/subscribe/post # Add your MailChimp form identifier.
 
 # Disqus
 discus_identifier: dancingwithcrm # Add your discus identifier
