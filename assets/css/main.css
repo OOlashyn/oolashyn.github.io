@@ -1069,7 +1069,7 @@ pre code {
 
 /* = = = = = = = = = = Post-Card Styles = = = = = = = = = = */
 .post-card-box {
-  margin: 100px 0 100px;
+  margin: 100px 0 50px;
   padding: 0;
 }
 
@@ -1161,7 +1161,7 @@ pre code {
 .pagination .previous, .pagination .next {
   text-decoration: none;
   text-transform: uppercase;
-  font-size: 14px;
+  font-size: 20px;
   color: #3e3e40;
 }
 
