@@ -1,0 +1,28 @@
+.copy-code-button {
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    padding-left: 6px;
+    padding-right: 6px;
+
+    &::before {
+        content: "Copy";
+    }
+
+    &::after {
+        margin-left: 4px;
+        content: "📋";
+        width: 1em;
+    }
+
+    // This class will be toggled via JavaScript
+    &.copied {
+        &::before {
+            content: "Copied!";
+        }
+
+        &::after {
+            content: "✔️";
+        }
+    }
+}

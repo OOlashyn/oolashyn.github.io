@@ -1,3 +1,4 @@
+@charset "UTF-8";
 .highlight {
   background-color: #faf9f9;
   border-radius: 3px;
@@ -1708,6 +1709,39 @@ pre code {
     -webkit-transform: translateY(0);
             transform: translateY(0);
   }
+}
+
+/* = = = = = = = = = = Code Style = = = = = = = = = = */
+.copy-code-button {
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  cursor: pointer;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
+.copy-code-button::before {
+  content: "Copy";
+}
+
+.copy-code-button::after {
+  margin-left: 4px;
+  content: "📋";
+  width: 1em;
+}
+
+.copy-code-button.copied::before {
+  content: "Copied!";
+}
+
+.copy-code-button.copied::after {
+  content: "✔️";
 }
 
 /* = = = = = = = = = = Media = = = = = = = = = = */
