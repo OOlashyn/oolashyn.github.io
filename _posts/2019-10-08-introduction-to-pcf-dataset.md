@@ -21,18 +21,18 @@ Let's start from the beginning - from the manifest file. To define your DataSet 
 
 Next thing to learn about DataSet is how to get data from it. The way that I used was using DataSet property called **sortedRecordIds** - it is sorted array of the Ids of records. You can go through it one by one and receive a record with that Id using **records** property of DataSet like this:
 
-{% highlight javascript %}
+{% capture code %}
 for (let currentRecordId of dataSet.sortedRecordIds) {
     let currentRecord = dataSet.records[currentRecordId];
-}
-{% endhighlight %}
+}{% endcapture %}
+{% include code.html code=code lang="javascript" %}
 
 Now when you have record it is time to retrieve necessary attributes. You can retrieve only the attributes that you provided in the manifest file. To retrieve values from the record you can use two methods: **getFormattedValue** and **getValue**. They both accept the name of the attribute as the input parameter. For example, I defined two attributes - *NameAttribute* and *NumberAttribute*. To retrieve them I can use the next code:
 
-{% highlight javascript %}
+{% capture code %}
 let name = currentRecord.getFormattedValue("NameAttribute");
-let number = currentRecord.getValue("NumberAttribute");
-{% endhighlight %}
+let number = currentRecord.getValue("NumberAttribute");{% endcapture %}
+{% include code.html code=code lang="javascript" %}
 
 ### Difference between **getFormattedValue** and **getValue**
 

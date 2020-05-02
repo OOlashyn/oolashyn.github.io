@@ -1,9 +1,43 @@
-<div
-  class="copy-code-button"
-  data-code="{{ include.code | escape }}"
-  title="Copy to clipboard"
-  tabindex="0"
-></div>
-```{{ include.lang }}
-{{ include.code }}
-```
+<div class="code-bar">
+  <div class="code-title">{{include.codeTitle}}</div>
+  <div class="copy-code-button" data-code="{{ include.code | escape }}" title="Copy to clipboard" tabindex="0"></div>
+</div>
+
+{% case include.lang %}
+
+{% when 'html' %}
+{% highlight html %}
+{{include.code}}
+{% endhighlight %}
+
+{% when 'javascript' %}
+{% highlight javascript %}
+{{include.code}}
+{% endhighlight %}
+
+{% when 'typescript' %}
+{% highlight typescript %}
+{{include.code}}
+{% endhighlight %}
+
+{% when 'csharp' %}
+{% highlight csharp %}
+{{include.code}}
+{% endhighlight %}
+
+{% when 'json' %}
+{% highlight json %}
+{{include.code}}
+{% endhighlight %}
+
+{% when 'css' %}
+{% highlight css %}
+{{include.code}}
+{% endhighlight %}
+
+{% when 'xml' %}
+{% highlight xml %}
+{{include.code}}
+{% endhighlight %}
+
+{% endcase %}

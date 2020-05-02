@@ -68,7 +68,8 @@ main { /* 1 */
  */
 
 figure {
-  margin: 1em 40px;
+  margin: 0 !important;
+  //margin: 1em 40px;
 }
 
 /**
@@ -90,6 +91,7 @@ hr {
 pre {
   font-family: monospace, monospace; /* 1 */
   font-size: 1em; /* 2 */
+  margin-top: 0 !important;
 }
 
 /* Text-level semantics
@@ -144,6 +146,7 @@ kbd,
 samp {
   font-family: monospace, monospace; /* 1 */
   font-size: 1em; /* 2 */
+  color:white;
 }
 
 /**

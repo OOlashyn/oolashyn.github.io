@@ -16,9 +16,8 @@ Popup is a very useful feature - it allows you to manipulate with modal window e
 
 First of all, you need to retrieve PopupService. It allows you to manage your popups. To retrieve you can use **getPopupService** method from context.factory (see code below).
 
-{% highlight javascript %}
-this._popUpService = context.factory.getPopupService();
-{% endhighlight %}
+{% capture code %}this._popUpService = context.factory.getPopupService();{% endcapture %}
+{% include code.html code=code lang="javascript" %}
 
 Now we can use the **createPopup** method from PopupSerice to create a new popup. As a parameter, we need to pass Popup object to it (you can find interface for it here - **ComponentFramework.FactoryApi.Popup.Popup**). We will need several options from it:
 
@@ -29,11 +28,11 @@ Now we can use the **createPopup** method from PopupSerice to create a new popup
 
 Looks pretty clear right? Well unfortunately if you try to use object just with these parameters for creating popup it will fail with **"Cannot read property 'display' of undefined"** error. After some investigation I found an answer in PowerApps forum - one of the PowerApps team replied that we need to use **popupStyle** property inside Popup object and it should be an empty object. Because PCF is still in preview, not all features are documented and they will add it soon as possible. However, if you just try to add a popupStyle property to your Popup object you will get an error because in Popup interface definition there is no popupStyle property. To fix this let's create our own interface that will extend the existing one with this property:
 
-{% highlight typescript %}
+{% capture code %}
 interface PopupDev extends ComponentFramework.FactoryApi.Popup.Popup {
     popupStyle: object;
-}
-{% endhighlight %}
+}{% endcapture %}
+{% include code.html code=code lang="typescript" %}
 
 Great. Now we can use our own PopupDev interface instead of default Popup one.
 
@@ -41,73 +40,71 @@ Now when we know how to create popup let's build a simple control with a button 
 
 Our control will have two private members: *_container* - html div element that will contain our control and *_popUpService* - which will hold our PopUpService.
 
-{% highlight typescript %}
+{% capture code %}
 private _container: HTMLDivElement;
-private _popUpService: ComponentFramework.FactoryApi.Popup.PopupService;
-{% endhighlight %}
+private _popUpService: ComponentFramework.FactoryApi.Popup.PopupService;{% endcapture %}
+{% include code.html code=code lang="typescript" %}
 
 In the init method create a div element which will be our container:
 
-{% highlight typescript %}
-this._container = document.createElement('div');
-{% endhighlight %}
+{% capture code %}this._container = document.createElement('div');{% endcapture %}
+{% include code.html code=code lang="typescript" %}
 
 Then create a button to show our popup:
 
-{% highlight typescript %}
+{% capture code %}
 let popUpButton = document.createElement('button');
 popUpButton.innerHTML = "Show Popup";
 popUpButton.onclick = () => this.buttonClick();
 
-this._container.appendChild(popUpButton);
-{% endhighlight %}
+this._container.appendChild(popUpButton);{% endcapture %}
+{% include code.html code=code lang="typescript" %}
 
 We will define buttonClick later - all it will do is open our popup.
 
 Now let's create popup content itself - in this example, it will be a simple 'Hello World!' text inside of the small div with white background.
 
-{% highlight typescript %}
+{% capture code %}
 let popUpContent = document.createElement('div');
 popUpContent.innerHTML = 'Hello World!';
 popUpContent.style.width = "200px";
 popUpContent.style.height = "200px";
-popUpContent.style.backgroundColor = "white";
-{% endhighlight %}
+popUpContent.style.backgroundColor = "white";{% endcapture %}
+{% include code.html code=code lang="typescript" %}
 
 Next, we need to define our Popup object.
 
-{% highlight typescript %}
+{% capture code %}
 let popUpOptions: PopupDev = {
     closeOnOutsideClick: true,
     content: popUpContent,
     name: 'dwcPopup', // unique popup name
     type: 1, // Root popup
     popupStyle: {}
-};
-{% endhighlight %}
+};{% endcapture %}
+{% include code.html code=code lang="typescript" %}
 
 PopupDev is an interface that we defined earlier.
 
 After we define Popup object we need to get PopupService and create Popup itself.
 
-{% highlight typescript %}
+{% capture code %}
 this._popUpService = context.factory.getPopupService();
-this._popUpService.createPopup(popUpOptions);
-{% endhighlight %}
+this._popUpService.createPopup(popUpOptions);{% endcapture %}
+{% include code.html code=code lang="typescript" %}
 
 Great. The final line in our init method will be adding our _container to PCF container.
 
-{% highlight typescript %}
-container.appendChild(this._container);
-{% endhighlight %}
+{% capture code %}container.appendChild(this._container);{% endcapture %}
+{% include code.html code=code lang="typescript" %}
 
 Now let's write our buttonClick function.
 
-{% highlight typescript %}
+{% capture code %}
 private buttonClick(){
     this._popUpService.openPopup('dwcPopup');
-}
-{% endhighlight %}
+}{% endcapture %}
+{% include code.html code=code lang="typescript" %}
 
 Done. Now you can run your code and test that popup is working as expected (see demo below).
 

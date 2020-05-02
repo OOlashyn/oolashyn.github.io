@@ -38,7 +38,7 @@ After you created your Azure Application Insights you need to add tracking scrip
 
 ![Enable Portal Traffic Analysis]({{site.baseurl}}/assets/img/2019-07-26-portal-analytics.jpg){: .center-image }
 
-{% highlight javascript %}
+{% capture code %}
 <script type="text/javascript">
      var appInsights=window.appInsights||function(a){
          function b(a){c[a]=function(){var b=arguments;c.queue.push(function(){c[a].apply(c,b)})}}var c={config:a},d=document,e=window;setTimeout(function(){var b=d.createElement("script");b.src=a.url||"https://az416426.vo.msecnd.net/scripts/a/ai.0.js",d.getElementsByTagName("script")[0].parentNode.appendChild(b)});try{c.cookie=d.cookie}catch(a){}c.queue=[];for(var f=["Event","Exception","Metric","PageView","Trace","Dependency"];f.length;)b("track"+f.pop());if(b("setAuthenticatedUserContext"),b("clearAuthenticatedUserContext"),b("startTrackEvent"),b("stopTrackEvent"),b("startTrackPage"),b("stopTrackPage"),b("flush"),!a.disableExceptionTracking){f="onerror",b("_"+f);var g=e[f];e[f]=function(a,b,d,e,h){var i=g&&g(a,b,d,e,h);return!0!==i&&c["_"+f](a,b,d,e,h),i}}return c
@@ -48,7 +48,8 @@ After you created your Azure Application Insights you need to add tracking scrip
 
      window.appInsights=appInsights,appInsights.queue&&0===appInsights.queue.length&&appInsights.trackPageView();
 </script>
-{% endhighlight %}
+{% endcapture %}
+{% include code.html code=code lang="javascript" %}
 
 You can notice that code uses Instrumentation Key. It is a unique key associated with your Application Insights instance. To find it open Azure portal, navigate to Application Insights that was created in the previous step. When you open it you can find Instrumentation Key on the right side of the blade (see picture below). Copy it and paste to the code.
 
@@ -64,7 +65,7 @@ One of the things that we needed was to be able to identify users that login to 
 
 To accomplish this we will use setAuthenticatedUserContext function from SDK. This function has one required parameter (authenticatedUserId) and two optional ( accountId and storeInCookie). This function needs to be called when we identified a specific signed-in user. And here we can use some liquid magic. Add the following code just before the closing script tag of the previous tracking code snippet.
 
-{% highlight html %}
+{% capture code %}
 {% raw %}
  {% if user %}
     appInsights.setAuthenticatedUserContext('{{user.Id}}', '{{ user.parentcustomerid.Id }}');
@@ -72,7 +73,8 @@ To accomplish this we will use setAuthenticatedUserContext function from SDK. Th
     appInsights.clearAuthenticatedUserContext();
  {% endif %}
  {% endraw %}
-{% endhighlight %}
+{% endcapture %}
+{% include code.html code=code lang="html" %}
 
 What this code will do is when a user is identified (signed-in) we will pass his id and his parent account id to Azure. And when it is not identified we will clear AuthenticatedUserContext using a special function called clearAuthenticatedUserContext.
 

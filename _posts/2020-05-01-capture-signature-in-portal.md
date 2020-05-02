@@ -12,7 +12,7 @@ tags: [Portal]
 
 Ability to get customer signature without relying on printed documents is very important in our digital world. And in Dynamics 365 you were able to do so for quite some time with Pen Input component. However, it isn't possible to do so on the Power Apps Portal, at least with OOTB components. In this article, I will explain how you can easily add support for both capturing and viewing signatures in the Power Apps Portal. This tutorial will not show how to work with signature input inside Dynamics 365 itself. For that one, you can check out [this post](https://www.powerobjects.com/blog/2018/04/16/capturing-signatures-in-dynamics-365/) by PowerObjects. Below you can see the final result of this article.
 
-![Signature Pad]({{site.baseurl}}/assets/videos/signature-pad.gif)
+{% include video.html webm="signature-pad.webm" mp4="signature-pad.mp4" %}
 
 ## Capture signature
 
@@ -20,15 +20,15 @@ First, let's start with the field that will hold our signature. It should be a f
 
 Next, we need to select a library to actually capture signature in the web. There are a lot of different libraries you can choose from, but in this example, we will use the [Signature Pad](https://github.com/szimek/signature_pad) library. To add this library to our page we need to insert a script tag to our page (you can find it below).
 
-{% highlight html %}
-<script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
-{% endhighlight %}
+{% capture code %}
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>{% endcapture %}
+{% include code.html code=code lang="html" %}
 
 If you are using custom web template just add script tag at the end of your template. If you are using one of the pre-existing templates and don't want to change them you can add the script tag to the Page Copy part of the page (this will only work if you are using default MS templates or templates that include Page Copy as part of their template). To do so navigate to your web page, find Localized Content and open a web page for a language you need. There scroll to the Content section and in Copy (HTML) field switch to HTML view and add script tag.
 
 After we added the library we need to add some JavaScript. What we will do is hide our signature field, add canvas and some buttons below it. You can find a code with explanations below. You can add this code to the template or to the Custom JavaScript field in the Advanced tab of the web page.
 
-{% highlight javascript %}
+{% capture code %}
 var signaturePad;
 
 //helper function to properly size canvas
@@ -100,8 +100,8 @@ $( document ).ready(function() {
     });
 
     resizeCanvas();
-});
-{% endhighlight %}
+});{% endcapture %}
+{% include code.html code=code lang="javascript" %}
 
 ## View signature
 
@@ -109,7 +109,7 @@ Now when we have a code to capture signature we need to have something to show i
 
 What we will do is add JavaScript code that will hide the original text field and place image tag below it to show the signature. You can find the code below. You can add this code to the template or to the Custom JavaScript field in the Advanced tab of the web page.
 
-{% highlight javascript %}
+{% capture code %}
 $( document ).ready(function() {
     let fieldName = "dwc_clientsignature";
 
@@ -124,8 +124,8 @@ $( document ).ready(function() {
     let wrapperTextSignature = $("#"+fieldName).parent();
     $(img).insertAfter(wrapperTextSignature);
     wrapperTextSignature.hide();
-});
-{% endhighlight %}
+});{% endcapture %}
+{% include code.html code=code lang="javascript" %}
 
 ## Conclusion
 

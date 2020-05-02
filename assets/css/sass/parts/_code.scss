@@ -1,9 +1,25 @@
+.code-bar{
+    display: flex;
+    justify-content: space-between;
+    color: white;
+    background-color: #3b3b3b;
+}
+
+.code-title{
+    padding: 10px;
+    font-weight: bold;
+}
+
 .copy-code-button {
     align-items: center;
     cursor: pointer;
     display: flex;
-    padding-left: 6px;
-    padding-right: 6px;
+    padding: 10px;
+    background-color: #3b3b3b;
+
+    &:hover{
+        background-color: #656c7a;
+    }
 
     &::before {
         content: "Copy";

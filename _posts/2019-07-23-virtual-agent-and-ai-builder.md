@@ -16,7 +16,7 @@ Let's start with the AI Model itself. Right now we have 4 options available for 
 
 When you have your model we need to create a flow that our Virtual Agent Bot will call. You need to create your Flow inside the solution because right now Bot can call just solution aware Flows. Triggering step should be HTTP request (When a HTTP request is received). As Request Body JSON schema put the next JSON:
 
-{% highlight json %}
+{% capture code %}
 {
     "type": "object",
     "properties": {
@@ -25,7 +25,8 @@ When you have your model we need to create a flow that our Virtual Agent Bot wil
         }
     }
 }
-{% endhighlight %}
+{% endcapture %}
+{% include code.html code=code lang="json" %}
 
 ![Trigger Step]({{site.baseurl}}/assets/img/2019-07-23-flow-trigger-step.jpg){: .center-image }
 
@@ -39,7 +40,7 @@ Next, we will use Predict step - this is a new CDS step that allows you to use y
 
 Now we need to parse JSON. Select Parse JSON step and put Response Payload as Content and next JSON as schema:
 
-{% highlight json %}
+{% capture code %}
 {
     "type": "object",
     "properties": {
@@ -72,7 +73,8 @@ Now we need to parse JSON. Select Parse JSON step and put Response Payload as Co
         "error": {}
     }
 }
-{% endhighlight %}
+{% endcapture %}
+{% include code.html code=code lang="json" %}
 
 ![Parse JSON]({{site.baseurl}}/assets/img/2019-07-23-parse-json.jpg){: .center-image }
 

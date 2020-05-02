@@ -33,13 +33,13 @@ So if you want to create a mobile-friendly experience you need to create a form 
 
 Each column has a class called **tab-column**. Unfortunately, Portal is not setting width using this class, instead, Portal will set it directly on a div. However, we can still use this class to easily update mobile behaviour. All you need is add next CSS to your page styles:
 
-{% highlight css %}
+{% capture code %}
 @media only screen and (max-width: 600px) {
   .tab-column {
     width: 100% !important;
   }
-}
-{% endhighlight %}
+}{% endcapture %}
+{% include code.html code=code lang="css" %}
 
 What this CSS rule will do is make the width of columns 100% on devices where the screen is less than 600px. You can modify it to fit your needs. See result below.
 

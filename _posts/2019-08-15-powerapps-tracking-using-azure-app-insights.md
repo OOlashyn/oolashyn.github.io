@@ -30,23 +30,23 @@ Create a new Azure Function project. It will ask you about a version of Azure Fu
 
 I named my function TrackEvent. Now we need to install the NuGet package to work with Azure Application Insights. Right-click on Dependency and select Manage NuGet Packages. Then search and install **Microsoft.ApplicationInsights.AspNetCore** package. After that go back to your function and these two lines at the beginning of the file:
 
-{% highlight c# %}
+{% capture code %}
 using Microsoft.ApplicationInsights;
-using Microsoft.ApplicationInsights.Extensibility;
-{% endhighlight %}
+using Microsoft.ApplicationInsights.Extensibility;{% endcapture %}
+{% include code.html code=code lang="csharp" %}
 
 Now we need to add TelemetryClient. This class will allow us to send data to Azure Application Insights. Add the next lines to your function
 
-{% highlight c# %}
+{% capture code %}
 TelemetryConfiguration configuration = TelemetryConfiguration.CreateDefault();
 configuration.InstrumentationKey = "YOUR INTRUMENTATION KEY";
-TelemetryClient telemetry = new TelemetryClient(configuration);
-{% endhighlight %}
+TelemetryClient telemetry = new TelemetryClient(configuration);{% endcapture %}
+{% include code.html code=code lang="csharp" %}
 
 You can find your instrumentation key on the main page of your Azure App Insight.
 To obtain and manipulate data in a more structured way let's create a simple model class for it. Create a new class (I named it EventInfo). From my PowerApps, I would like to receive the next things: EventName, UserEmail, Screen, AppName and PASessionId- which will be the unique id of the user session in PowerApps. Our call will look like this:
 
-{% highlight c# %}
+{% capture code %}
 public class EventInfo
     {
         public string Screen { get; set; }
@@ -55,18 +55,19 @@ public class EventInfo
         public string PASessionId { get; set; }
         public string AppName { get; set; }
     }
-{% endhighlight %}
+{% endcapture %}
+{% include code.html code=code lang="csharp" %}
 
 I will send a bunch of events from my PowerApp to Azure Function as an array of EventInfo objects, so we need to read it from the request body. (you can send only one event, I did multiple just to show what you can do).
 
-{% highlight c# %}
+{% capture code %}
 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-EventInfo[] eventsData = JsonConvert.DeserializeObject<EventInfo[]>(requestBody);
-{% endhighlight %}
+EventInfo[] eventsData = JsonConvert.DeserializeObject<EventInfo[]>(requestBody);{% endcapture %}
+{% include code.html code=code lang="csharp" %}
 
 After getting all events we need to send them to Azure App Insights. To do so we will use TrackEvent method from TelemetryClient class. This method accepts one required and two optional parameters - eventName, properties and methods. We will use the first two. eventName - is just a string that represents a unique event name. properties is a Dictionary variable that contains custom properties and their values. Inside the properties, we will put all fields from EventInfo except EventName, which be the eventName. See code below.
 
-{% highlight c# %}
+{% capture code %}
 foreach (var paEvent in eventsData)
 {
     // Set up event custom properties
@@ -79,14 +80,13 @@ foreach (var paEvent in eventsData)
     };
     // Send event
     telemetry.TrackEvent(paEvent.EventName, properties);
-}
-{% endhighlight %}
+}{% endcapture %}
+{% include code.html code=code lang="csharp" %}
 
 That's it. After we tracked all events we need to return the OK result.
 
-{% highlight c# %}
-return new OkResult();
-{% endhighlight %}
+{% capture code %}return new OkResult();{% endcapture %}
+{% include code.html code=code lang="csharp" %}
 
 Now when we have our function ready we need to publish it. Publishing for the first time will ask you to create a new resource group or to select an existing one. To find more about publishing Azure Function refer to the [official tutorial][off-tutorial].
 

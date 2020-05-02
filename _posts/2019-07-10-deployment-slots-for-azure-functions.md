@@ -40,34 +40,37 @@ This will open Add/Edit application blade. There you can type the Name of the se
 
 Now, when we created an application setting we need to know how to use them in code. For example, I created two settings called MyQueue and MyConnection. MyQueue will contain the name of the queue that I will use to trigger my queue function. And MyConnection will contain connection string to my CRM instance. Let's say we have a function called MySimpleQueueFunction and we want to connect it with our queue. To do so we need to wrap the variable name in the code with % sign (see code below).
 
-{% highlight c# %}
+{% capture code %}
 [FunctionName("MySimpleQueueFunction ")]
 public static async Task<HttpResponseMessage> Run(
     [HttpTrigger(AuthorizationLevel.Anonymous,"get", "post", Route = null)]HttpRequestMessage req,
     [Queue("%MyQueue%", Connection = "AzureWebJobsStorage")] ICollector<string> myDestinationQueue,
         TraceWriter log)
-{% endhighlight %}
+{% endcapture %}
+{% include code.html code=code lang="csharp" %}
 
 But what should we do if we need to use our setting inside the function itself? Well, Microsoft provided us with this simple function:
 
-{% highlight c# %}
+{% capture code %}
 public static string GetEnvironmentVariable(string name)
 {
     return System.Environment.GetEnvironmentVariable(name, EnvironmentVariableTarget.Process);
 }
-{% endhighlight %}
+{% endcapture %}
+{% include code.html code=code lang="csharp" %}
 
 And to get value from our variable we can do something like that:
 
-{% highlight c# %}
+{% capture code %}
 // some code
 string connectionString = GetEnvironmentVariable("MyConnection");
 // use connection string
-{% endhighlight %}
+{% endcapture %}
+{% include code.html code=code lang="csharp" %}
 
 Great we are almost done. Now if we wanted to use these variables in local development we need to specify them in our **local.settings.json** file.
 
-{% highlight json %}
+{% capture code %}
 {
   "IsEncrypted": false,
   "Values": {
@@ -77,7 +80,8 @@ Great we are almost done. Now if we wanted to use these variables in local devel
     "MyConnection": "<your_connection_string>"
   }
 }
-{% endhighlight %}
+{% endcapture %}
+{% include code.html code=code lang="json" %}
 
 ## How to perform a Swap
 

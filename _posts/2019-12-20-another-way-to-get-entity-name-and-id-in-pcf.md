@@ -23,15 +23,14 @@ Let's step back and think what else do we have for our disposal that contains ne
 
 Typical URL for the record for Model-Driven app looks like this:
 
-{% highlight html%}
-"org"."region".dynamics.com/main.aspx?appid="YOUR_APP_ID"&pagetype=entityrecord&etn="ENTITY_NAME"&id="RECORD_ID"
-{% endhighlight %}
+{% capture code %}"org"."region".dynamics.com/main.aspx?appid="YOUR_APP_ID"&pagetype=entityrecord&etn="ENTITY_NAME"&id="RECORD_ID"{% endcapture %}
+{% include code.html code=code lang="html" %}
 
 If you check your record URL it might look a bit different (might include additional parameter like formid), but in general all elements described above will be present. This means that we can extract everything we need from the URL and not depend on unsupported methods that might break.
 
 Below code will extract all necessary data and return you the object that contains all available parameters from the URL.
 
-{% highlight typescript %}
+{% capture code %}
 function getPageParameters():any{
     //get current page url
     const url = window.location.href;
@@ -58,8 +57,8 @@ function getPageParameters():any{
     // }
 
     return parametersObj;
-}
-{% endhighlight %}
+}{% endcapture %}
+{% include code.html code=code lang="typescript" %}
 
 ## Conclusion
 

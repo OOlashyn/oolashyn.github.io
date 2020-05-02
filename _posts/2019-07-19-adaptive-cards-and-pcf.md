@@ -30,19 +30,21 @@ Let's start building our control. I will call my control StockMarketCard. I will
 
 First, you need to install Adaptive Cards using npm. You can do it with next command:
 
-{% highlight javascript %}
+{% capture code %}
 npm install adaptivecards --save
-{% endhighlight %}
+{% endcapture %}
+{% include code.html code=code lang="javascript" %}
 
 After the installation, you need to import AdaptiveCards module. To do so you need to add next line to your index.ts file:
 
-{% highlight javascript %}
+{% capture code %}
 import * as AdaptiveCards from "adaptivecards";
-{% endhighlight %}
+{% endcapture %}
+{% include code.html code=code lang="javascript" %}
 
 Great. Now we can use AdaptiveCards in our component. Inside your init function add next code:
 
-{% highlight javascript %}
+{% capture code %}
 // Create an AdaptiveCard instance
 let adaptiveCard = new AdaptiveCards.AdaptiveCard();
 
@@ -60,11 +62,12 @@ let renderedCard = adaptiveCard.render();
 
 // And finally insert it somewhere in your page:
 container.appendChild(renderedCard);
-{% endhighlight %}
+{% endcapture %}
+{% include code.html code=code lang="javascript" %}
 
 We still miss the key component - card schema itself. Let's grab it from Adaptive Cards samples and insert in init function before adaptive card initialization.
 
-{% highlight javascript %}
+{% capture code %}
 let card = {
   "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
   "type": "AdaptiveCard",
@@ -141,7 +144,8 @@ let card = {
     }
   ]
 }
-{% endhighlight %}
+{% endcapture %}
+{% include code.html code=code lang="javascript" %}
 
 That's it. Now you can use **npm run start** to check out how your component looks and feels. There are a lot of examples on AdaptiveCards that you can use, so definitely check it out.
 
@@ -154,7 +158,7 @@ First, we need to find an API that supports querying stock market data. My choic
 Demo query will return to us all the information that we need to display.
 Now we need to create a function that will receive the symbol and API key as parameters and then will call some function that will build a card. I named this function getStockInfo and it uses fetch to get stock info.
 
-{% highlight javascript %}
+{% capture code %}
 private getStockInfo(symbol: string, apiKey: string) {
     fetch("https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=" + symbol + "&apikey="+apiKey)
         .then((response) => {
@@ -164,12 +168,12 @@ private getStockInfo(symbol: string, apiKey: string) {
             console.log(quoteJson);
             this.createCard(quoteJson);
         });
-    }
-{% endhighlight %}
+    }{% endcapture %}
+{% include code.html code=code lang="javascript" %}
 
 Next function is called createCard - it will receive quote JSON, parse it, modify card schema JSON and render it using code that we created previously.
 
-{% highlight javascript %}
+{% capture code %}
 private createCard(quoteJson: any) {
 
     let quoteDetails: QuoteDetails = {
@@ -198,13 +202,14 @@ private createCard(quoteJson: any) {
 
     this._container.appendChild(renderedCard);
 }
-{% endhighlight %}
+{% endcapture %}
+{% include code.html code=code lang="javascript" %}
 
 You might notice an interface called QuoteDetails - I made it to work more easily with quote details because demo JSON object from Alpha Vantage has naming that wasn't easily usable.
 
 Last is getCard function - it will use QuoteDetails object to set correct data into our card JSON schema.  
 
-{% highlight javascript %}
+{% capture code %}
 private getCard(quoteDetails: QuoteDetails) {
     let arrowSymbol = "▲";
     let changeColor = "Good";
@@ -294,14 +299,16 @@ private getCard(quoteDetails: QuoteDetails) {
                 }
             ]
         };
-{% endhighlight %}
+{% endcapture %}
+{% include code.html code=code lang="javascript" %}
 
 Our component is almost ready. We just need to specify two input parameters in ControlManifest.Input.xml - Symbol and ApiKey.
 
-{% highlight xml %}
+{% capture code %}
 <property name="Symbol" display-name-key="Symbol" description-key="Input stock symbol" of-type="SingleLine.Text" usage="bound" required="false" />
 <property name="ApiKey" display-name-key="ApiKey" description-key="Your Alpha Ventage API key" of-type="SingleLine.Text" usage="bound" required="false" />
-{% endhighlight %}
+{% endcapture %}
+{% include code.html code=code lang="xml" %}
 
 Now our component has all the necessary parts. You can find the full code and managed solution in my GitHub [repository][github-repo]. Below you can see how it looks like in Dynamics.
 

@@ -66,7 +66,7 @@ What we need to do is register function onchage of main field (in my case dwc_pr
 
 You can find my custom code with explanation below:
 
-{% highlight javascript %}
+{% capture code %}
 $(document).ready(function () {
     // register onPrimaryChange function to run on change of dwc_primarycategorization field
     $("#dwc_primarycategorization").change(onPrimaryChange);
@@ -98,8 +98,8 @@ function onPrimaryChange(){
         }
         );
     }
-}
-{% endhighlight %}
+}{% endcapture %}
+{% include code.html code=code lang="javascript" %}
 
 ## Conclusion
 

@@ -55,15 +55,13 @@ Press Create, then select you resource Name, select Subscription, Location, Pric
 
 To use ACS Speech SDK in our project (PCF or any other JS project) we need to first install it. We can do it with the help of **npm**. Run next command in a console to install:
 
-{% highlight javascript %}
-npm install microsoft-cognitiveservices-speech-sdk
-{% endhighlight %}
+{% capture code %}npm install microsoft-cognitiveservices-speech-sdk{% endcapture %}
+{% include code.html code=code lang="javascript" %}
 
 After the installation, we need to import SDK to use it. Use below the line of code to import it:
 
-{% highlight javascript %}
-import * as SpeechSDK from 'microsoft-cognitiveservices-speech-sdk'
-{% endhighlight %}
+{% capture code %}import * as SpeechSDK from 'microsoft-cognitiveservices-speech-sdk'{% endcapture %}
+{% include code.html code=code lang="javascript" %}
 
 Now we are able to use SDK in our project.
 
@@ -77,17 +75,15 @@ To create AudioConfig object there are different method inside SpeechSDK.AudioCo
 
 Create from the audio file (**NOTE**: right now only wav files are supported):
 
-{% highlight javascript %}
-let audioConfig = SpeechSDK.AudioConfig.fromWavFileInput(audioFile);
-{% endhighlight %}
+{% capture code %}let audioConfig = SpeechSDK.AudioConfig.fromWavFileInput(audioFile);{% endcapture %}
+{% include code.html code=code lang="javascript" %}
 
 where audioFile - is File type object obtained from HTML input or generated in code.
 
 Create from microphone input:
 
-{% highlight javascript %}
-let audioConfig = SpeechSDK.AudioConfig.fromDefaultMicrophoneInput();
-{% endhighlight %}
+{% capture code %}let audioConfig = SpeechSDK.AudioConfig.fromDefaultMicrophoneInput();{% endcapture %}
+{% include code.html code=code lang="javascript" %}
 
 Now when we have our AudioConfig object we need to create the next one: **SpeechConfig**. This object contains information about your subscription, region and recognition language.
 
@@ -111,23 +107,20 @@ As subscription region, you need to pass a location in lowercase and without spa
 
 Create **SpeechConfig** using code below:
 
-{% highlight javascript %}
-let speechConfig = SpeechSDK.SpeechConfig.fromSubscription("YOUR_API_KEY", "YOUR_REGION");
-{% endhighlight %}
+{% capture code %}let speechConfig = SpeechSDK.SpeechConfig.fromSubscription("YOUR_API_KEY", "YOUR_REGION");{% endcapture %}
+{% include code.html code=code lang="javascript" %}
 
 Next, we need to specify speech recognition language as part of SpeechConfig. In my case, I will use English (US) - "en-US". You can find a list of supported languages via [next link](https://docs.microsoft.com/en-gb/azure/cognitive-services/speech-service/language-support#speech-to-text).
 
 To add language to SpeechConfig use code below:
 
-{% highlight javascript %}
-speechConfig.speechRecognitionLanguage = "en-US";
-{% endhighlight %}
+{% capture code %}speechConfig.speechRecognitionLanguage = "en-US";{% endcapture %}
+{% include code.html code=code lang="javascript" %}
 
 Now we have everything to create a SpeechRecognizer object:
 
-{% highlight javascript %}
-let speechRecognizer = new SpeechSDK.SpeechRecognizer(speechConfig, audioConfig);
-{% endhighlight %}
+{% capture code %}let speechRecognizer = new SpeechSDK.SpeechRecognizer(speechConfig, audioConfig);{% endcapture %}
+{% include code.html code=code lang="javascript" %}
 
 After the speech recognizer creation, we can start to perform recognition operation itself. We have two recognition methods: **recognizeOnceAsync** and **startContinuousRecognitionAsync**. They suit different purpose:
 
@@ -140,7 +133,8 @@ In this tutorial, we will focus on the first method.
 In the success callback function will be passed **SpeechRecognitionResult** object that has two options that we will need to determine the execution result - **reason** and **text**. **reason** property is enum containing different result code like *SpeechSDK.ResultReason.RecognizedSpeech* or *SpeechSDK.ResultReason.Canceled* etc. If the **reason** is *RecognizedSpeech* result object will also contain **text** property - final recognition result.
 
 See the below code as an example:
-{% highlight javascript %}
+
+{% capture code %}
 speechRecognizer.recognizeOnceAsync(
     (result) => {
         //success callback
@@ -172,8 +166,8 @@ speechRecognizer.recognizeOnceAsync(
         //error callback
         console.error("Error occured during recognition", error);
     }
-);
-{% endhighlight %}
+);{% endcapture %}
+{% include code.html code=code lang="javascript" %}
 
 Finally, let's explore event handlers that available for us in SpeechRecognizer class:
 
@@ -186,12 +180,12 @@ Finally, let's explore event handlers that available for us in SpeechRecognizer 
 
 For example, you want to show what data is processed by recognition service right now. You can subscribe to recognizing the event and show intermediate recognition results. See code below:
 
-{% highlight javascript %}
+{% capture code %}
 speechRecognizer.recognizing = (recognizer, event) => {
     console.log("Recognition event:", event);
     yourResultDiv.innerHTML = event.result.text;
-};
-{% endhighlight %}
+};{% endcapture %}
+{% include code.html code=code lang="javascript" %}
 
 If you want to find more about **SpeechRecogizer** class visit [official reference page](https://docs.microsoft.com/en-us/javascript/api/microsoft-cognitiveservices-speech-sdk/speechrecognizer?view=azure-node-latest).
 
@@ -207,7 +201,7 @@ As described previously two most common options for creating AudioConfig are fro
 
 However when I tried to use context.device.pickFile it didn't open file selection window and just returned undefined as a result. After small investigation, I noticed that in harness they use Xrm.Proxy that returned undefined by default. In the real environment, it works as intended. So what should we do in local development? Well, for me the solution was to use regular HTML input in local development and for real deployment switch to pickFile. To override default styling for the input you can use CSS below:
 
-{% highlight css %}
+{% capture code %}
 /* Overwrite default styling from PCF to show and enable input */
 .audio-input{
     opacity: 1 !important;
@@ -215,16 +209,16 @@ However when I tried to use context.device.pickFile it didn't open file selectio
     pointer-events: all !important;
     width: auto !important;
     height: auto !important;
-}
-{% endhighlight %}
+}{% endcapture %}
+{% include code.html code=code lang="css" %}
 
 Next thing that you need to one when using pickFile it returns FileObject array. However, AudioConfig constructor allows only using File. So you will need to have small convert function. You can use my code below:
 
-{% highlight javascript %}
+{% capture code %}
 private convertToFile(fileObject: ComponentFramework.FileObject): File {
     return new File([fileObject.fileContent], fileObject.fileName, { type: fileObject.mimeType });
-}
-{% endhighlight %}
+}{% endcapture %}
+{% include code.html code=code lang="javascript" %}
 
 You can find full code with a sample component via [this link](https://github.com/OOlashyn/PCF-SampleAudioToText).
 

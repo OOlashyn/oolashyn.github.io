@@ -14,15 +14,15 @@ Microsoft just released Virtual Agent for Dynamics 365 in public preview. So my 
 
 First we will need to create a button with chat icon. We want our button to be simple and self-explanatory. As for me, the best design is round button with message icon inside of it. In addition, it should be fixed on one place of the screen (for example right bottom corner) and flow over current web site. We will use default style from Bootstrap from our Portal to make it more consistent ('btn' and 'btn-primary' classes on a button). For message icon we will use comment icon from glyphicon, as it is already included with your bootstrap.
 
-{% highlight html %}
+{% capture code %}
 <button class="chat-open-button btn btn-primary" onclick="openChat()">
     <span class="glyphicon glyphicon-comment"></span>
-</button>
-{% endhighlight %}
+</button>{% endcapture %}
+{% include code.html code=code lang="html" %}
 
 Ok, so far so good. Now let's style our button.
 
-{% highlight css %}
+{% capture code %}
 .chat-open-button {
     cursor: pointer;
     outline:none;
@@ -48,22 +48,22 @@ Ok, so far so good. Now let's style our button.
 /* remove transparency on hover */
 .chat-open-button:hover {
     opacity: none;
-}
-{% endhighlight %}
+}{% endcapture %}
+{% include code.html code=code lang="css" %}
 
 Great. Now our button is styled and correctly positioned. Next step is to create a chatbox container. It will contain two main parts - iframe and close button. See code below.
 
-{% highlight html %}
+{% capture code %}
 <div class="chatbox-container" id="myChat">
     <iframe src="https://va.ai.dynamics.com/webchat/tenants/<YOUR_BOT>" frameborder="0"
      style="height:90%; width:100%;"></iframe>
     <button class="btn btn-primary btn-block" onclick="closeChat()">CLOSE</button>
-</div>
-{% endhighlight %}
+</div>{% endcapture %}
+{% include code.html code=code lang="html" %}
 
 To get the iframe just go to the Deploy page of your bot and copy it from there. Let's style our chat window.
 
-{% highlight css %}
+{% capture code %}
 .chatbox-container {
     background-color: white;
     /* hide chatbox by default */
@@ -80,28 +80,29 @@ To get the iframe just go to the Deploy page of your bot and copy it from there.
     /* chat window size */
     width: 360px;
     height: 400px;
-}
-{% endhighlight %}
+}{% endcapture %}
+{% include code.html code=code lang="css" %}
 
 In addition, we need to style our iframe. We will put our styling as style attribute on an iframe directly, because when I tried to apply styles by adding class it doesn’t work. We want our iframe to occupy all width and to take 90% of height (other 10% will take our close button).
 
 Well we almost done. The last part is to show/hide our chat window. For this is we will create two functions: openChat function on open button and closeChat function on close button.
 
-{% highlight javascript %}
-    function openChat() {
-        $("#myChat").show();
-    }
+{% capture code %}
+function openChat() {
+    $("#myChat").show();
+}
 
-    function closeChat() {
-        $("#myChat").hide();
-    }
-{% endhighlight %}
+function closeChat() {
+    $("#myChat").hide();
+}
+{% endcapture %}
+{% include code.html code=code lang="javascript" %}
 
 Great. That's it. Now our chat window is ready and we can use it to hold iframe with chatbot. You can put this code in Content Snippet and easily reuse it in your Portal. Hope it was helpful. I will post more posts about Portal, so check my blog frequently. 
 
 You can find full source code below.
 
-{% highlight html %}
+{% capture code %}
 <style>
 .chatbox-container {
     background-color: white;
@@ -137,4 +138,5 @@ You can find full source code below.
         $("#myChat").hide();
     }
 </script>
-{% endhighlight %}
+{% endcapture %}
+{% include code.html code=code lang="html" %}

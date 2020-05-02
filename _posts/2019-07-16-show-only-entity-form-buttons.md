@@ -20,11 +20,12 @@ The first episode is about Portals. Some time ago I built a great webpage for ou
 
 You can do it fairly easily - just add this CSS line to your web template:
 
-{% highlight css %}
+{% capture code %}
 .entity-form{
     display: none;
 }
-{% endhighlight %}
+{% endcapture %}
+{% include code.html code=code lang="css" %}
 
 That's it. It will hide the form content but still will show whatever buttons you add to entity form.
 
