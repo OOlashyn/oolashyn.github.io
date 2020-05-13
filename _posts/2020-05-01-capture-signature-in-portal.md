@@ -129,4 +129,4 @@ $( document ).ready(function() {
 
 ## Conclusion
 
-In this article I described an easy way to capture and show signature on Power Apps Portal using Singanture Pad library. Hope you will this articel useful.
+In this article I described an easy way to capture and show signature on Power Apps Portal using Singanture Pad library. Hope you will find this article useful.
