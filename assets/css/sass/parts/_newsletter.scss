@@ -1,0 +1,23 @@
+.newsletter-box{
+    display: flex;
+
+    &_email{
+        width:100%;
+        padding: 10px;
+    }
+
+    &_submit{
+        color: white;
+        background-color: black;
+        border: 5px solid black;
+        padding: 15px 50px;
+        cursor: pointer;
+        text-transform: uppercase;
+
+        &:hover{
+            border: 5px solid #9296F0;
+            color: #9296F0;
+        }
+    }
+}
+

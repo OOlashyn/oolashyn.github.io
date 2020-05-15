@@ -64,5 +64,10 @@ gulp.task('watch', function () {
     gulp.watch(['*.html', '_layouts/*.html', '_includes/*.html', '_pages/*.html', '_posts/*'], gulp.series('jekyll-rebuild'));
 });
 
+// Watch scss
+gulp.task('watch-sass', function () {
+    gulp.watch('assets/css/sass/**/*.scss', gulp.series('sass'));
+});
+
 //  Default task
 gulp.task('default', gulp.series('browser-sync', 'watch'));
