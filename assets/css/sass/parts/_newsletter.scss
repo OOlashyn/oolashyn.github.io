@@ -1,6 +1,15 @@
 .newsletter-box{
     display: flex;
 
+    @media only screen and (max-width: 480px){
+        flex-direction: column;
+
+        &_submit{
+            width:100%;
+            margin-top: 10px;
+        }
+    }
+
     &_email{
         width:100%;
         padding: 10px;
