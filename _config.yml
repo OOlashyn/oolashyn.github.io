@@ -2,7 +2,7 @@ name: My personal blog - Oleksandr Olashyn
 email: oleksandr@dancingwithcrm.com
 permalink: ':title/'
 title: Dancing with CRM
-description: Oleksandr's Olashyn personal blog.
+description: Oleksandr's Olashyn personal blog about Power Platform, Dynamics 365 and many more
 
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://www.dancingwithcrm.com" # the base hostname & protocol for your site, e.g. http://example.com
