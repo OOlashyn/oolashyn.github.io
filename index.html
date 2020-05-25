@@ -1,11 +1,12 @@
 ---
 layout: home-page
+description: Oleksandr's Olashyn personal blog about Power Platform, Dynamics 365 and many more
 ---
 <ol class="post-card-box clearfix">
   {% for post in paginator.posts %}
   <li>
     <div class="post-card">
-      <a href="{{post.url | prepend: site.baseurl}}" class="post-card-image" style="background-image: url( {{ "/assets/img/" | prepend: site.baseurl | append : post.img}} )">
+      <a href="{{post.url | prepend: site.baseurl}}" aria-label="{{post.title}}" class="post-card-image" style="background-image: url( {{ "/assets/img/" | prepend: site.baseurl | append : post.img}} )">
       </a>
 
       <div class="post-card-body">
