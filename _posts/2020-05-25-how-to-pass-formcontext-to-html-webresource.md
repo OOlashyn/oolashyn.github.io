@@ -13,7 +13,7 @@ Learn about suported way to pass formContext and XRM to your html webresource
 
 ## Introduction
 
-Let's image that you created a simple HTML web resource that needs to do some work and then pass it back to the form. Previously to do so you would use parent.Xrm. However, the problem is that previous parent.Xrm and Xrm.Page is deprecated. But know you have supported way to do so - welcome **getContentWindow**.
+Let's image that you created a simple HTML web resource that needs to do some work and then pass it back to the form. Previously to do so you would use parent.Xrm. However, the problem is that previous parent.Xrm and Xrm.Page is deprecated. But know you have supported way to do so - welcome **[getContentWindow](https://docs.microsoft.com/en-us/powerapps/developer/model-driven-apps/clientapi/reference/controls/getcontentwindow)**.
 
 This function will return you a promise that on success will contain [contentWindow](https://developer.mozilla.org/en-US/docs/Web/API/HTMLIFrameElement/contentWindow) property of your iframe that later can be used to pass some data back to iframe. Keep in mind that this instance is read-only, but its properties can be manipulated so you cannot use it to modify the internal content of iframe.
 
