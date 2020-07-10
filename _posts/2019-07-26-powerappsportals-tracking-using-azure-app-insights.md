@@ -38,6 +38,8 @@ After you created your Azure Application Insights you need to add tracking scrip
 
 ![Enable Portal Traffic Analysis]({{site.baseurl}}/assets/img/2019-07-26-portal-analytics.jpg){: .center-image }
 
+**IMPORTANT** Tracking code snippet below is valid on the date of writing this article. Please refer to [THIS PAGE](https://docs.microsoft.com/en-us/azure/azure-monitor/app/javascript#snippet-based-setup) on official documentation to find the latest script.
+
 {% capture code %}
 <script type="text/javascript">
      var appInsights=window.appInsights||function(a){
