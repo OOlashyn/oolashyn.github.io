@@ -11,6 +11,8 @@ tags: [Portal]
 
 One of the most requested and long-awaited features for the Portals is finally here - Web API is available in preview. Finally, one of my portals was updated to the necessary version (to have Web API your portal version must be 9.2.6.41 or higher) and I was able to play around. Below I will describe what Web API is and will have a deep dive on how to use it.
 
+You can find full official documentation on Web API [here](https://docs.microsoft.com/en-us/powerapps/maker/portals/web-api-overview).
+
 ## Why Portal Web API
 
 Before we started our journey into the depth of the API lets first define what is the main purpose of the Portal Web API. Unlike CDS Web API you cannot use it outside the portal for integration or any other purpose. So why do we need it? Well, the answer is pretty straightforward - enhanced user experience.
