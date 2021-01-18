@@ -121,6 +121,7 @@ Some time ago, in my [previous post](https://www.dancingwithcrm.com/powerapps-po
     }
 
     var data = [
+        {%raw%}
         {% for entity in contactList.results.entities %}
         [
             "{{ entity.firstname }}",
@@ -129,7 +130,8 @@ Some time ago, in my [previous post](https://www.dancingwithcrm.com/powerapps-po
             "{{ entity.telephone1 }}",
             "{{entity.contactid}}",
         ] {% unless forloop.last %}, {% endunless %}
-        {% endfor %}  
+        {% endfor %}
+        {% endraw %}
     ];
 
     var table = jexcel(document.getElementById('spreadsheet'), {
