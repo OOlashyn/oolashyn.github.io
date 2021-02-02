@@ -195,7 +195,10 @@ webapi.safeAjax({
 {% endcapture %}
 {% include code.html code=code lang="javascript" %}
 
-**IMPORTANT** The URL for your entity will contain not the entity name ie *contact* but rather entity set name ie *contacts*. This might be obvious if you used CDS Web API before, but if not might be a bit confusing.
+{% capture importantText %}
+The URL for your entity will contain not the entity name ie <i>contact</i> but rather entity set name ie <i>contacts</i>. This might be obvious if you used CDS Web API before, but if not might be a bit confusing.
+{% endcapture %}
+{% include important-block.html importantText=importantText %}
 
 ## Conclusion
 

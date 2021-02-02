@@ -11,7 +11,10 @@ tags: [Portal]
 
 Some time ago, in my [previous post](https://www.dancingwithcrm.com/powerapps-portal-web-api-deep-dive/) about Web API I mentioned the example of its usage - creating Excel-like experience on the Portal. The time has come to show that example. In my code, I am using a third-party library called [jExcel](https://bossanova.uk/jexcel/v4/). Below you can find a video of how it looks like and sample code. The code may not reveal the best practices for jExcel library and provided only as a reference.
 
-**IMPORTANT!** As the date of the article Web API is still in Preview and is not suitable for the production environment.
+{% capture importantText %}
+As the date of the article Web API is still in Preview and is not suitable for the production environment.
+{% endcapture %}
+{% include important-block.html importantText=importantText %}
 
 {% include video.html webm="spreadsheet_example.webm" mp4="spreadsheet_example.mp4" %}
 
