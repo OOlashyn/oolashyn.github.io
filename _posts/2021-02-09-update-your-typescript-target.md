@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  Typescript - selecting proper target version
-date:   2021-02-09 08:01:20 +0100
+date:   2021-02-09 18:01:20 +0100
 description: Learn why you should choose proper target version in your tsconfig file and how it boost your code
 excerpt: Learn why you should choose proper target version in your tsconfig file and how it boost your code
 img: 2021-02-09-cover.jpg
