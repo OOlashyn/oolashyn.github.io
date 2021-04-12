@@ -7,7 +7,6 @@
     font-size: 36px;
     text-align: center;
     margin: 0 0 30px;
-    color: $dark-purple;
   }
   .tags {
     margin: 0;
@@ -16,9 +15,9 @@
     li {
       a {
         display: inline-block;
-        color: $dark-purple;
         &:hover {
           opacity: .8;
+          color: var(--link-hover-color);
         }
       }
     }
@@ -27,7 +26,6 @@
     span {
       a {
         display: inline-block;
-        color: $dark-pink;
         text-decoration: none;
         text-transform: uppercase;
         font-size: 12px;
@@ -39,7 +37,7 @@
       }
     }
     small {
-      color: $dark-purple;
+      color: var(--tag-date-color);
     }
   }
 }

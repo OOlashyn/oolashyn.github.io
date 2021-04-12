@@ -51,7 +51,7 @@
       font-weight: 700;
       text-transform: uppercase;
       font-size: 18px;
-      color: $white;
+      color: var(--white);
       margin: 0 0 10px;
       &:hover {
         opacity: .8;
@@ -62,7 +62,7 @@
       text-decoration: none;
       font-size: 10px;
       text-transform: uppercase;
-      color: $white;
+      color: var(--white);
       &:hover {
         text-decoration: underline;
       }

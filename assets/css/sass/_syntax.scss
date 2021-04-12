@@ -62,3 +62,11 @@
 .highlight .il { color: #099; }
 .highlight .ld { color: #e6db74; }
 .highlight .nx { color: #9DDBFB; }
+
+@media (prefers-color-scheme: dark) {
+    .highlight{
+        border-bottom: 1px solid var(--light-brd-color);
+        border-right: 1px solid var(--light-brd-color);
+        border-left: 1px solid var(--light-brd-color);
+    }
+}

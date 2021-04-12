@@ -1,10 +1,16 @@
 .main-footer {
   padding: 15px 0;
-  background-color: #efefef;
+  background-color: var(--footer-bg-color);
 
   .copyright {
     text-align: center;
-    color: $dark-purple;
+    color: var(--main-text-color);
     font-size: 16px;
   }
 }
+
+// @media (prefers-color-scheme: dark) {
+//   .main-footer{
+//     border-top: 1px solid var(--light-brd-color);
+//   }
+// }

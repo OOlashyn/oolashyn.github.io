@@ -6,7 +6,7 @@
   bottom: 0;
   left: 0;
   z-index: 100;
-  background: #fff;
+  background: var(--main-bg-color);
   transition: all .4s ease-in-out;
   transform: translate(0, -100%) scale(0, 0);
 }
@@ -22,10 +22,11 @@
     width: 100%;
     padding: 15px;
     border: none;
-    border-bottom: 1px solid $lighten-gray;
+    border-bottom: 1px solid var(--lighten-gray);
     outline: none;
     font-size: 21px;
-    color: $dark-gray;
+    color: var(--main-text-color);
+    background-color: var(--main-bg-color);
   }
 }
 
@@ -38,13 +39,13 @@
   li {
     padding-bottom: 15px;
     margin-bottom: 15px;
-    border-bottom: 1px solid $lighten-gray;
+    border-bottom: 1px solid var(--lighten-gray);
 
     a {
       text-decoration: none;
-      color: $dark-gray;
+      color: var(--link-color);
       &:hover {
-        color: $dark-pink;
+        color: var(--link-hover-color);
         opacity: .8;
       }
     }
@@ -60,3 +61,4 @@
   top: 0;
   right: 0;
 }
+

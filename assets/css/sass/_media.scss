@@ -34,7 +34,7 @@
           font-size: 12px;
           left: 2.5%;
           bottom: 10%;
-          color: $white;
+          color: var(--white);
         }
       }
     }
@@ -104,7 +104,7 @@
           font-size: 12px;
           left: 2.5%;
           bottom: 10%;
-          color: $white;
+          color: var(--white);
         }
       }
     }
@@ -122,14 +122,14 @@
 
         a {
           display: block;
-          color: $light-gray;
+          color: var(--light-gray);
           font-size: 16px;
           text-decoration: none;
           padding: 5px;
           transition: all 350ms cubic-bezier(0.13, 0.43, 0.54, 1.82);
 
           &:hover {
-            color: $dark-pink;
+            color: var(--dark-pink);
             transform: scale(1.3);
           }
         }

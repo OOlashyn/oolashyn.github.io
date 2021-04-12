@@ -33,6 +33,32 @@ gulp.task('sass', function () {
         .pipe(gulp.dest('assets/css'));
 });
 
+// Compile files
+gulp.task('sass-dark', function () {
+    return gulp.src('assets/css/sass/dark.scss')
+        .pipe(sass({
+            outputStyle: 'compressed',
+            onError: browserSync.notify
+        }))
+        .pipe(prefix(['last 15 versions', '> 1%', 'ie 8', 'ie 7'], { cascade: true }))
+        .pipe(gulp.dest('_site/assets/css'))
+        .pipe(browserSync.reload({stream:true}))
+        .pipe(gulp.dest('assets/css'));
+});
+
+// Compile files
+gulp.task('sass-light', function () {
+    return gulp.src('assets/css/sass/light.scss')
+        .pipe(sass({
+            outputStyle: 'compressed',
+            onError: browserSync.notify
+        }))
+        .pipe(prefix(['last 15 versions', '> 1%', 'ie 8', 'ie 7'], { cascade: true }))
+        .pipe(gulp.dest('_site/assets/css'))
+        .pipe(browserSync.reload({stream:true}))
+        .pipe(gulp.dest('assets/css'));
+});
+
 // Compression images
 gulp.task('img', function() {
 	return gulp.src('assets/img/**/*')
