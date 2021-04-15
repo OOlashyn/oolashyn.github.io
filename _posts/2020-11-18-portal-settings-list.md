@@ -6,7 +6,7 @@ description: List of little known and hidden Content Snippets and Site Settings 
 excerpt: List of little known and hidden Content Snippets and Site Settings for Power Apps Portals
 img: 2020-11-18-cover.jpg
 image: /assets/img/2020-11-18-cover.jpg
-tags: [PORTAL]
+tags: [Portal]
 ---
 
 ## Introduction
