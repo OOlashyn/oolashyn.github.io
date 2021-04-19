@@ -15,7 +15,10 @@ Unfortunately what unites all of the methods presented above is that they are no
 
 But there might be a solution that sort of supported and will work (only for Model-Driven app),
 
-**UPDATE** - please do not use this method in your production instance. Microsoft said that using URL can have inconsistant behavior and other side effects.
+{% capture importantText %}
+<strong>UPDATE</strong> - please do not use this method in your production instance. Microsoft said that using URL can have inconsistant behavior and other side effects. Check <a href="https://www.dancingwithcrm.com/pcf-entity-id-supported-way/">this article</a> for a supported way to get id and logical name information.
+{% endcapture %}
+{% include important-block.html importantText=importantText %}
 
 ## Solution
 
