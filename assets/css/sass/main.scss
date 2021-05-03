@@ -124,6 +124,18 @@ pre {
   clear: both;
 }
 
+table, td, th {
+  border: 1px solid var(--light-brd-color);
+}
+
+td, th {
+  padding: 5px;
+}
+
+table {
+  border-collapse: collapse;
+}
+
 /* = = = = = = = = = = Header Styles = = = = = = = = = = */
 @import "parts/header";
 
