@@ -28,3 +28,11 @@ html {
     --footer-bg-color: #efefef;
     --tag-date-color: var(--dark-purple);
 }
+
+#dark-mode{
+    display: none;
+}
+
+#light-mode{
+    display: block;
+}

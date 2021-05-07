@@ -54,3 +54,11 @@ html {
 .page-content {
     border: 1px solid var(--light-brd-color);
 }
+
+#dark-mode{
+    display: block;
+}
+
+#light-mode{
+    display: none;
+}

@@ -32,6 +32,13 @@ mailchimp: https://dancingwithcrm.us4.list-manage.com/subscribe/post # Add your 
 # Disqus
 discus_identifier: dancingwithcrm # Add your discus identifier
 
+# Utterances
+utterances:
+  repo: "OOlashyn/oolashyn.github.io"
+  issue-term: "title"
+  label: "Comment"
+  theme: "github-dark"
+
 # Tracker
 analytics: UA-141204351-1
 
