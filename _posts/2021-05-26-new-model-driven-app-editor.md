@@ -1,7 +1,7 @@
 ---
 layout: post
 title: New model driven app designer
-date: 2021-05-26 07:01:20 +0100
+date: 2021-05-26 18:01:20 +0100
 description: New model driven app designer is available in preview to simplify MDA creation
 excerpt: New model driven app designer is available in preview to simplify MDA creation
 img: 2021-05-26-cover.jpg
