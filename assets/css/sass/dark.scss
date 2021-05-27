@@ -8,7 +8,8 @@
     --light-gray: #999999;
     --lighten-gray: #d9d9d9;
     --dark-gray: #3e3e40;
-    --light-brd-color:  hsl(0, 0%, 30%);;
+    --light-brd-color:  hsl(0, 0%, 30%);
+    --purple: #7f5af0;
 }
 
 html {
@@ -27,6 +28,9 @@ html {
     --important-block-header-color: #a3d7ff;
     --footer-bg-color: hsl(200, 3%, 12%);
     --tag-date-color: #bbe1fa;
+    --newsletter-btn-color: var(--purple);
+    --newsletter-btn-clr-hvr: var(--purple);
+    --newsletter-btn-clr-hvr-txt: #fffffe;
 }
 
 .code-bar {

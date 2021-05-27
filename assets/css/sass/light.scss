@@ -8,7 +8,8 @@
     --light-gray: #999999;
     --lighten-gray: #d9d9d9;
     --dark-gray: #3e3e40;
-    --light-brd-color:  hsl(0, 0%, 30%);;
+    --light-brd-color:  hsl(0, 0%, 30%);
+    --purple: #7f5af0;
 }
 
 html {
@@ -27,6 +28,9 @@ html {
     --important-block-header-color: var(--dark-gray);
     --footer-bg-color: #efefef;
     --tag-date-color: var(--dark-purple);
+    --newsletter-btn-color: var(--black);
+    --newsletter-btn-clr-hvr: #9296F0;
+    --newsletter-btn-clr-hvr-txt: #9296F0;
 }
 
 #dark-mode{

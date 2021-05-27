@@ -17,15 +17,15 @@
 
     &_submit{
         color: white;
-        background-color: black;
-        border: 5px solid black;
+        background-color: var(--newsletter-btn-color);
+        border: 5px solid var(--newsletter-btn-color);
         padding: 15px 50px;
         cursor: pointer;
         text-transform: uppercase;
 
         &:hover{
-            border: 5px solid #9296F0;
-            color: #9296F0;
+            border: 5px solid var(--newsletter-btn-clr-hvr);
+            color:  var(--newsletter-btn-clr-hvr-txt);
         }
     }
 }
