@@ -2,8 +2,8 @@
 layout: post
 title: Deployment profiles in Power Apps Portals
 date: 2021-09-29 22:01:20 +0200
-description: Learn how you can user deployment profiles in Portal CLI to deploy environment specific variables
-excerpt: Learn how you can user deployment profiles in Portal CLI to deploy environment specific variables
+description: Learn how you can use deployment profiles in Portal CLI to deploy environment specific variables
+excerpt: Learn how you can use deployment profiles in Portal CLI to deploy environment specific variables
 img: 2021-09-29-cover.jpg
 image: /assets/img/2021-09-29-cover.jpg
 tags: [Portal]
