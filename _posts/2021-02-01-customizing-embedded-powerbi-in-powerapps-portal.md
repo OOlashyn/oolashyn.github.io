@@ -117,37 +117,6 @@ Print report dialog:
 
 ![print report]({{site.baseurl}}/assets/img/2021-02-02-report-print.jpg){: .center-image }
 
-## Mobile layout
-
-In our mobile-first ability to view everything in mobile is crucial. Unfortunately, if you will just embed standard report and try to show it on a mobile device it will look bad. That's because the system will just try to shrink it. To solve this issue you need to create a mobile layout for your report ( see [here](https://docs.microsoft.com/en-us/power-bi/create-reports/desktop-create-phone-report) for more details ) and then using library change layout of report to mobile (if applicable).
-{% capture code %}
-//get enum of available models
-//for mobile layout there is two options
-//models.LayoutType.MobileLandscape and models.LayoutType.MobilePortrait
-var models = window['powerbi-client'].models;
-
-// get div container for powerbi report
-var embedContainer = $(".powerbi")[0];
-
-// get reference to the embedded report
-var report = powerbi.get(embedContainer);
-
-report.getPages().then(function (pages) {
-    //check if report has mobile portrait layout
-    pages[0].hasLayout(models.LayoutType.MobilePortrait).then(function (hasLayout) {
-
-        if(hasLayout) {
-            const newSettings = {
-                layoutType: models.LayoutType.MobilePortrait
-            };
-            
-            report.updateSettings(newSettings);
-        }
-    })
-})
-{% endcapture %}
-{% include code.html code=code lang="javascript" %}
-
 ## Data selected event
 
 Sometimes we need to handle events in a specific way - show notification when the data was selected etc. Luckily we can register custom event listeners on data selected event and perform our custom logic.
