@@ -13,6 +13,7 @@ layout: default
           <h1 class="page-title">{{page.title}}</h1>
           <div class="page-date"><time datetime="{{page.date}}">{{page.date | date: '%d %b %Y'}}</time></div>
         </div>
+        {% include ukraineBanner.html %}
         {{page.content | markdownify}}
         {% include newsletter.html %}
         <div class="page-footer">
