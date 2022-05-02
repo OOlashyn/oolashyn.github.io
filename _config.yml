@@ -11,7 +11,7 @@ url: "https://www.dancingwithcrm.com" # the base hostname & protocol for your si
 author: Oleksandr Olashyn # add your name
 author-pic: face-min.jpg
 author-pic-full: face.jpg
-about-author: My name is Oleksandr Olashyn. I’m a Microsoft Business Application MVP, MCT, certified Dynamics 365 Architect with passion for coding and dancing.
+about-author: My name is Oleksandr Olashyn. I am a Microsoft Business Application MVP, MCT, certified Dynamics 365 Architect with passion for coding and dancing.
 
 # Contact links
 website: "www.dancingwithcrm.com" # Add your website, do not add http://
@@ -52,12 +52,17 @@ paginate_path: /page:num/
 # Build settings
 markdown: kramdown
 
+sass:
+    sass_dir: _sass
+    style: compressed
+
 plugins:
   - jekyll-paginate
   - jekyll-feed
   - jekyll-sitemap
   - jekyll-seo-tag
   - jekyll-target-blank
+  - jekyll-sass-converter
 
 include: [_pages]
 exclude: ["node_modules", "gulpfile.js", "package.json", "yarn.lock", "package-lock.json", "assets/css/sass/"]

@@ -1,6 +1,8 @@
-@import "variables";
+---
+---
+
 @import "syntax";
-@import "tools/normalize";
+@import "normalize";
 
 
 /* = = = = = = = = = = Main Styles = = = = = = = = = = */
@@ -137,50 +139,50 @@ table {
 }
 
 /* = = = = = = = = = = Header Styles = = = = = = = = = = */
-@import "parts/header";
+@import "header";
 
 /* = = = = = = = = = = Search Styles = = = = = = = = = = */
-@import "parts/search";
+@import "search";
 
 /* = = = = = = = = = = Post-Card Styles = = = = = = = = = = */
-@import "parts/post-card";
+@import "post-card";
 
 /* = = = = = = = = = = Pagination Styles = = = = = = = = = = */
-@import "parts/pagination";
+@import "pagination";
 
 
 /* = = = = = = = = = = Footer Styles = = = = = = = = = = */
-@import "parts/footer";
+@import "footer";
 
 /* = = = = = = = = = = Post-Page Styles = = = = = = = = = = */
-@import "parts/post-page";
+@import "post-page";
 
 /* = = = = = = = = = = Author Box Styles = = = = = = = = = = */
-@import "parts/author-box";
+@import "author-box";
 
 /* = = = = = = = = = = About Page Styles = = = = = = = = = = */
-@import "parts/about";
+@import "about";
 
 /* = = = = = = = = = = Projects Page Styles = = = = = = = = = = */
-@import "parts/projects";
+@import "projects";
 
 /* = = = = = = = = = = Tags Styles = = = = = = = = = = */
-@import "parts/tags";
+@import "tags";
 
 /* = = = = = = = = = = Animate Styles = = = = = = = = = = */
-@import "parts/animate";
+@import "animate";
 
 /* = = = = = = = = = = Code Style = = = = = = = = = = */
-@import "parts/code";
+@import "code";
 
 /* = = = = = = = = = = Video Style = = = = = = = = = = */
-@import "parts/video";
+@import "video";
 
 /* = = = = = = = = = = Newsletter Style = = = = = = = = = = */
-@import "parts/newsletter";
+@import "newsletter";
 
 /* = = = = = = = = = = Media = = = = = = = = = = */
 @import "media";
 
 /* = = = = = = = = = = Important block = = = = = = = = = = */
-@import "parts/important-block";
+@import "important-block";

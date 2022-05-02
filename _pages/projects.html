@@ -9,97 +9,30 @@ permalink: /projects/
         <h1 style="margin-bottom: 5px;">PROJECTS</h1>
     </div>
     <div class="projects-container">
+        {% for project in site.data.projects %}
         <div class="projects-card">
             <div class="projects-header">
-                <h2 class="projects-title">Power Apps Portal Helper extension for VS Code <a class="project-ext-link"
-                        href="https://marketplace.visualstudio.com/items?itemName=oleksandr-olashyn.portal-helper-vscode">
+                <h2 class="projects-title">{{ project.title }}<a class="project-ext-link"
+                        href="{{project.extLink}}">
                         <i class="fas fa-external-link-alt" aria-hidden="true"></i>
                     </a>
                 </h2>
             </div>
             <div class="projects-description">
-                Extension for VS Code with a set of commands and shortcuts to simplify work with Power Apps CLI for Portals
+                {{ project.content}}
             </div>
-            <img class="projects-video" src="https://github.com/OOlashyn/portal-helper-vscode/blob/master/assets/list-portals.gif?raw=true" alt="">
+            {% if project.extImgLink %}
+            <img class="projects-video" src="{{project.extImgLink}}" alt="">
+            {% endif %}
+            {% if project.imgLink %}
+            <img class="projects-video" src="{{ "/assets/img/" | prepend: site.baseurl }}{{project.imgLink}}" alt="">
+            {% endif %}
+            {% if project.videowebm %}
+                {% include video.html webm=project.videowebm mp4=project.videomp4 %}
+            {% elsif project.videomp4 %}
+                {% include video.html mp4=project.videomp4 %}
+            {% endif %}
         </div>
-        <div class="projects-card">
-            <div class="projects-header">
-                <h2 class="projects-title">Site Settings & Content Snippets for Power Apps Portals <a class="project-ext-link"
-                        href="https://github.com/OOlashyn/PowerAppsPortalSiteSettingsAndSnippets">
-                        <i class="fas fa-external-link-alt" aria-hidden="true"></i>
-                    </a>
-                </h2>
-            </div>
-            <div class="projects-description">
-                List of little known and hidden Content Snippets and Site Settings for Power Apps Portals
-            </div>
-            <img class="projects-video" src="{{ "/assets/img/" | prepend: site.baseurl }}2021-04-15-portal-settings-and-snippets.jpg" alt="">
-        </div>
-        <div class="projects-card">
-            <div class="projects-header">
-                <h2 class="projects-title">Web Form Steps Visualizer Component <a class="project-ext-link"
-                        href="https://github.com/OOlashyn/PCF-WebFormStepVisualizer">
-                        <i class="fas fa-external-link-alt" aria-hidden="true"></i>
-                    </a>
-                </h2>
-            </div>
-            <div class="projects-description">
-                Make it easier to work with Web Forms by visualizing your Web Form Steps as a flow chart.
-            </div>
-            {% include video.html webm="webformstepsvisualizer_v0_2_0_0.webm" mp4="webformstepsvisualizer_v0_2_0_0.mp4" %}
-        </div>
-        <div class="projects-card">
-            <div class="projects-header">
-                <h2 class="projects-title">Attachment Gallery Component <a class="project-ext-link"
-                        href="https://github.com/OOlashyn/PCF-AttachmentGalleryControl">
-                        <i class="fas fa-external-link-alt" aria-hidden="true"></i>
-                    </a>
-                </h2>
-            </div>
-            <div class="projects-description">
-                This is PCF component that shows images and pdf from attached notes and also can show note title and
-                note text
-            </div>
-            {% include video.html mp4="pcf-gallery-v1.mp4" %}
-        </div>
-        <div class="projects-card">
-            <div class="projects-header">
-                <h2 class="projects-title">Tag Cloud Component <a class="project-ext-link"
-                        href="https://github.com/OOlashyn/PCF-TagCloud">
-                        <i class="fas fa-external-link-alt" aria-hidden="true"></i>
-                    </a>
-                </h2>
-            </div>
-            <div class="projects-description">
-                Tag Cloud Dataset component using PowerApps Component Framework, React and Office Fabric UI
-            </div>
-            {% include video.html mp4="pcf-tagcloud-v1.mp4" %}
-        </div>
-        <div class="projects-card">
-            <div class="projects-header">
-                <h2 class="projects-title">Range Slider Component <a class="project-ext-link"
-                        href="https://github.com/OOlashyn/PCF-RangeSliderControl">
-                        <i class="fas fa-external-link-alt" aria-hidden="true"></i>
-                    </a>
-                </h2>
-            </div>
-            <div class="projects-description">
-                Range Slider Component using Powerapps Component Framework
-            </div>
-            {% include video.html mp4="pcf-rangeslider-v1.mp4" %}
-        </div>
-        <div class="projects-card">
-            <div class="projects-header">
-                <h2 class="projects-title">Stock Market Component <a class="project-ext-link"
-                        href="https://github.com/OOlashyn/PCF-StockMarketCard">
-                        <i class="fas fa-external-link-alt" aria-hidden="true"></i>
-                    </a>
-                </h2>
-            </div>
-            <div class="projects-description">
-                Stock Market Update Card using Adaptive Cards and Powerapps Control Framework
-            </div>
-            <img class="projects-video" src="https://raw.githubusercontent.com/OOlashyn/PCF-StockMarketCard/master/Screenshots/2019-07-18-stock-card-demo.jpg" alt="">
-        </div>
+        {% endfor %}
     </div>
 </div>
