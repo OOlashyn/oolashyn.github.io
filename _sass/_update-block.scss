@@ -1,0 +1,10 @@
+.update-block{
+    background-color: var(--update-block-bg-color);
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin: 10px 0px;
+
+    &__header{
+        color: var(--update-block-header-color);
+    }
+}
