@@ -2,8 +2,8 @@
 layout: post
 title:  Web Form Steps Visualizer v1
 date:   2022-08-15 00:05:20 -0400
-description:  Make it easier to work with Web Forms by visualizing your Web Form Steps as a flow chart with my Web Form Steps Visualizer PCF Component.
-excerpt: Make it easier to work with Web Forms by visualizing your Web Form Steps as a flow chart with my Web Form Steps Visualizer PCF Component.
+description:  Make it easier to work with Web Forms Steps by visualizing them Web Form Steps as a flow chart with my updated and improved Web Form Steps Visualizer PCF Component.
+excerpt: Make it easier to work with Web Forms Steps by visualizing them Web Form Steps as a flow chart with my updated and improved Web Form Steps Visualizer PCF Component.
 img: 2020-06-28-flow-chart.jpg
 image: /assets/img/2020-06-28-flow-chart.jpg
 tags: [PCF, Portal]
