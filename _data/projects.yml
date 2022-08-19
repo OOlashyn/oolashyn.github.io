@@ -15,8 +15,8 @@
 
 - title: Web Form Steps Visualizer Component
   extLink: https://github.com/OOlashyn/PCF-WebFormStepVisualizer
-  videowebm: webformstepsvisualizer_v0_2_0_0.webm
-  videomp4: webformstepsvisualizer_v0_2_0_0.mp4
+  videowebm: WebFormStepVisualizer_v1.webm
+  videomp4: WebFormStepVisualizer_v1.mp4
   content: Make it easier to work with Web Forms by visualizing your Web Form Steps as a flow chart
 
 - title: Tag Cloud Component
