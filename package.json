@@ -1,10 +1,9 @@
 {
-  "name": "Jekyll-Gulp-Sass-Autoprefixer-Imagemin-BrowserSync",
   "version": "1.0.0",
-  "description": "A starter project for Jekyll",
+  "description": "Personal website",
   "main": "index.js",
-  "repository": "https://github.com/artemsheludko/Jekyll-Gulp-Sass-Autoprefixer-Imagemin-BrowserSync",
-  "author": "Artem Sheludko",
+  "repository": "https://github.com/OOlashyn/oolashyn.github.io",
+  "author": "Oleksandr Olashyn",
   "license": "MIT",
   "dependencies": {
     "browser-sync": "^2.26.7",
@@ -17,6 +16,7 @@
     "imagemin-pngquant": "^5.0.0"
   },
   "scripts": {
-    "dev": "node_modules\\.bin\\gulp watch"
+    "dev": "node_modules\\.bin\\gulp watch",
+    "start": "bundle exec jekyll serve"
   }
 }
