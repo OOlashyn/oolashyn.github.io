@@ -20,10 +20,20 @@ So what is a deployment profile? The deployment profile allows you to define a s
 To create a deployment profile you need to create a **deployment-profiles** folder in the root folder of your portal. This folder will contain all your deployment profiles and will not be overridden during the download command. Then you need to create the profile itself - inside the deployment-profiles folder create a file **PROFILE_NAME.deployment.yml** (for example *test.deployment.yml*). The file should contain a table name with the list of attributes and respective values. You can have multiple tables and records specified in the same file.
 
 {% capture code %}
-adx_sitesetting:
+adx_contentsnippet:
     - adx_contentsnippetid: 09d34372-8420-ec11-b6e6-000d3ab86fbc
-      adx_name: google-secret
-      adx_value:  Authentication/OpenAuth/Google/Secret
+      adx_name: Legal text
+      adx_value:  Some legal text
+    - adx_contentsnippetid: 09d34372-8420-ec11-b6e6-000d3ab86f12
+      adx_name: Search Title
+      adx_value: Search
+adx_sitesetting:
+    - adx_sitesettingid: 09d34372-8420-ec11-b6e6-000d3ab86f45
+      adx_name: Authentication/OpenAuth/Google/Secret
+      adx_value: some-google-secret
+    - adx_sitesettingid: 09d34372-8420-ec11-b6e6-000d3ab86f34
+      adx_name: Authentication/OpenAuth/Facebook/Secret
+      adx_value: some-facebook-secret
 {% endcapture %}
 {% include code.html code=code lang="yaml" %}
 
