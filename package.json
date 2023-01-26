@@ -8,12 +8,7 @@
   "dependencies": {
     "browser-sync": "^2.26.7",
     "child_process": "^1.0.2",
-    "gulp": "^4.0.0",
-    "gulp-autoprefixer": "^3.1.1",
-    "gulp-cache": "^0.4.6",
-    "gulp-imagemin": "^3.2.0",
-    "gulp-sass": "^3.1.0",
-    "imagemin-pngquant": "^5.0.0"
+    "gulp": "^4.0.0"
   },
   "scripts": {
     "dev": "node_modules\\.bin\\gulp watch",
