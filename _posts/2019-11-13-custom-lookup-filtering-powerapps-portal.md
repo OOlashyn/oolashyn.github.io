@@ -105,5 +105,5 @@ function onPrimaryChange(){
 
 In this article I described a way to filter lookup using custom code and entity form metadata. You can use this approach on any type of form. However I would recommend default filtering when applicable. Hope you find this article useful.
 
-[first-liquid-article]: https://colinvermander.com/2017/04/17/dynamics-365-portals-use-liquid-to-return-json-or-xml/
-[second-liquid-article]: https://colinvermander.com/2018/06/26/dynamics-365-portal-use-liquid-fetchxml-with-paging-cookie/
+[first-liquid-article]: https://colinvermander.wordpress.com/2017/04/17/dynamics-365-portals-use-liquid-to-return-json-or-xml/
+[second-liquid-article]: https://colinvermander.wordpress.com/2018/06/26/dynamics-365-portal-use-liquid-fetchxml-with-paging-cookie/
