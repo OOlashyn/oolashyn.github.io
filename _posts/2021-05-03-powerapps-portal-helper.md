@@ -11,6 +11,11 @@ tags: [Portal]
 
 A couple of days ago Microsoft updated their Microsoft Power Apps CLI library to allow developer work with Power Apps Portals easily, by allowing to use commands to download and work with data locally in our favourite IDE of choice (see video [here](https://youtu.be/_EtE-DObJmA)). Inspired by [Danish Naglekar](https://powermaverick.dev/) and his awesome [PCF Builder](https://marketplace.visualstudio.com/items?itemName=danish-naglekar.pcf-builder) I decided to create something similar, but for Portals - welcome my first VS Code extension Power Apps Portal Helper. Now you don't need to remember commands and arguments for them to more easily work with CLI. You can download an extension from [here](https://marketplace.visualstudio.com/items?itemName=oleksandr-olashyn.portal-helper-vscode) or directly from your VS Code. You can find usage examples below.
 
+{% capture importantText %}
+<strong>UPDATE</strong> - The name of the extension was updated from Power Apps Portal Helper to Power Pages Helper to reflect changes in Microsoft naming
+{% endcapture %}
+{% include important-block.html importantText=importantText %}
+
 ## List of all available commands
 
 | Command | Description |
