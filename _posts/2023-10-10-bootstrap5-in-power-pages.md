@@ -5,7 +5,7 @@ date: 2023-10-11 20:45:20 -0500
 description: Learn how to migrate your Power Pages site to Bootstrap 5
 excerpt: Bootstrap 5 - one of the most requested features for Power Pages - is finally here. In this post you will learn how to migrate your Power Pages site to Bootstrap 5 and what issues and gotchas you need to be aware about.
 img: 2023-01-25-bootstrap5.png
-image: /assets/img/2023-01-25-bootstrap5.png
+image: /assets/img/2023-01-25-bootstrap5-rss.jpg
 tags: [PowerPlatform, PowerPages]
 ---
 
