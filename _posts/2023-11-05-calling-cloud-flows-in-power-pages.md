@@ -9,7 +9,7 @@ image: /assets/img/2023-11-05-cover-rss.jpg
 tags: [PowerPlatform, PowerPages, PowerAutomate]
 ---
 
-Calling cloud flows from Power Pages was always a complicated endeavour from a security and general perspective. However, an introduction of native support for this back in June was a game changer. Now, we can even send files from Power Pages to cloud flows. Let's see how it can be done and what pitfalls you need to avoid. At the end of this article you will find the full code and demo on how this works, so feel free to jump ahead.
+Calling cloud flows from Power Pages was always a complicated endeavour from a security and general perspective. However, an introduction of native support for this back in June was a game changer. Now, we can even send files from Power Pages to cloud flows. Let's see how it can be done and what pitfalls you need to avoid (including some issues with flows itself - see more at the end of the post). At the end of this article you will find the full code and demo on how this works, so feel free to jump ahead. 
 
 ## Action plan
 
@@ -154,9 +154,11 @@ Below you can find small demo of sending and receiving file form cloud flow:
 
 {% include video.html mp4="2023-11-05-cloud-flow-demo.mp4" %}
 
-## ERRORS
+## ERRORS AND ISSUES
 
 When you call the flow you might receive an error that input parameters are in incorrect format. Please check your flow as an error might be caused by problems in other parts of the flow unrelated to the inputs.
+
+**IMPORTANT** Currently, there is an issue with sending files more than 2mb in size. You will get: "Error during serialization or deserialization using the JSON JavaScriptSerializer. The length of the string exceeds the value set on the maxJsonLength property. Parameter name: input". Microsoft was notified about this problem. Unfortunately, there is no workaround at the time of writing. This section will be updated as soon as new information will be available.
 
 ## CONCLUSION
 
