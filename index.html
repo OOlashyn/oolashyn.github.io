@@ -2,21 +2,64 @@
 layout: home-page
 description: Oleksandr's Olashyn personal blog about Power Platform, Dynamics 365 and many more
 ---
-<ol class="post-card-box clearfix">
+<ol class="post-card-box">
   {% for post in paginator.posts %}
-  <li>
-    <div class="post-card">
-      <a href="{{post.url | prepend: site.baseurl}}" aria-label="{{post.title}}" class="post-card-image" style="background-image: url( {{ "/assets/img/" | prepend: site.baseurl | append : post.img}} )">
+  <li class="article">
+    <article class="flex-column flex-row-lg post-card">
+      <a href="{{post.url | prepend: site.baseurl}}" aria-label="{{post.title}}" class="col-item">
+        <img class="post-card-image" src="{{ '/assets/img/' | prepend: site.baseurl | append : post.img}}" alt="">
       </a>
-
-      <div class="post-card-body">
-        {% for tag in post.tags %}
-        <a href="{{site.baseurl}}/tags#{{tag}}" class="tag">|&#32;{{ tag }}</a>
-        {% endfor %}
-        <a href="{{post.url | prepend: site.baseurl}}" class="post-card-link"><h3 class="post-card-title">{{post.title}}</h3></a>
+      <div class="col-item post-card-body">
+        <div><span><i class="far fa-clock"></i><time class="post-date" datetime="{{post.date}}">{{post.date | date: '%d %b %Y'}}</time></span></div>
+        <h2 style="margin-top: 5px;"><a class="post-card-title" href="{{post.url | prepend: site.baseurl}}">{{post.title}}</a></h2> 
+        <p>{{post.shortDescription | default: post.excerpt}}</p>
+        <ul class="tag-list">
+          {% for tag in post.tags %}
+          <li class="tag">
+            <a href="{{site.baseurl}}/tags#{{tag}}" class="tag-link">#{{ tag }}</a>
+          </li>
+          {% endfor %}
+        </ul>
       </div>
+    </article>
 
-    </div>
   </li>
   {% endfor %}
 </ol>
+<style>
+  .flex {
+    display: flex;
+  }
+
+  .flex-column {
+    flex-direction: column;
+  }
+
+  li.article{
+    list-style: none;
+    margin-bottom: 3rem;
+    transition: all .3s;
+  }
+
+  ol{
+    animation-delay: 0.75s;
+    animation-duration: 0.7s;
+    animation-fill-mode: both;
+    animation-name: fadeInDown;
+  }
+
+  @media (min-width: 768px){
+    li.article{
+      margin-bottom: 5rem;
+    }
+
+    .col-item {
+      width: 50%;
+    }
+
+    .flex-row-lg{
+      flex-direction: row;
+    }
+
+  }
+</style>

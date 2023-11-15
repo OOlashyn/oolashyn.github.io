@@ -4,6 +4,7 @@ title: Web Roles and Enhanced Data Model
 date: 2023-11-12 21:45:20 -0500
 description: Learn how to view and dynamically assign Web Roles in the Enhanced Data Model
 excerpt: Web Roles are the core of the Power Pages security. They define who and how can access the data on our site. We are using them constantly. However, if you enabled the Enhanced Data Model you might notice that things are different - Related records missing associated Web Roles, and dynamically assigning web roles via adx relationship doesn't work anymore. Check my new blog to see what's going on with Web Roles in the new data model and how you can resolve both of the mentioned issues.
+shortDescription: Having troubles finding Web Roles in the Enhanced Data Model? Or dynamically assigning them via adx relationship? In this post you will learn what's going on with Web Roles in the new data model and how you can resolve both of the mentioned issues.
 img: 2023-11-12-cover.jpg
 image: /assets/img/2023-11-12-cover-rss.jpg
 tags: [PowerPlatform, PowerPages, PowerAutomate]
