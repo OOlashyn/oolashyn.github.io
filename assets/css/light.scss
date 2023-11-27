@@ -12,14 +12,16 @@
     --lighten-gray: #d9d9d9;
     --dark-gray: #3e3e40;
     --light-brd-color:  hsl(0, 0%, 30%);
-    --purple: #7f5af0;
+    --purple: #5d47c6;
+    --deep-purple: #4733a7;
+    --dark-grey: #2b2c34;
 }
 
 html {
     --icon-color: var(--light-gray);
     --icon-hover-color: var(--dark-pink);
-    --link-color: var(--dark-pink);
-    --link-hover-color: var(--dark-pink);
+    --link-color: var(--purple);
+    --link-hover-color: var(--deep-purple);
     --main-text-color: var(--dark-gray);
     --main-bg-color: var(--white);
     --main-h-color: var(--dark-purple);
@@ -44,4 +46,20 @@ html {
 
 #light-mode{
     display: block;
+}
+
+.post-card-title{
+    color: var(--dark-gray);
+
+    &:hover{
+      color:  var(--deep-purple);
+    }
+}
+
+.tag-link{
+    color: #101010a8;
+}
+
+.previous, .next {
+    color: #101010a8 !important;
 }

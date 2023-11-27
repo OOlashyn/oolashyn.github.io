@@ -3,6 +3,10 @@
   flex-direction: column;
   padding: 0;
   
+  animation-delay: 0.75s;
+  animation-duration: 0.7s;
+  animation-fill-mode: both;
+  animation-name: fadeInDown;
 }
 
 .post-card {
@@ -10,8 +14,7 @@
 
   .post-card-image {
     height: 100%;
-    max-width: 100%;
-    width: auto;
+    width: 100%;
     object-fit: cover;
   }
 
@@ -39,11 +42,12 @@
     }
   
     .tag{
-      margin-right: 0.75rem;
+      margin-right: 0.5rem;
     }
   
     .tag-link{
       text-decoration: none;
+      font-weight: 600;
     }
   
   }
