@@ -4,6 +4,7 @@ title: Sending files to cloud flows from Power Pages
 date: 2023-11-05 21:45:20 -0500
 description: Learn how to send files to cloud flows from Power Pages
 excerpt: Calling cloud flows from Power Pages was always a complicated endeavour from a security and general perspective. However, an introduction of native support for this back in June was a game changer. And now, we can even send files to the cloud flows. Check my new blog to see how it can be done and what pitfalls you need to avoid.
+shortDescription: Calling cloud flows from Power Pages is finally GA and available in all regions. And now, we can even send files to the cloud flows. Check my this post to see how it can be done and what pitfalls you need to avoid
 img: 2023-11-05-cover.jpg
 image: /assets/img/2023-11-05-cover-rss.jpg
 tags: [PowerPlatform, PowerPages, PowerAutomate]
