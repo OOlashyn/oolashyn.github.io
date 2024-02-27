@@ -32,6 +32,13 @@ Previously, with the Standard Data Model, when you wanted to dynamically assign 
 
 ![Associate web role dynamically]({{site.baseurl}}/assets/img/2023-11-12-associate-web-role.png){: .center-image }
 
+## How to dynamically remove roles
+
+Similarly, to how we associated web roles we can dynamically remove them using Power Automate. This time, however, we need to get odataid of the Site Component behind the Web Role. To do so you can first query Web Role by name and then query Site Component by id or if you know that id query it directly. After getting odataid we need to perform an Unrelate action from the contact to the Site Component table via powerpagecomponent_mspp_webrole_contact relationship.
+
+![Remove web role dynamically]({{site.baseurl}}/assets/img/2024-02-26-unrelate-web-role.jpg){: .center-image }
+
+
 ## Conclusion
 
 Enhanced Data Model is a big shift to make Power Pages more aligned with the usual ALM story for Power Platform, more performant and easier to update. And, although, from the surface, things might look the same, under the hood a lot has changed. This includes changes to the Web Roles and how we interact with them. In this article, you found how you can find current associated roles and how to dynamically assign new ones. Hope you find it useful.
