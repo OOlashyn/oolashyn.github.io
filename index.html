@@ -12,7 +12,7 @@ description: Oleksandr's Olashyn personal blog about Power Platform, Dynamics 36
       <div class="col-item post-card-body">
         <div><span><i class="far fa-clock"></i><time class="post-date" datetime="{{post.date}}">{{post.date | date: '%d %b %Y'}}</time></span></div>
         <h2 style="margin-top: 5px;"><a class="post-card-title" href="{{post.url | prepend: site.baseurl}}">{{post.title}}</a></h2> 
-        <p>{{post.shortDescription | default: post.excerpt}}</p>
+        <p>{{post.shortDescription | default: post.description}}</p>
         <ul class="tag-list">
           {% for tag in post.tags %}
           <li class="tag">
