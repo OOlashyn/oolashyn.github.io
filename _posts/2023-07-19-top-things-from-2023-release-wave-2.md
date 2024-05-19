@@ -38,7 +38,7 @@ It will become **GA** for all users in **Mar 2024**. The original announcement c
 ## Power Pages Copilot
 
 ![Robot]({{site.baseurl}}/assets/img/2023-07-19-robot.jpg){: .center-image }
-Image by [ClaudeAI.uk](https://claudeai.uk/) 
+Image by [ClaudeAI.wiki](https://claudeai.wiki) 
 
 Another feature - another AI infusion. This time it is for Power Pages. Previously MS brought Copilot to Power Pages to help with Form creation. This time scope is bigger and consists of next things:
 
