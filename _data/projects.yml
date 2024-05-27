@@ -1,7 +1,12 @@
-- title: Power Apps Portal Helper extension for VS Code
+- title: Power Pages Lookup to Select
+  extLink: https://www.dancingwithcrm.com/power-pages-lookup-to-select
+  videomp4: 2024-05-26-lts-oob.mp4
+  content: jQuery library to easily replace Power Pages lookup control with Select2 control
+
+- title: Power Pages Helper extension for VS Code
   extLink: https://marketplace.visualstudio.com/items?itemName=oleksandr-olashyn.portal-helper-vscode
   extImgLink: https://github.com/OOlashyn/portal-helper-vscode/blob/master/assets/list-portals.gif?raw=true
-  content: Extension for VS Code with a set of commands and shortcuts to simplify work with Power Apps CLI for Portals
+  content: Extension for VS Code with a set of commands and shortcuts to simplify work with Power Apps CLI for Power Pages
 
 - title: Site Settings & Content Snippets for Power Apps Portals
   extLink: https://github.com/OOlashyn/PowerAppsPortalSiteSettingsAndSnippets
