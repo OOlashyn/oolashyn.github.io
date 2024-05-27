@@ -22,7 +22,7 @@ What if I told you that you could do all of the above with just a couple of line
 
 See it in action below:
 
-{% include video.html mp4="2024-05-26-lts-oob.mp4" %}
+{% include video.html mp4="2024-05-26-lts-full.mp4" %}
 
 Visit [documentation](https://www.dancingwithcrm.com/power-pages-lookup-to-select/) to find more information on how to get started.
 
