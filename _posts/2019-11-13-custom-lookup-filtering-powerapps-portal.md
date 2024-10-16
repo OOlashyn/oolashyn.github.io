@@ -11,6 +11,11 @@ tags: [D365, Portal]
 
 One of the common tasks in Dynamics 365 CE is to apply related records filtering, usually between two or more lookup fields. And luckily Microsoft provided us with great and most importantly out of the box way to achieve that. You just go to the form(in Classic interface), open lookup that you are interested in, scroll to Related Record Filtering and specify all necessary conditions. This type of tasks was usual for me for our Portal development as well. And it worked just fine. However last week I found that not everything is unicorns and rainbows - for some reason filtering didn't work on a create entity form. First I thought there was a bug. So I contacted Microsoft support. And to my surprise, they replied to me that indeed it wasn't working and it was expected behaviour. Related record filtering works only on edit forms. For us those requirements were critical, so I started thinking about how I can solve this problem. And soon I found the solution.
 
+{% capture importantText %}
+<strong>UPDATE</strong> There is a bettwe way - there is a newer article covering this topic (published Oct 2024). Visit it using the <a href="https://www.dancingwithcrm.com/lookup-filtering-in-2024/">this article link</a>.
+{% endcapture %}
+{% include important-block.html importantText=importantText %}
+
 ## Custom Lookup Filtering
 
 Imagine we have a custom entity called Categorization. We have two lookup fields on Contact - Primary Categorization and Secondary Categorization. We need to filter Secondary Categorization by the value in Primary Categorization.
