@@ -159,7 +159,51 @@ Below you can find small demo of sending and receiving file form cloud flow:
 
 When you call the flow you might receive an error that input parameters are in incorrect format. Please check your flow as an error might be caused by problems in other parts of the flow unrelated to the inputs.
 
-**IMPORTANT** Currently, there is an issue with sending files more than 2mb in size. You will get: "Error during serialization or deserialization using the JSON JavaScriptSerializer. The length of the string exceeds the value set on the maxJsonLength property. Parameter name: input". Microsoft was notified about this problem. Unfortunately, there is no workaround at the time of writing. This section will be updated as soon as new information will be available.
+**IMPORTANT** Currently, there is an issue with sending files more than 2mb in size. You will get: "Error during serialization or deserialization using the JSON JavaScriptSerializer. The length of the string exceeds the value set on the maxJsonLength property. Parameter name: input". Microsoft was notified about this problem. 
+
+Potential workaround: thanks to [Lyle Stanton](https://github.com/LyleStanton) for suggestion.
+
+To avoid this issue try to not provide contentType explicetly, remove processData and global from the ajaxSafePost request and do not stringify request object
+
+{% capture code1 %}
+  function sendToFlow(fileName, b64str) {
+    // create object with inputs
+    // file input should have both name which holds filename
+    // and contentBytes which holds base64 string representation of the file
+    let data = {
+      customTextField: "Hi, I am text from site",
+      customFile: {
+        name: fileName,
+        contentBytes: b64str
+      }
+    };
+
+    // actual request object should have only one parameter
+    // called eventData which shoould be stringified
+    // version of the object with inputs
+    let requestObj = {
+      eventData: JSON.stringify(data)
+    };
+
+    // I am using ajaxSafePost as it automatically adds
+    // CSRF token, however, you can use fetch or other method
+    // as long as you manually handle getting the token
+    // and adding it to appropriate header
+    shell.ajaxSafePost({
+      type: "POST",
+      contentType: "application/json",
+      url: "/_api/cloudflow/v1.0/trigger/YOUR_CLOUD_FLOW_GUID",
+      data: requestObj,
+    })
+      .done(function (response) {
+        handleFlowResponse(response);
+      })
+      .fail(function (er) {
+        console.error(er);
+      });
+  }
+{% endcapture %}
+{% include code.html code=code1 lang="javascript" %}
 
 ## CONCLUSION
 
