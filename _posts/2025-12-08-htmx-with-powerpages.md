@@ -228,4 +228,5 @@ You can find the full code at [my GitHub repo](https://github.com/OOlashyn/htmx-
 ## Credits
 
 Cover image by [Eluj](https://pixabay.com/users/eluj-1927408/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=3131802) from [Pixabay](https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=3131802)
+
 [Animated SVG Preloaders by SVGBackgrounds.com](https://www.svgbackgrounds.com/elements/animated-svg-preloaders/)
