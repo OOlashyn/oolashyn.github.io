@@ -15,7 +15,7 @@ What if I told you that you can create an interactive UI without full-screen ref
 
 ## What is htmx?
 
-htmx is a JavaScript library that lets you write less JS by extending HTML (hence the name HTMX). htmx allows you to extend HTML so that components can react to events, send HTTP requests, perform CSS transitions, and much more.
+htmx is a JavaScript library that lets you write less JS by extending HTML (hence the name HTMX). htmx allows you to extend HTML so that components can react to events, send HTTP requests, perform CSS transitions, and much more. You can find more about htmx by visiting [htmx official website](https://htmx.org/).
 
 The simplest example of htmx will look like this.
 
