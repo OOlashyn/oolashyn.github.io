@@ -1,0 +1,59 @@
+---
+import HomeLayout from '@/layouts/HomeLayout.astro';
+import { siteConfig } from '@/config';
+---
+
+<HomeLayout title="About" description="About Oleksandr Olashyn D365 Developer">
+  <div class="small-wrapper">
+    <div class="about-container">
+      <section class="about-header">
+        <div class="author-image-container">
+          <img
+            src={`/assets/img/${siteConfig.authorPicFull}`}
+            alt={siteConfig.author}
+          />
+        </div>
+        <p class="subtitle">{siteConfig.aboutAuthor}</p>
+      </section>
+      <section class="about-body">
+        <ul class="contact-list">
+          {siteConfig.email && (
+            <li class="email">
+              <a href={`mailto:${siteConfig.email}`}>
+                <i class="fas fa-envelope"></i>
+              </a>
+            </li>
+          )}
+          {siteConfig.website && (
+            <li class="website">
+              <a href={`http://${siteConfig.website}`} target="_blank">
+                <i class="fas fa-globe"></i>
+              </a>
+            </li>
+          )}
+          {siteConfig.linkedin && (
+            <li class="linkedin">
+              <a href={`https://in.linkedin.com/in/${siteConfig.linkedin}`} target="_blank">
+                <i class="fab fa-linkedin"></i>
+              </a>
+            </li>
+          )}
+          {siteConfig.github && (
+            <li class="github">
+              <a href={`http://github.com/${siteConfig.github}`} target="_blank">
+                <i class="fab fa-github"></i>
+              </a>
+            </li>
+          )}
+          {siteConfig.twitter && (
+            <li class="twitter">
+              <a href={`https://twitter.com/${siteConfig.twitter}`} target="_blank">
+                <i class="fab fa-twitter"></i>
+              </a>
+            </li>
+          )}
+        </ul>
+      </section>
+    </div>
+  </div>
+</HomeLayout>

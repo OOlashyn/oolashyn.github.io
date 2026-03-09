@@ -1,0 +1,88 @@
+---
+import HomeLayout from '@/layouts/HomeLayout.astro';
+import { getCollection } from 'astro:content';
+import { siteConfig } from '@/config';
+import { getPostUrl } from '@/utils';
+
+const allPosts = await getCollection('posts');
+const sortedPosts = allPosts.sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+
+const postsPerPage = siteConfig.postsPerPage;
+const totalPages = Math.ceil(sortedPosts.length / postsPerPage);
+const posts = sortedPosts.slice(0, postsPerPage);
+
+const nextUrl = totalPages > 1 ? '/page2/' : undefined;
+---
+
+<HomeLayout
+  description={siteConfig.description}
+  nextUrl={nextUrl}
+>
+  <ol class="post-card-box">
+    {posts.map((post) => (
+      <li class="article">
+        <article class="flex-column flex-row-lg post-card">
+          <a href={getPostUrl(post.id)} aria-label={post.data.title} class="col-item">
+            <img
+              class="post-card-image"
+              src={`/assets/img/${post.data.img}`}
+              alt=""
+            />
+          </a>
+          <div class="col-item post-card-body">
+            <div>
+              <span>
+                <i class="far fa-clock"></i>
+                <time class="post-date" datetime={post.data.date.toISOString()}>
+                  {post.data.date.toLocaleDateString('en-GB', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric',
+                  })}
+                </time>
+              </span>
+            </div>
+            <h2 style="margin-top: 5px;">
+              <a class="post-card-title" href={getPostUrl(post.id)}>
+                {post.data.title}
+              </a>
+            </h2>
+            <p>{post.data.shortDescription || post.data.description}</p>
+            <ul class="tag-list">
+              {(post.data.tags || []).map((tag) => (
+                <li class="tag">
+                  <a href={`/tags/#${tag}`} class="tag-link">#{tag}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </article>
+      </li>
+    ))}
+  </ol>
+
+  <style>
+    .flex-column {
+      flex-direction: column;
+    }
+
+    li.article {
+      list-style: none;
+      margin-bottom: 3rem;
+      transition: all .3s;
+    }
+
+    @media (min-width: 768px) {
+      .col-item {
+        width: 50%;
+        height: 300px;
+      }
+
+      .flex-row-lg {
+        flex-direction: row;
+      }
+    }
+  </style>
+</HomeLayout>

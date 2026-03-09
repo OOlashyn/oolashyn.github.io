@@ -1,0 +1,108 @@
+---
+import HomeLayout from '@/layouts/HomeLayout.astro';
+import { getCollection } from 'astro:content';
+import { siteConfig } from '@/config';
+import { getPostUrl } from '@/utils';
+import type { GetStaticPaths } from 'astro';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const allPosts = await getCollection('posts');
+  const sortedPosts = allPosts.sort(
+    (a, b) => b.data.date.getTime() - a.data.date.getTime()
+  );
+
+  const postsPerPage = siteConfig.postsPerPage;
+  const totalPages = Math.ceil(sortedPosts.length / postsPerPage);
+
+  // Pages start at 2 (page 1 is the index route `/`)
+  return Array.from({ length: totalPages - 1 }, (_, i) => {
+    const pageNum = i + 2;
+    const start = (pageNum - 1) * postsPerPage;
+    return {
+      params: { page: `page${pageNum}` },
+      props: {
+        posts: sortedPosts.slice(start, start + postsPerPage),
+        currentPage: pageNum,
+        totalPages,
+      },
+    };
+  });
+};
+
+const { posts, currentPage, totalPages } = Astro.props;
+
+const previousUrl = currentPage === 2 ? '/' : `/page${currentPage - 1}/`;
+const nextUrl = currentPage < totalPages ? `/page${currentPage + 1}/` : undefined;
+---
+
+<HomeLayout
+  description={siteConfig.description}
+  previousUrl={previousUrl}
+  nextUrl={nextUrl}
+>
+  <ol class="post-card-box">
+    {posts.map((post: any) => (
+      <li class="article">
+        <article class="flex-column flex-row-lg post-card">
+          <a href={getPostUrl(post.id)} aria-label={post.data.title} class="col-item">
+            <img
+              class="post-card-image"
+              src={`/assets/img/${post.data.img}`}
+              alt=""
+            />
+          </a>
+          <div class="col-item post-card-body">
+            <div>
+              <span>
+                <i class="far fa-clock"></i>
+                <time class="post-date" datetime={post.data.date.toISOString()}>
+                  {post.data.date.toLocaleDateString('en-GB', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric',
+                  })}
+                </time>
+              </span>
+            </div>
+            <h2 style="margin-top: 5px;">
+              <a class="post-card-title" href={getPostUrl(post.id)}>
+                {post.data.title}
+              </a>
+            </h2>
+            <p>{post.data.shortDescription || post.data.description}</p>
+            <ul class="tag-list">
+              {(post.data.tags || []).map((tag: string) => (
+                <li class="tag">
+                  <a href={`/tags/#${tag}`} class="tag-link">#{tag}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </article>
+      </li>
+    ))}
+  </ol>
+
+  <style>
+    .flex-column {
+      flex-direction: column;
+    }
+
+    li.article {
+      list-style: none;
+      margin-bottom: 3rem;
+      transition: all .3s;
+    }
+
+    @media (min-width: 768px) {
+      .col-item {
+        width: 50%;
+        height: 300px;
+      }
+
+      .flex-row-lg {
+        flex-direction: row;
+      }
+    }
+  </style>
+</HomeLayout>

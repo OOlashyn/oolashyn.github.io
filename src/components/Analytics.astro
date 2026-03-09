@@ -1,0 +1,20 @@
+---
+import { siteConfig } from '@/config';
+---
+
+<!-- Google Analytics -->
+<script
+  is:inline
+  define:vars={{ analyticsId: siteConfig.analytics }}
+>
+  (function() {
+    var script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://www.googletagmanager.com/gtag/js?id=' + analyticsId;
+    document.head.appendChild(script);
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){window.dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', analyticsId, { 'anonymize_ip': true });
+  })();
+</script>

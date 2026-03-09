@@ -1,0 +1,19 @@
+---
+interface Props {
+  lang?: string;
+  code?: string;
+  codeTitle?: string;
+}
+
+const { lang, code, codeTitle } = Astro.props;
+---
+
+{codeTitle && (
+  <div class="code-bar">
+    <div class="code-title">{codeTitle}</div>
+  </div>
+)}
+{code && (
+  <pre><code class={lang ? `language-${lang}` : ''}>{code}</code></pre>
+)}
+<slot />
