@@ -8,31 +8,31 @@
         <div id="pagefind-search"></div>
       </div>
       <div class="icon-close-container">
-        <span class="search-icon-close"><i class="fas fa-times" aria-hidden="true"></i></span>
+        <button class="search-icon-close" aria-label="Close search">
+          <i class="fas fa-times" aria-hidden="true"></i>
+        </button>
       </div>
     </div>
   </div>
 </div>
 
-<script is:inline>
-  (function() {
-    // Dynamically load Pagefind assets to avoid 404s in dev mode
-    var link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = '/pagefind/pagefind-ui.css';
-    link.onerror = function() { console.warn('Pagefind CSS not found — run "bun run build" to generate search index.'); };
-    document.head.appendChild(link);
+<script>
+  // Dynamically load Pagefind assets to avoid 404s in dev mode
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = '/pagefind/pagefind-ui.css';
+  link.onerror = () => console.warn('Pagefind CSS not found — run "bun run build" to generate search index.');
+  document.head.appendChild(link);
 
-    var script = document.createElement('script');
-    script.src = '/pagefind/pagefind-ui.js';
-    script.onload = function() {
-      new PagefindUI({
-        element: '#pagefind-search',
-        showSubResults: true,
-        showImages: false,
-      });
-    };
-    script.onerror = function() { console.warn('Pagefind JS not found — run "bun run build" to generate search index.'); };
-    document.head.appendChild(script);
-  })();
+  const script = document.createElement('script');
+  script.src = '/pagefind/pagefind-ui.js';
+  script.onload = () => {
+    new (window as any).PagefindUI({
+      element: '#pagefind-search',
+      showSubResults: true,
+      showImages: false,
+    });
+  };
+  script.onerror = () => console.warn('Pagefind JS not found — run "bun run build" to generate search index.');
+  document.head.appendChild(script);
 </script>

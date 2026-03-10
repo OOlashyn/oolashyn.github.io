@@ -1,0 +1,61 @@
+---
+---
+
+<script>
+  const flexContainer = document.querySelector<HTMLElement>('div.flex-container');
+  const searchBox = document.querySelector<HTMLElement>('.search-box');
+
+  // Menu open/close
+  document.querySelectorAll<HTMLElement>('.menu-icon, .menu-icon-close').forEach((el) => {
+    el.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const isOpen = flexContainer?.classList.toggle('active') ?? false;
+      document.querySelector<HTMLElement>('.menu-icon')?.setAttribute('aria-expanded', String(isOpen));
+    });
+  });
+
+  // Click outside menu to close
+  flexContainer?.addEventListener('click', (e) => {
+    if (flexContainer.classList.contains('active') && (e.target as HTMLElement).tagName !== 'A') {
+      flexContainer.classList.remove('active');
+      document.querySelector<HTMLElement>('.menu-icon')?.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  // Search open
+  document.querySelectorAll<HTMLElement>('.search-icon').forEach((el) => {
+    el.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (searchBox) {
+        searchBox.classList.add('search-active');
+        el.setAttribute('aria-expanded', 'true');
+        searchBox.querySelector<HTMLElement>('input')?.focus();
+      }
+    });
+  });
+
+  // Search close
+  document.querySelectorAll<HTMLElement>('.search-icon-close').forEach((el) => {
+    el.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (searchBox) {
+        searchBox.classList.remove('search-active');
+        document.querySelector<HTMLElement>('.search-icon')?.setAttribute('aria-expanded', 'false');
+      }
+    });
+  });
+
+  // Escape key
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      if (flexContainer?.classList.contains('active')) {
+        flexContainer.classList.remove('active');
+        document.querySelector<HTMLElement>('.menu-icon')?.setAttribute('aria-expanded', 'false');
+      } else if (searchBox?.classList.contains('search-active')) {
+        searchBox.classList.remove('search-active');
+        document.querySelector<HTMLElement>('.search-icon')?.setAttribute('aria-expanded', 'false');
+      }
+    }
+  });
+</script>
