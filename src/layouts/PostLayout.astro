@@ -7,6 +7,7 @@ import Search from '@/components/Search.astro';
 import Newsletter from '@/components/Newsletter.astro';
 import RecentPosts from '@/components/RecentPosts.astro';
 import Utterances from '@/components/Utterances.astro';
+import CopyCode from '@/components/CopyCode.astro';
 
 interface Props {
   title: string;
@@ -93,6 +94,6 @@ const dateStr = date.toLocaleDateString('en-GB', {
     </article>
     <Search />
     <Footer />
-    <script is:inline src="/assets/js/copyCode.js"></script>
+    <CopyCode />
   </div>
 </BaseLayout>
