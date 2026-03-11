@@ -79,28 +79,40 @@ import MissingLayout from '@/layouts/MissingLayout.astro';
     </div>
   </div>
 
-  <script is:inline>
-    document.addEventListener("DOMContentLoaded", function () {
-      var body = document.getElementById("message-content");
-      setInterval(createStar, 100);
+  <script>
+    const MAX_STARS = 80;
+    let starCount = 0;
+    const body = document.getElementById('message-content');
+    if (body) {
+      const creatorInterval = setInterval(createStar, 100);
 
       function createStar() {
-        var right = Math.random() * 500;
-        var top = Math.random() * screen.height;
-        var star = document.createElement("div");
-        star.classList.add("star");
+        if (!body || starCount >= MAX_STARS) return;
+        starCount++;
+        const right = Math.random() * 500;
+        const top = Math.random() * screen.height;
+        const star = document.createElement('div');
+        star.classList.add('star');
         body.appendChild(star);
-        setInterval(runStar, 10);
-        star.style.top = top + "px";
+        star.style.top = top + 'px';
+        let pos = right;
 
-        function runStar() {
-          if (right >= screen.width) {
+        const runInterval = setInterval(() => {
+          if (pos >= screen.width) {
+            clearInterval(runInterval);
             star.remove();
+            starCount--;
+          } else {
+            pos += 3;
+            star.style.right = pos + 'px';
           }
-          right += 3;
-          star.style.right = right + "px";
-        }
+        }, 10);
       }
-    });
+
+      // Clean up on page unload (important for View Transitions)
+      document.addEventListener('astro:before-swap', () => {
+        clearInterval(creatorInterval);
+      }, { once: true });
+    }
   </script>
 </MissingLayout>

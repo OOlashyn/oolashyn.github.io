@@ -3,7 +3,9 @@ import { getCollection } from 'astro:content';
 import { siteConfig } from '@/config';
 import { getPostUrl } from '@/utils';
 
-export async function GET(context: any) {
+import type { APIContext } from 'astro';
+
+export async function GET(context: APIContext) {
   const posts = await getCollection('posts');
   const sortedPosts = posts.sort(
     (a, b) => b.data.date.getTime() - a.data.date.getTime()
@@ -12,7 +14,7 @@ export async function GET(context: any) {
   return rss({
     title: siteConfig.title,
     description: siteConfig.description,
-    site: context.site,
+    site: context.site ?? siteConfig.url,
     items: sortedPosts.map((post) => ({
       title: post.data.title,
       pubDate: post.data.date,

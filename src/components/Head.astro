@@ -48,14 +48,15 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url);
   <meta name="apple-mobile-web-app-status-bar-style" content="#311e3e" />
 
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
 
   <!-- Font Awesome -->
-  <script src="https://kit.fontawesome.com/f430ab3721.js" crossorigin="anonymous"></script>
+  <script is:inline src="https://kit.fontawesome.com/f430ab3721.js" crossorigin="anonymous"></script>
 
   <!-- Dark mode toggle web component -->
-  <script type="module" src="https://unpkg.com/dark-mode-toggle"></script>
+  <script is:inline type="module" src="https://unpkg.com/dark-mode-toggle"></script>
 
   <!-- Google verification -->
   <meta name="google-site-verification" content="e33KPrSW7_LHxFoA9XP_rkj1noTjubwKyfeCRAV9seg" />

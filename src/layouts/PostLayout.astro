@@ -20,8 +20,7 @@ interface Props {
 }
 
 const { title, description, date, img, image, tags = [], url } = Astro.props;
-const siteUrl = 'https://www.dancingwithcrm.com';
-const fullUrl = `${siteUrl}${url}`;
+const fullUrl = new URL(url, Astro.site).href;
 const dateStr = date.toLocaleDateString('en-GB', {
   day: '2-digit',
   month: 'short',

@@ -9,17 +9,21 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
+    "check": "bunx --bun astro check",
     "build": "astro build && pagefind --site dist",
     "preview": "astro build && pagefind --site dist && astro preview",
+    "clean-vite": "Remove-Item -Recurse -Force node_modules\\.vite",
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/check": "^0.9.7",
     "@astrojs/mdx": "^4.3.13",
     "@astrojs/rss": "^4.0.15",
     "@astrojs/sitemap": "^3.7.0",
     "astro": "^5.18.0",
     "rehype-external-links": "^3.0.0",
-    "sass": "^1.97.3"
+    "sass": "^1.97.3",
+    "typescript": "^5.9.3"
   },
   "devDependencies": {
     "@types/bun": "^1.3.10",

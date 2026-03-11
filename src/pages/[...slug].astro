@@ -1,6 +1,6 @@
 ---
 import PostLayout from '@/layouts/PostLayout.astro';
-import { getCollection, render } from 'astro:content';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
 import type { GetStaticPaths } from 'astro';
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -10,6 +10,10 @@ export const getStaticPaths: GetStaticPaths = async () => {
     props: { post },
   }));
 };
+
+interface Props {
+  post: CollectionEntry<'posts'>;
+}
 
 const { post } = Astro.props;
 const { Content } = await render(post);
