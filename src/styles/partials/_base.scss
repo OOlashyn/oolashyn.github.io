@@ -14,7 +14,7 @@ html {
 }
 
 body {
-  font-family: 'Montserrat', sans-serif;
+  font-family: var(--font-montserrat);
   color: var(--main-text-color);
   margin: 0;
   background-color: var(--main-bg-color);
@@ -24,8 +24,7 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Lato', sans-serif;
-  color: var(--main-h-color);
+  font-family: var(--font-lato);
   font-weight: 400;
 }
 

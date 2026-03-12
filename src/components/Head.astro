@@ -1,5 +1,6 @@
 ---
 import { siteConfig } from '@/config';
+import { Font } from 'astro:assets';
 
 interface Props {
   title?: string;
@@ -47,10 +48,9 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url);
   <meta name="msapplication-navbutton-color" content="#311e3e" />
   <meta name="apple-mobile-web-app-status-bar-style" content="#311e3e" />
 
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <!-- Fonts -->
+  <Font cssVariable="--font-montserrat" preload />
+  <Font cssVariable="--font-lato" preload />
 
   <!-- Font Awesome -->
   <script is:inline src="https://kit.fontawesome.com/f430ab3721.js" crossorigin="anonymous"></script>
