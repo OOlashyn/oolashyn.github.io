@@ -17,22 +17,40 @@
 </div>
 
 <script>
-  // Dynamically load Pagefind assets to avoid 404s in dev mode
-  const link = document.createElement('link');
-  link.rel = 'stylesheet';
-  link.href = '/pagefind/pagefind-ui.css';
-  link.onerror = () => console.warn('Pagefind CSS not found — run "bun run build" to generate search index.');
-  document.head.appendChild(link);
+  function initPagefind() {
+    const el = document.getElementById('pagefind-search');
+    if (!el) return;
 
-  const script = document.createElement('script');
-  script.src = '/pagefind/pagefind-ui.js';
-  script.onload = () => {
-    new (window as any).PagefindUI({
-      element: '#pagefind-search',
-      showSubResults: true,
-      showImages: false,
-    });
-  };
-  script.onerror = () => console.warn('Pagefind JS not found — run "bun run build" to generate search index.');
-  document.head.appendChild(script);
+    // Always ensure CSS is in <head> — ClientRouter swaps <head> and removes dynamically injected links
+    if (!document.querySelector('link[href="/pagefind/pagefind-ui.css"]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = '/pagefind/pagefind-ui.css';
+      link.onerror = () => console.warn('Pagefind CSS not found — run "bun run build" first.');
+      document.head.appendChild(link);
+    }
+
+    if ((window as any).PagefindUI) {
+      // JS already loaded — re-instantiate into the fresh DOM node
+      el.innerHTML = '';
+      new (window as any).PagefindUI({ element: '#pagefind-search', showSubResults: true, showImages: false });
+      return;
+    }
+
+    // First time — load JS, then instantiate
+    if (!document.querySelector('script[src="/pagefind/pagefind-ui.js"]')) {
+      const script = document.createElement('script');
+      script.src = '/pagefind/pagefind-ui.js';
+      script.onload = () => {
+        new (window as any).PagefindUI({ element: '#pagefind-search', showSubResults: true, showImages: false });
+      };
+      script.onerror = () => console.warn('Pagefind JS not found — run "bun run build" first.');
+      document.head.appendChild(script);
+    }
+  }
+
+  // Runs on every ClientRouter navigation (including initial load and back/forward via ClientRouter)
+  document.addEventListener('astro:page-load', initPagefind);
+  // bfcache restore: browser may skip ClientRouter, fire pageshow instead
+  window.addEventListener('pageshow', (e) => { if (e.persisted) initPagefind(); });
 </script>

@@ -2,69 +2,73 @@
 ---
 
 <script>
-  // Abort previous listeners to prevent duplicates when ClientRouter re-runs this script.
-  // The header is transition:persist, so its DOM elements are the same across navigations.
-  if ((window as unknown as Record<string, unknown>).__headerAbort) {
-    ((window as unknown as Record<string, unknown>).__headerAbort as AbortController).abort();
-  }
-  const controller = new AbortController();
-  (window as unknown as Record<string, unknown>).__headerAbort = controller;
-  const { signal } = controller;
+  function initHeaderInteractions() {
+    const w = window as unknown as Record<string, unknown>;
+    if (w.__headerAbort) (w.__headerAbort as AbortController).abort();
+    const controller = new AbortController();
+    w.__headerAbort = controller;
+    const { signal } = controller;
 
-  const pageWrapper = document.querySelector<HTMLElement>('div.page-wrapper');
-  const searchBox = document.querySelector<HTMLElement>('.search-box');
+    const pageWrapper = document.querySelector<HTMLElement>('div.page-wrapper');
 
-  // Menu open/close
-  document.querySelectorAll<HTMLElement>('.menu-icon, .menu-icon-close').forEach((el) => {
-    el.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const isOpen = pageWrapper?.classList.toggle('active') ?? false;
-      document.querySelector<HTMLElement>('.menu-icon')?.setAttribute('aria-expanded', String(isOpen));
-    }, { signal });
-  });
+    // Menu open/close
+    document.querySelectorAll<HTMLElement>('.menu-icon, .menu-icon-close').forEach((el) => {
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const isOpen = pageWrapper?.classList.toggle('active') ?? false;
+        document.querySelector<HTMLElement>('.menu-icon')?.setAttribute('aria-expanded', String(isOpen));
+      }, { signal });
+    });
 
-  // Click outside menu to close
-  pageWrapper?.addEventListener('click', (e) => {
-    if (pageWrapper.classList.contains('active') && (e.target as HTMLElement).tagName !== 'A') {
-      pageWrapper.classList.remove('active');
-      document.querySelector<HTMLElement>('.menu-icon')?.setAttribute('aria-expanded', 'false');
-    }
-  }, { signal });
-
-  // Search open
-  document.querySelectorAll<HTMLElement>('.search-icon').forEach((el) => {
-    el.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (searchBox) {
-        searchBox.classList.add('search-active');
-        el.setAttribute('aria-expanded', 'true');
-        searchBox.querySelector<HTMLElement>('input')?.focus();
-      }
-    }, { signal });
-  });
-
-  // Search close
-  document.querySelectorAll<HTMLElement>('.search-icon-close').forEach((el) => {
-    el.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (searchBox) {
-        searchBox.classList.remove('search-active');
-        document.querySelector<HTMLElement>('.search-icon')?.setAttribute('aria-expanded', 'false');
-      }
-    }, { signal });
-  });
-
-  // Escape key
-  window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      if (pageWrapper?.classList.contains('active')) {
+    // Click outside menu to close
+    pageWrapper?.addEventListener('click', (e) => {
+      if (pageWrapper.classList.contains('active') && (e.target as HTMLElement).tagName !== 'A') {
         pageWrapper.classList.remove('active');
         document.querySelector<HTMLElement>('.menu-icon')?.setAttribute('aria-expanded', 'false');
-      } else if (searchBox?.classList.contains('search-active')) {
-        searchBox.classList.remove('search-active');
-        document.querySelector<HTMLElement>('.search-icon')?.setAttribute('aria-expanded', 'false');
       }
-    }
-  }, { signal });
+    }, { signal });
+
+    // Search open
+    document.querySelectorAll<HTMLElement>('.search-icon').forEach((el) => {
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        const searchBox = document.querySelector<HTMLElement>('.search-box');
+        if (searchBox) {
+          searchBox.classList.add('search-active');
+          el.setAttribute('aria-expanded', 'true');
+          searchBox.querySelector<HTMLElement>('input')?.focus();
+        }
+      }, { signal });
+    });
+
+    // Search close
+    document.querySelectorAll<HTMLElement>('.search-icon-close').forEach((el) => {
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        const searchBox = document.querySelector<HTMLElement>('.search-box');
+        if (searchBox) {
+          searchBox.classList.remove('search-active');
+          document.querySelector<HTMLElement>('.search-icon')?.setAttribute('aria-expanded', 'false');
+        }
+      }, { signal });
+    });
+
+    // Escape key
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const searchBox = document.querySelector<HTMLElement>('.search-box');
+        if (pageWrapper?.classList.contains('active')) {
+          pageWrapper.classList.remove('active');
+          document.querySelector<HTMLElement>('.menu-icon')?.setAttribute('aria-expanded', 'false');
+        } else if (searchBox?.classList.contains('search-active')) {
+          searchBox.classList.remove('search-active');
+          document.querySelector<HTMLElement>('.search-icon')?.setAttribute('aria-expanded', 'false');
+        }
+      }
+    }, { signal });
+  }
+
+  document.addEventListener('astro:page-load', initHeaderInteractions);
+  window.addEventListener('pageshow', (e) => { if (e.persisted) initHeaderInteractions(); });
 </script>
