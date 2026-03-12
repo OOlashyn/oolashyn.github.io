@@ -1,6 +1,5 @@
 ---
 import BaseLayout from './BaseLayout.astro';
-import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
 import UkraineBanner from '@/components/UkraineBanner.astro';
 import Search from '@/components/Search.astro';
@@ -30,7 +29,6 @@ const dateStr = date.toLocaleDateString('en-GB', {
 
 <BaseLayout title={title} description={description} image={image}>
   <div class="flex-container">
-    <Header />
     <article class="article-page" data-pagefind-body>
       {img && (
         <div class="page-image">

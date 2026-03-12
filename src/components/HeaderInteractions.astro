@@ -11,7 +11,7 @@
   (window as unknown as Record<string, unknown>).__headerAbort = controller;
   const { signal } = controller;
 
-  const flexContainer = document.querySelector<HTMLElement>('div.flex-container');
+  const pageWrapper = document.querySelector<HTMLElement>('div.page-wrapper');
   const searchBox = document.querySelector<HTMLElement>('.search-box');
 
   // Menu open/close
@@ -19,15 +19,15 @@
     el.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
-      const isOpen = flexContainer?.classList.toggle('active') ?? false;
+      const isOpen = pageWrapper?.classList.toggle('active') ?? false;
       document.querySelector<HTMLElement>('.menu-icon')?.setAttribute('aria-expanded', String(isOpen));
     }, { signal });
   });
 
   // Click outside menu to close
-  flexContainer?.addEventListener('click', (e) => {
-    if (flexContainer.classList.contains('active') && (e.target as HTMLElement).tagName !== 'A') {
-      flexContainer.classList.remove('active');
+  pageWrapper?.addEventListener('click', (e) => {
+    if (pageWrapper.classList.contains('active') && (e.target as HTMLElement).tagName !== 'A') {
+      pageWrapper.classList.remove('active');
       document.querySelector<HTMLElement>('.menu-icon')?.setAttribute('aria-expanded', 'false');
     }
   }, { signal });
@@ -58,8 +58,8 @@
   // Escape key
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-      if (flexContainer?.classList.contains('active')) {
-        flexContainer.classList.remove('active');
+      if (pageWrapper?.classList.contains('active')) {
+        pageWrapper.classList.remove('active');
         document.querySelector<HTMLElement>('.menu-icon')?.setAttribute('aria-expanded', 'false');
       } else if (searchBox?.classList.contains('search-active')) {
         searchBox.classList.remove('search-active');

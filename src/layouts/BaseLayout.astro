@@ -1,8 +1,8 @@
 ---
 import Head from '@/components/Head.astro';
+import Header from '@/components/Header.astro';
 import Analytics from '@/components/Analytics.astro';
 import HeaderInteractions from '@/components/HeaderInteractions.astro';
-import { ClientRouter } from 'astro:transitions';
 import '@/styles/main.scss';
 
 import darkCssUrl from '@/styles/dark.scss?url';
@@ -19,12 +19,12 @@ const { title, description, image } = Astro.props;
 
 <!DOCTYPE html>
 <html lang="en">
-  <Head title={title} description={description} image={image} />
-  <ClientRouter />
-  <link rel="stylesheet" href={darkCssUrl} media="(prefers-color-scheme: dark)" />
-  <link rel="stylesheet" href={lightCssUrl} media="(prefers-color-scheme: light)" />
+  <Head title={title} description={description} image={image} darkCssUrl={darkCssUrl} lightCssUrl={lightCssUrl} />
   <body>
-    <slot />
+    <div class="page-wrapper">
+      <Header />
+      <slot />
+    </div>
     <HeaderInteractions />
     <Analytics />
     <!-- Preserve Font Awesome's dynamically injected styles across ClientRouter navigations -->

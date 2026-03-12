@@ -1,14 +1,17 @@
 ---
 import { siteConfig } from '@/config';
 import { Font } from 'astro:assets';
+import { ClientRouter } from 'astro:transitions';
 
 interface Props {
   title?: string;
   description?: string;
   image?: string;
+  darkCssUrl: string;
+  lightCssUrl: string;
 }
 
-const { title, description, image } = Astro.props;
+const { title, description, image, darkCssUrl, lightCssUrl } = Astro.props;
 const pageTitle = title ? `${title} - ${siteConfig.title}` : siteConfig.title;
 const pageDescription = description || siteConfig.description;
 const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url);
@@ -48,6 +51,10 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url);
   <meta name="msapplication-navbutton-color" content="#311e3e" />
   <meta name="apple-mobile-web-app-status-bar-style" content="#311e3e" />
 
+  <!-- Theme stylesheets -->
+  <link rel="stylesheet" href={darkCssUrl} media="(prefers-color-scheme: dark)" />
+  <link rel="stylesheet" href={lightCssUrl} media="(prefers-color-scheme: light)" />
+
   <!-- Fonts -->
   <Font cssVariable="--font-montserrat" preload />
   <Font cssVariable="--font-lato" preload />
@@ -60,4 +67,6 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url);
 
   <!-- Google verification -->
   <meta name="google-site-verification" content="e33KPrSW7_LHxFoA9XP_rkj1noTjubwKyfeCRAV9seg" />
+
+  <ClientRouter />
 </head>

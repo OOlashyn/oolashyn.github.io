@@ -70,14 +70,14 @@ pre {
   width:57%;
 }
 
-.flex-container {
+.page-wrapper {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   transition: transform .4s cubic-bezier(0.16, 0.68, 0.43, 0.99);
 }
 
-.flex-container.active {
+.page-wrapper.active {
   transform: translate3d(300px, 0, 0);
   &::after {
     content: "";
@@ -89,6 +89,12 @@ pre {
     z-index: 2;
     background-color: rgba(0,0,0,0.5);
   }
+}
+
+.flex-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 .content {
