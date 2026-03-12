@@ -2,6 +2,15 @@
 ---
 
 <script>
+  // Abort previous listeners to prevent duplicates when ClientRouter re-runs this script.
+  // The header is transition:persist, so its DOM elements are the same across navigations.
+  if ((window as unknown as Record<string, unknown>).__headerAbort) {
+    ((window as unknown as Record<string, unknown>).__headerAbort as AbortController).abort();
+  }
+  const controller = new AbortController();
+  (window as unknown as Record<string, unknown>).__headerAbort = controller;
+  const { signal } = controller;
+
   const flexContainer = document.querySelector<HTMLElement>('div.flex-container');
   const searchBox = document.querySelector<HTMLElement>('.search-box');
 
@@ -12,7 +21,7 @@
       e.stopPropagation();
       const isOpen = flexContainer?.classList.toggle('active') ?? false;
       document.querySelector<HTMLElement>('.menu-icon')?.setAttribute('aria-expanded', String(isOpen));
-    });
+    }, { signal });
   });
 
   // Click outside menu to close
@@ -21,7 +30,7 @@
       flexContainer.classList.remove('active');
       document.querySelector<HTMLElement>('.menu-icon')?.setAttribute('aria-expanded', 'false');
     }
-  });
+  }, { signal });
 
   // Search open
   document.querySelectorAll<HTMLElement>('.search-icon').forEach((el) => {
@@ -32,7 +41,7 @@
         el.setAttribute('aria-expanded', 'true');
         searchBox.querySelector<HTMLElement>('input')?.focus();
       }
-    });
+    }, { signal });
   });
 
   // Search close
@@ -43,7 +52,7 @@
         searchBox.classList.remove('search-active');
         document.querySelector<HTMLElement>('.search-icon')?.setAttribute('aria-expanded', 'false');
       }
-    });
+    }, { signal });
   });
 
   // Escape key
@@ -57,5 +66,5 @@
         document.querySelector<HTMLElement>('.search-icon')?.setAttribute('aria-expanded', 'false');
       }
     }
-  });
+  }, { signal });
 </script>
