@@ -1,6 +1,5 @@
 .main-header {
   font-family: var(--font-lato);
-  // padding: 15px 0;
   background-color: var(--main-bg-color);
   box-shadow: 0px -5px 15px rgba(0,0,0,.3);
 
@@ -9,66 +8,68 @@
     justify-content: space-between;
     align-items: center;
   }
+
   .logo {
-    width: 50%;
-    text-align: center;
-    a {
-      text-decoration: none;
-      text-transform: uppercase;
-      font-size: 27px;
-      font-weight: 300;
-      color: var(--dark-purple);
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+
+    .img-logo {
+      height: 70px;
+      display: block;
     }
   }
 }
 
+// Desktop inline nav — default (>768px)
 .main-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 10;
-  width: 300px;
-  height: 100%;
-  background-color: var(--main-bg-color);
-  padding: 25px 30px;
-  transform: translate3d(-300px, 0, 0);
+  display: flex;
+  align-items: center;
+
+  .menu-icon-close {
+    display: none;
+  }
+
   ul {
-    padding: 15px 0 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0;
     margin: 0;
     list-style: none;
 
     li {
-      border-bottom: 1px solid var(--lighten-gray);
       a {
         display: block;
-        padding: 15px 0;
+        padding: 8px 12px;
         text-decoration: none;
         text-transform: uppercase;
         font-weight: 400;
-        font-size: 18px;
-        color: var(--link-color);
+        font-size: 15px;
+        color: var(--main-text-color);
         &:hover {
           opacity: .8;
-          color: var(--link-hover-color);
+          color: var(--main-text-color);
         }
       }
     }
   }
 }
 
+// Hamburger hidden on desktop
 .menu-icon-container {
-  width: 25%;
-  text-align: left;
+  display: none;
 }
 
 .search-icon-container {
-  width: 25%;
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  margin-left: auto;
 }
 
-dark-mode-toggle::part(toggleLabel)::before{
+dark-mode-toggle::part(toggleLabel)::before {
   margin-top: -10px;
 }
 
@@ -88,5 +89,59 @@ dark-mode-toggle::part(toggleLabel)::before{
   transition: all .4s;
   &:hover {
     color: var(--icon--hover-color);
+  }
+}
+
+// Mobile — restore hamburger + centered logo + sidebar nav
+@media only screen and (max-width: 768px) {
+  .menu-icon-container {
+    display: block;
+    width: 25%;
+    text-align: left;
+  }
+
+  .main-header {
+    .logo {
+      .img-logo {
+        height: 55px;
+      }
+    }
+  }
+
+  .search-icon-container {
+    width: 25%;
+    margin-left: 0;
+  }
+
+  .main-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    width: 300px;
+    height: 100%;
+    background-color: var(--main-bg-color);
+    padding: 25px 30px;
+    transform: translate3d(-300px, 0, 0);
+    display: block;
+
+    .menu-icon-close {
+      display: inline-flex;
+    }
+
+    ul {
+      flex-direction: column;
+      gap: 0;
+      padding: 15px 0 0;
+
+      li {
+        border-bottom: 1px solid var(--lighten-gray);
+
+        a {
+          padding: 15px 0;
+          font-size: 18px;
+        }
+      }
+    }
   }
 }

@@ -1,13 +1,5 @@
 /* Small Devices, Tablets */
 @media only screen and (max-width: 768px) {
-  .main-header {
-    .logo {
-      a {
-        font-size: 24px;
-      }
-    }
-  }
-
   .recent-box {
     .recent-list {
       .recent-item {
@@ -56,14 +48,6 @@
 
     .page-date {
       font-size: 14px;
-    }
-  }
-
-  .main-header {
-    .logo {
-      a {
-        font-size: 21px;
-      }
     }
   }
 
