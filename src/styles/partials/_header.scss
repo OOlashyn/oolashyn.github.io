@@ -53,6 +53,10 @@
           color: var(--main-text-color);
         }
       }
+
+      &.mobile-only {
+        display: none;
+      }
     }
   }
 }
@@ -131,11 +135,17 @@ dark-mode-toggle::part(toggleLabel)::before {
 
     ul {
       flex-direction: column;
+      align-items: flex-start;
       gap: 0;
       padding: 15px 0 0;
 
       li {
+        width: 100%;
         border-bottom: 1px solid var(--lighten-gray);
+
+        &.mobile-only {
+          display: list-item;
+        }
 
         a {
           padding: 15px 0;
