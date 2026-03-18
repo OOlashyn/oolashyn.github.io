@@ -4,21 +4,22 @@ import { getPostUrl } from '@/utils';
 
 interface Props {
   post: CollectionEntry<'posts'>;
+  gridCard?: boolean;
 }
 
-const { post } = Astro.props;
+const { post, gridCard = false } = Astro.props;
 ---
 
-<li class="article">
-  <article class="flex-column flex-row-lg post-card">
-    <a href={getPostUrl(post.id)} aria-label={post.data.title} class="col-item">
+<li class={gridCard ? 'article grid-item' : 'article'}>
+  <article class={`flex-column post-card${gridCard ? ' grid-card' : ' flex-row-lg'}`}>
+    <a href={getPostUrl(post.id)} aria-label={post.data.title} class={gridCard ? 'card-img-link' : 'col-item'}>
       <img
         class="post-card-image"
         src={`/assets/img/${post.data.img}`}
         alt=""
       />
     </a>
-    <div class="col-item post-card-body">
+    <div class={gridCard ? 'post-card-body' : 'col-item post-card-body'}>
       <div>
         <span>
           <i class="far fa-clock"></i>
@@ -57,6 +58,12 @@ const { post } = Astro.props;
     list-style: none;
     margin-bottom: 3rem;
     transition: all .3s;
+  }
+
+  li.article.grid-item {
+    margin-bottom: 0;
+    display: flex;
+    flex-direction: column;
   }
 
   @media (min-width: 768px) {

@@ -46,7 +46,7 @@ const nextUrl = currentPage < totalPages ? `/page${currentPage + 1}/` : undefine
   previousUrl={previousUrl}
   nextUrl={nextUrl}
 >
-  <ol class="post-card-box">
-    {posts.map((post) => <PostCard post={post} />)}
+  <ol class="post-card-grid">
+    {posts.map((post) => <PostCard post={post} gridCard={true} />)}
   </ol>
 </HomeLayout>

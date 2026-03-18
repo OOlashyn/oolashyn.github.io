@@ -20,7 +20,7 @@ const nextUrl = totalPages > 1 ? '/page2/' : undefined;
   description={siteConfig.description}
   nextUrl={nextUrl}
 >
-  <ol class="post-card-box">
-    {posts.map((post) => <PostCard post={post} />)}
+  <ol class="post-card-grid">
+    {posts.map((post) => <PostCard post={post} gridCard={true} />)}
   </ol>
 </HomeLayout>
