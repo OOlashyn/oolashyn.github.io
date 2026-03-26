@@ -16,11 +16,11 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.7",
-    "@astrojs/mdx": "5.0.0",
+    "@astrojs/check": "0.9.8",
+    "@astrojs/mdx": "5.0.2",
     "@astrojs/rss": "4.0.17",
     "@astrojs/sitemap": "3.7.1",
-    "astro": "6.0.2",
+    "astro": "6.0.8",
     "rehype-external-links": "^3.0.0",
     "sass": "^1.97.3",
     "typescript": "^5.9.3"
