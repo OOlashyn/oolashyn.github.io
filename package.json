@@ -17,10 +17,10 @@
   },
   "dependencies": {
     "@astrojs/check": "0.9.8",
-    "@astrojs/mdx": "5.0.2",
-    "@astrojs/rss": "4.0.17",
-    "@astrojs/sitemap": "3.7.1",
-    "astro": "6.0.8",
+    "@astrojs/mdx": "5.0.3",
+    "@astrojs/rss": "4.0.18",
+    "@astrojs/sitemap": "3.7.2",
+    "astro": "6.1.2",
     "rehype-external-links": "^3.0.0",
     "sass": "^1.97.3",
     "typescript": "^5.9.3"
