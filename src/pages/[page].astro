@@ -18,12 +18,14 @@ export const getStaticPaths: GetStaticPaths = async () => {
   );
 
   const postsPerPage = siteConfig.postsPerPage;
-  const totalPages = Math.ceil(sortedPosts.length / postsPerPage);
+  // Subtract 1 because page 1 (index route) uses the first post as a hero above the grid
+  const totalPages = Math.ceil((sortedPosts.length - 1) / postsPerPage);
 
   // Pages start at 2 (page 1 is the index route `/`)
+  // Add 1 to start offset to skip the hero post that is shown on page 1
   return Array.from({ length: totalPages - 1 }, (_, i) => {
     const pageNum = i + 2;
-    const start = (pageNum - 1) * postsPerPage;
+    const start = (pageNum - 1) * postsPerPage + 1;
     return {
       params: { page: `page${pageNum}` },
       props: {

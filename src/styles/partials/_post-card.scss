@@ -28,6 +28,11 @@
   }
 }
 
+.tag-link {
+  text-decoration: none;
+  font-weight: 600;
+}
+
 .post-card {
   display: flex;
 
@@ -62,11 +67,6 @@
   
     .tag{
       margin-right: 0.5rem;
-    }
-  
-    .tag-link{
-      text-decoration: none;
-      font-weight: 600;
     }
   
   }

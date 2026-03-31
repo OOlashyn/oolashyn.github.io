@@ -1,0 +1,53 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getPostUrl } from '@/utils';
+
+interface Props {
+  post: CollectionEntry<'posts'>;
+}
+
+const { post } = Astro.props;
+const category = post.data.tags?.[0] ?? null;
+---
+
+<div class="hero-post">
+  <a href={getPostUrl(post.id)} aria-label={post.data.title} class="hero-post__image-link">
+    <img
+      class="hero-post__image"
+      src={`/assets/img/${post.data.img}`}
+      alt=""
+    />
+  </a>
+  <div class="hero-post__content">
+    <div class="hero-post__meta">
+      {category && (
+        <ul class="tag-list hero-post__tags">
+          <li class="tag">
+            <a href={`/tags/#${category}`} class="tag-link">#{category}</a>
+          </li>
+        </ul>
+      )}
+      <span class="hero-post__date">
+        <i class="far fa-clock"></i>
+        <time datetime={post.data.date.toISOString()}>
+          {post.data.date.toLocaleDateString('en-GB', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric',
+          })}
+        </time>
+      </span>
+    </div>
+    <h2 class="hero-post__title">
+      <a href={getPostUrl(post.id)} class="hero-post__title-link">
+        {post.data.title}
+      </a>
+    </h2>
+    <p class="hero-post__description">
+      {post.data.shortDescription || post.data.description}
+    </p>
+    <a href={getPostUrl(post.id)} class="hero-post__cta">
+      Read the Full Article
+    </a>
+  </div>
+</div>
