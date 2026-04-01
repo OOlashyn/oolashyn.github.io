@@ -65,13 +65,44 @@
       }, { signal });
     });
 
+    // Focus trap inside subscribe modal
+    document.addEventListener('keydown', (e) => {
+      const modal = document.querySelector<HTMLElement>('#subscribe-modal');
+      if (!modal?.classList.contains('is-open')) return;
+      if (e.key !== 'Tab') return;
+
+      const focusable = Array.from(
+        modal.querySelectorAll<HTMLElement>(
+          'input:not([type="hidden"]), button, [tabindex]:not([tabindex="-1"])'
+        )
+      ).filter((el) => !(el as HTMLInputElement | HTMLButtonElement).disabled);
+
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    }, { signal });
+
     // Subscribe modal close — X button
     document.querySelectorAll<HTMLElement>('.subscribe-modal__close').forEach((el) => {
       el.addEventListener('click', () => {
         const modal = document.querySelector<HTMLElement>('#subscribe-modal');
         if (!modal) return;
         modal.classList.remove('is-open');
-        document.querySelector<HTMLElement>('#subscribe-trigger')?.setAttribute('aria-expanded', 'false');
+        const trigger = document.querySelector<HTMLElement>('#subscribe-trigger');
+        trigger?.setAttribute('aria-expanded', 'false');
+        trigger?.focus();
       }, { signal });
     });
 
@@ -80,7 +111,9 @@
       modal.addEventListener('click', (e) => {
         if (e.target === modal) {
           modal.classList.remove('is-open');
-          document.querySelector<HTMLElement>('#subscribe-trigger')?.setAttribute('aria-expanded', 'false');
+          const trigger = document.querySelector<HTMLElement>('#subscribe-trigger');
+          trigger?.setAttribute('aria-expanded', 'false');
+          trigger?.focus();
         }
       }, { signal });
     });
@@ -92,7 +125,9 @@
         const modal = document.querySelector<HTMLElement>('#subscribe-modal');
         if (modal?.classList.contains('is-open')) {
           modal.classList.remove('is-open');
-          document.querySelector<HTMLElement>('#subscribe-trigger')?.setAttribute('aria-expanded', 'false');
+          const trigger = document.querySelector<HTMLElement>('#subscribe-trigger');
+          trigger?.setAttribute('aria-expanded', 'false');
+          trigger?.focus();
         } else if (pageWrapper?.classList.contains('active')) {
           pageWrapper.classList.remove('active');
           document.querySelector<HTMLElement>('.menu-icon')?.setAttribute('aria-expanded', 'false');

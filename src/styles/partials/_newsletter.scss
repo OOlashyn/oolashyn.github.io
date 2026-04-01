@@ -13,6 +13,11 @@
     &_email{
         width:100%;
         padding: 10px;
+        border-radius: 0.25rem 0 0 0.25rem;
+
+        @media only screen and (max-width: 480px) {
+            border-radius: 0.25rem;
+        }
     }
 
     &_submit{
@@ -22,6 +27,11 @@
         padding: 15px 50px;
         cursor: pointer;
         text-transform: uppercase;
+        border-radius: 0 0.25rem 0.25rem 0;
+
+        @media only screen and (max-width: 480px) {
+            border-radius: 0.25rem;
+        }
 
         &:hover{
             border: 5px solid var(--newsletter-btn-clr-hvr);

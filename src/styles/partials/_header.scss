@@ -68,7 +68,7 @@
 }
 
 .nav-subscribe-btn {
-  background-color: var(--purple);
+  background-color: var(--deep-purple);
   color: var(--white);
   border: none;
   border-radius: 0.2rem;
@@ -82,7 +82,7 @@
   transition: background-color 0.2s ease;
 
   &:hover {
-    background-color: var(--deep-purple);
+    background-color: var(--dark-purple);
     color: var(--white);
   }
 }

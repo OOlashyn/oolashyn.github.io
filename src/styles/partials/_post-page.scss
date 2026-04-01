@@ -140,68 +140,26 @@
     display: block;
 }
 
-.newsletter {
-  text-align: center;
+.dwc-newsletter {
   margin-top: 30px;
   padding-bottom: 60px;
   margin-bottom: 30px;
   border-bottom: 1px solid var(--gray);
-  .newsletter-title {
-    font-weight: 400;
-  }
-  .form-container {
-    padding: 30px;
-    background-color: var(--gray);
-    width: 720px;
-    max-width: 100%;
-    margin: 0 auto;
-    p {
-      margin: 0;
+
+  // Only override border-radius — let _newsletter.scss handle layout/colors
+  .email-input {
+    border-radius: 0.25rem 0 0 0.25rem;
+
+    @media (max-width: 480px) {
+      border-radius: 0.25rem;
     }
   }
-  .screen-reader-text {
-    clip: rect(1px, 1px, 1px, 1px);
-    height: 1px;
-    overflow: hidden;
-    position: absolute !important;
-    width: 1px;
-    word-wrap: normal !important;
-  }
-  .newsletter-box {
-    position: relative;
-    max-width: 100%;
-    margin: 25px 0;
-    display: flex;
-    align-items: stretch;
-    .email-input {
-      flex-grow: 1;
-      height: 40px;
-      padding: 8px 10px;
-      width: 100%;
-      max-width: 100%;
-      color: var(--dark-gray);
-      border: none;
-      border-radius: 2px;
-      font-size: 14px;
-      outline: none;
-    }
-    .subscribe-btn {
-      flex-shrink: 0;
-      width: 100px;
-      height: 40px;
-      font-size: 14px;
-      text-align: center;
-      color: var(--white);
-      background-color: var(--dark-purple);
-      vertical-align: baseline;
-      cursor: pointer;
-      border: none;
-      border-radius: 2px;
-      outline: none;
-      transition: all .3s;
-      &:hover {
-        background-color: var(--dark-pink);
-      }
+
+  .newsletter-box_submit {
+    border-radius: 0 0.25rem 0.25rem 0;
+
+    @media (max-width: 480px) {
+      border-radius: 0.25rem;
     }
   }
 }
