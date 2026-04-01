@@ -1,4 +1,5 @@
 ---
+import SubscribeModal from '@/components/SubscribeModal.astro';
 ---
 
 <header class="main-header">
@@ -22,6 +23,11 @@
           <li class="mobile-only"><a href="/">Blog</a></li>
           <li><a href="/about/">About</a></li>
           <li><a href="/projects/">Projects</a></li>
+          <li class="nav-subscribe-item">
+            <button class="nav-subscribe-btn" id="subscribe-trigger" aria-expanded="false" aria-controls="subscribe-modal">
+              Subscribe
+            </button>
+          </li>
         </ul>
       </nav>
       <div class="search-icon-container">
@@ -33,3 +39,4 @@
     </div>
   </div>
 </header>
+<SubscribeModal />

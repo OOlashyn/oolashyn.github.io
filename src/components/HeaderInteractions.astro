@@ -54,11 +54,46 @@
       }, { signal });
     });
 
+    // Subscribe modal open
+    document.querySelectorAll<HTMLElement>('#subscribe-trigger').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const modal = document.querySelector<HTMLElement>('#subscribe-modal');
+        if (!modal) return;
+        modal.classList.add('is-open');
+        btn.setAttribute('aria-expanded', 'true');
+        modal.querySelector<HTMLElement>('#subscribe-modal-email')?.focus();
+      }, { signal });
+    });
+
+    // Subscribe modal close — X button
+    document.querySelectorAll<HTMLElement>('.subscribe-modal__close').forEach((el) => {
+      el.addEventListener('click', () => {
+        const modal = document.querySelector<HTMLElement>('#subscribe-modal');
+        if (!modal) return;
+        modal.classList.remove('is-open');
+        document.querySelector<HTMLElement>('#subscribe-trigger')?.setAttribute('aria-expanded', 'false');
+      }, { signal });
+    });
+
+    // Subscribe modal close — click on backdrop (not card)
+    document.querySelectorAll<HTMLElement>('#subscribe-modal').forEach((modal) => {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.classList.remove('is-open');
+          document.querySelector<HTMLElement>('#subscribe-trigger')?.setAttribute('aria-expanded', 'false');
+        }
+      }, { signal });
+    });
+
     // Escape key
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         const searchBox = document.querySelector<HTMLElement>('.search-box');
-        if (pageWrapper?.classList.contains('active')) {
+        const modal = document.querySelector<HTMLElement>('#subscribe-modal');
+        if (modal?.classList.contains('is-open')) {
+          modal.classList.remove('is-open');
+          document.querySelector<HTMLElement>('#subscribe-trigger')?.setAttribute('aria-expanded', 'false');
+        } else if (pageWrapper?.classList.contains('active')) {
           pageWrapper.classList.remove('active');
           document.querySelector<HTMLElement>('.menu-icon')?.setAttribute('aria-expanded', 'false');
         } else if (searchBox?.classList.contains('search-active')) {
