@@ -6,7 +6,7 @@ import type { GetStaticPaths } from 'astro';
 export const getStaticPaths: GetStaticPaths = async () => {
   const posts = await getCollection('posts');
   return posts.map((post) => ({
-    params: { slug: post.id.replace(/\.mdx?$/, '') },
+    params: { slug: post.id.replace(/\.mdx?$/, '').replace(/^\d{4}-\d{2}-\d{2}-/, '') },
     props: { post },
   }));
 };
