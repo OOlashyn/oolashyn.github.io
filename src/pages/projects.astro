@@ -15,7 +15,7 @@ import { Icon } from 'astro-icon/components';
           <div class="projects-header">
             <h2 class="projects-title">
               {project.title}
-              <a class="project-ext-link" href={project.extLink}>
+              <a class="project-ext-link" href={project.extLink} aria-label={`View ${project.title}`}>
                 <Icon name="lucide:external-link" aria-hidden="true" />
               </a>
             </h2>
