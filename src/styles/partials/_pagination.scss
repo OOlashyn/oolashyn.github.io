@@ -7,6 +7,9 @@
     float: right;
   }
   .previous, .next {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
     text-decoration: none;
     text-transform: uppercase;
     font-size: 20px;
