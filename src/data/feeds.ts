@@ -150,14 +150,17 @@ export async function generateRssXml(context: APIContext): Promise<string> {
   let xml = feed.rss2();
 
   xml = xml.replace(
-    '<rss version="2.0">',
-    '<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/">'
+    /(<rss\b)([^>]*>)/,
+    (_, tag, rest) =>
+      rest.includes('xmlns:media')
+        ? `${tag}${rest}`
+        : `${tag} xmlns:media="http://search.yahoo.com/mrss/"${rest}`
   );
 
-  // The feed package renders item images as <enclosure url="..." length="0" type="image/jpg"/>
+  // The feed package renders item images as <enclosure url="..." length="0" type="image/..."/>
   // Append <media:content> alongside each enclosure so Mailchimp picks it up via *|RSSITEM:IMAGE|*
   xml = xml.replace(
-    /<enclosure url="([^"]+)" length="0" type="image\/jpg"\/>/g,
+    /<enclosure url="([^"]+)" length="0" type="image\/[^"]+"\s*\/>/g,
     (match, url) =>
       `${match}\n        <media:content url="${url}" medium="image"/>`
   );
