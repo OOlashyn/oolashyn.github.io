@@ -19,36 +19,36 @@ import { Icon } from 'astro-icon/components';
         <ul class="contact-list">
           {siteConfig.email && (
             <li class="email">
-              <a href={`mailto:${siteConfig.email}`}>
-                <Icon name="lucide:mail" />
+              <a href={`mailto:${siteConfig.email}`} aria-label="Email">
+                <Icon name="lucide:mail" aria-hidden="true" />
               </a>
             </li>
           )}
           {siteConfig.website && (
             <li class="website">
-              <a href={`https://${siteConfig.website}`} target="_blank" rel="noopener noreferrer">
-                <Icon name="lucide:globe" />
+              <a href={`https://${siteConfig.website}`} target="_blank" rel="noopener noreferrer" aria-label="Website">
+                <Icon name="lucide:globe" aria-hidden="true" />
               </a>
             </li>
           )}
           {siteConfig.linkedin && (
             <li class="linkedin">
-              <a href={`https://www.linkedin.com/in/${siteConfig.linkedin}`} target="_blank" rel="noopener noreferrer">
-                <Icon name="simple-icons:linkedin" />
+              <a href={`https://www.linkedin.com/in/${siteConfig.linkedin}`} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                <Icon name="simple-icons:linkedin" aria-hidden="true" />
               </a>
             </li>
           )}
           {siteConfig.github && (
             <li class="github">
-              <a href={`https://github.com/${siteConfig.github}`} target="_blank" rel="noopener noreferrer">
-                <Icon name="simple-icons:github" />
+              <a href={`https://github.com/${siteConfig.github}`} target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                <Icon name="simple-icons:github" aria-hidden="true" />
               </a>
             </li>
           )}
           {siteConfig.twitter && (
             <li class="twitter">
-              <a href={`https://twitter.com/${siteConfig.twitter}`} target="_blank" rel="noopener noreferrer">
-                <Icon name="simple-icons:twitter" />
+              <a href={`https://twitter.com/${siteConfig.twitter}`} target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+                <Icon name="simple-icons:twitter" aria-hidden="true" />
               </a>
             </li>
           )}
