@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { getPostUrl } from '@/utils';
+import { Icon } from 'astro-icon/components';
 
 interface Props {
   post: CollectionEntry<'posts'>;
@@ -28,7 +29,7 @@ const category = post.data.tags?.[0] ?? null;
         </ul>
       )}
       <span class="hero-post__date">
-        <i class="far fa-clock"></i>
+        <Icon name="lucide:clock" aria-hidden="true" />
         <time datetime={post.data.date.toISOString()}>
           {post.data.date.toLocaleDateString('en-GB', {
             day: '2-digit',

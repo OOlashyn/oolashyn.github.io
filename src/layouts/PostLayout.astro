@@ -7,6 +7,7 @@ import Newsletter from '@/components/Newsletter.astro';
 import RecentPosts from '@/components/RecentPosts.astro';
 import Utterances from '@/components/Utterances.astro';
 import CopyCode from '@/components/CopyCode.astro';
+import { Icon } from 'astro-icon/components';
 
 interface Props {
   title: string;
@@ -64,7 +65,7 @@ const dateStr = date.toLocaleDateString('en-GB', {
                 rel="noreferrer"
                 target="_blank"
               >
-                <i class="fab fa-twitter" aria-hidden="true"></i>
+                <Icon name="simple-icons:twitter" aria-hidden="true" />
               </a>
               <a
                 href={`https://facebook.com/sharer.php?u=${encodeURIComponent(fullUrl)}`}
@@ -72,7 +73,7 @@ const dateStr = date.toLocaleDateString('en-GB', {
                 rel="noreferrer"
                 target="_blank"
               >
-                <i class="fab fa-facebook" aria-hidden="true"></i>
+                <Icon name="simple-icons:facebook" aria-hidden="true" />
               </a>
               <a
                 href={`https://www.linkedin.com/shareArticle?url=${encodeURIComponent(fullUrl)}`}
@@ -80,7 +81,7 @@ const dateStr = date.toLocaleDateString('en-GB', {
                 rel="noreferrer"
                 target="_blank"
               >
-                <i class="fab fa-linkedin" aria-hidden="true"></i>
+                <Icon name="simple-icons:linkedin" aria-hidden="true" />
               </a>
             </div>
           </div>

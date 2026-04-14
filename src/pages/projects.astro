@@ -1,6 +1,7 @@
 ---
 import HomeLayout from '@/layouts/HomeLayout.astro';
 import { projects } from '@/data/projects';
+import { Icon } from 'astro-icon/components';
 ---
 
 <HomeLayout title="Projects">
@@ -15,7 +16,7 @@ import { projects } from '@/data/projects';
             <h2 class="projects-title">
               {project.title}
               <a class="project-ext-link" href={project.extLink}>
-                <i class="fas fa-external-link-alt" aria-hidden="true"></i>
+                <Icon name="lucide:external-link" aria-hidden="true" />
               </a>
             </h2>
           </div>

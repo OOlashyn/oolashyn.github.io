@@ -1,4 +1,6 @@
 ---
+import { Icon } from 'astro-icon/components';
+
 interface Props {
   previousUrl?: string;
   nextUrl?: string;
@@ -11,12 +13,12 @@ const { previousUrl, nextUrl } = Astro.props;
   <div class="pagination clearfix">
     {previousUrl && (
       <a href={previousUrl} class="previous">
-        <i class="fas fa-angle-left" aria-hidden="true"></i> Previous
+        <Icon name="lucide:chevron-left" aria-hidden="true" /> Previous
       </a>
     )}
     {nextUrl && (
       <a href={nextUrl} class="next">
-        Next <i class="fas fa-angle-right" aria-hidden="true"></i>
+        Next <Icon name="lucide:chevron-right" aria-hidden="true" />
       </a>
     )}
   </div>

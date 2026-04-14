@@ -1,4 +1,6 @@
 ---
+import { Icon } from 'astro-icon/components';
+
 interface Props {
   text?: string;
 }
@@ -9,7 +11,7 @@ const { text } = Astro.props;
 <div class="update-block">
   <span class="update-block__header">
     <strong>
-      <i class="fa fa-exclamation-circle" aria-hidden="true" style="font-size: 18px; margin-right: 5px;"></i>UPDATE
+      <Icon name="lucide:alert-circle" aria-hidden="true" size={18} style="margin-right: 5px;" />UPDATE
     </strong>
   </span>
   <br />

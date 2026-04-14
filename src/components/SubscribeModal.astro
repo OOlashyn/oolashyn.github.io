@@ -1,11 +1,12 @@
 ---
 import SubscribeForm from '@/components/SubscribeForm.astro';
+import { Icon } from 'astro-icon/components';
 ---
 
 <div class="subscribe-modal" id="subscribe-modal" role="dialog" aria-modal="true" aria-labelledby="subscribe-modal-form-title">
   <div class="subscribe-modal__card">
     <button class="subscribe-modal__close" aria-label="Close subscribe dialog">
-      <i class="fas fa-times" aria-hidden="true"></i>
+      <Icon name="lucide:x" aria-hidden="true" />
     </button>
     <SubscribeForm formId="subscribe-modal-form" emailId="subscribe-modal-email" />
   </div>

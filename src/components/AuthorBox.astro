@@ -1,5 +1,6 @@
 ---
 import { siteConfig } from '@/config';
+import { Icon } from 'astro-icon/components';
 ---
 
 <section class="author-box">
@@ -15,28 +16,28 @@ import { siteConfig } from '@/config';
       {siteConfig.email && (
         <li class="email">
           <a href={`mailto:${siteConfig.email}`} aria-label="Email">
-            <i class="fas fa-envelope"></i>
+            <Icon name="lucide:mail" />
           </a>
         </li>
       )}
       {siteConfig.website && (
         <li class="website">
           <a href={`http://${siteConfig.website}`} target="_blank" aria-label="Website">
-            <i class="fas fa-globe"></i>
+            <Icon name="lucide:globe" />
           </a>
         </li>
       )}
       {siteConfig.linkedin && (
         <li class="linkedin">
           <a href={`https://in.linkedin.com/in/${siteConfig.linkedin}`} target="_blank" aria-label="LinkedIn">
-            <i class="fab fa-linkedin"></i>
+            <Icon name="simple-icons:linkedin" />
           </a>
         </li>
       )}
       {siteConfig.twitter && (
         <li class="twitter">
           <a href={`https://twitter.com/${siteConfig.twitter}`} target="_blank" aria-label="Twitter">
-            <i class="fab fa-twitter"></i>
+            <Icon name="simple-icons:twitter" />
           </a>
         </li>
       )}
