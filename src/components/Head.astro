@@ -1,0 +1,72 @@
+---
+import { siteConfig } from '@/config';
+import { Font } from 'astro:assets';
+import { ClientRouter } from 'astro:transitions';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  darkCssUrl: string;
+  lightCssUrl: string;
+}
+
+const { title, description, image, darkCssUrl, lightCssUrl } = Astro.props;
+const pageTitle = title ? `${title} - ${siteConfig.title}` : siteConfig.title;
+const pageDescription = description || siteConfig.description;
+const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url);
+---
+
+<head>
+  <meta charset="utf-8" />
+  <title>{pageTitle}</title>
+  <meta name="description" content={pageDescription} />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="canonical" href={canonicalUrl.href} />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content={pageTitle} />
+  <meta property="og:description" content={pageDescription} />
+  <meta property="og:url" content={canonicalUrl.href} />
+  <meta property="og:site_name" content={siteConfig.title} />
+  <meta property="og:type" content="website" />
+  {image && <meta property="og:image" content={image} />}
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content={siteConfig.twitter} />
+  <meta name="twitter:title" content={pageTitle} />
+  <meta name="twitter:description" content={pageDescription} />
+
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="/assets/img/favicon/favicon.ico" type="image/x-icon" />
+  <link rel="apple-touch-icon" href="/assets/img/favicon/apple-touch-icon.png" />
+  <link rel="apple-touch-icon" sizes="72x72" href="/assets/img/favicon/apple-touch-icon-72x72.png" />
+  <link rel="apple-touch-icon" sizes="114x114" href="/assets/img/favicon/apple-touch-icon-114x114.png" />
+
+  <!-- Theme colors -->
+  <meta name="theme-color" content="#311e3e" />
+  <meta name="msapplication-navbutton-color" content="#311e3e" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="#311e3e" />
+
+  <!-- Theme stylesheets -->
+  <link rel="stylesheet" href={darkCssUrl} media="(prefers-color-scheme: dark)" />
+  <link rel="stylesheet" href={lightCssUrl} media="(prefers-color-scheme: light)" />
+
+  <!-- Fonts -->
+  <Font cssVariable="--font-montserrat" preload />
+  <Font cssVariable="--font-lato" preload />
+
+  <!-- Font Awesome -->
+  <script is:inline src="https://kit.fontawesome.com/f430ab3721.js" crossorigin="anonymous"></script>
+
+  <!-- Dark mode toggle web component -->
+  <script is:inline type="module" src="https://unpkg.com/dark-mode-toggle"></script>
+
+  <!-- Google verification -->
+  <meta name="google-site-verification" content="e33KPrSW7_LHxFoA9XP_rkj1noTjubwKyfeCRAV9seg" />
+
+  <ClientRouter />
+</head>

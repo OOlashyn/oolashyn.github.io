@@ -1,0 +1,56 @@
+.code-bar{
+    display: flex;
+    justify-content: space-between;
+    color: white;
+    background-color: var(--code-bar-bg, #3b3b3b);
+    border-radius: 8px 8px 0 0;
+}
+
+.code-bar + pre {
+    margin-top: 0 !important;
+    border-radius: 0 0 8px 8px;
+}
+
+.code-title{
+    padding: 10px;
+    font-weight: bold;
+}
+
+.copy-code-button {
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    padding: 10px;
+    background-color: var(--code-bar-bg, #3b3b3b);
+    border: none;
+    color: white;
+    font-family: inherit;
+    font-size: inherit;
+    border-radius: 0 8px 0 0;
+
+    &:hover{
+        background-color: var(--code-bar-bg-hover, #656c7a);
+        border-radius: 0 8px 0 0;
+    }
+
+    &::before {
+        content: "Copy";
+    }
+
+    &::after {
+        margin-left: 4px;
+        content: "📋";
+        width: 1em;
+    }
+
+    // This class will be toggled via JavaScript
+    &.copied {
+        &::before {
+            content: "Copied!";
+        }
+
+        &::after {
+            content: "✔️";
+        }
+    }
+}

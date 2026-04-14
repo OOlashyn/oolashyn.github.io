@@ -1,5 +1,17 @@
-_site/
-.sass-cache/
-.jekyll-cache/
-.jekyll-metadata
+# Build output
+dist/
+
+# Dependencies
 node_modules/
+
+# Astro
+.astro/
+
+# Environment
+.env
+.env.*
+
+# Editor
+.vscode/
+*.swp
+*.swo

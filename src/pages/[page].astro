@@ -1,0 +1,54 @@
+---
+import HomeLayout from '@/layouts/HomeLayout.astro';
+import PostCard from '@/components/PostCard.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { siteConfig } from '@/config';
+import type { GetStaticPaths } from 'astro';
+
+interface Props {
+  posts: CollectionEntry<'posts'>[];
+  currentPage: number;
+  totalPages: number;
+}
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const allPosts = await getCollection('posts');
+  const sortedPosts = allPosts.sort(
+    (a, b) => b.data.date.getTime() - a.data.date.getTime()
+  );
+
+  const postsPerPage = siteConfig.postsPerPage;
+  // Subtract 1 because page 1 (index route) uses the first post as a hero above the grid
+  const totalPages = Math.ceil((sortedPosts.length - 1) / postsPerPage);
+
+  // Pages start at 2 (page 1 is the index route `/`)
+  // Add 1 to start offset to skip the hero post that is shown on page 1
+  return Array.from({ length: totalPages - 1 }, (_, i) => {
+    const pageNum = i + 2;
+    const start = (pageNum - 1) * postsPerPage + 1;
+    return {
+      params: { page: `page${pageNum}` },
+      props: {
+        posts: sortedPosts.slice(start, start + postsPerPage),
+        currentPage: pageNum,
+        totalPages,
+      },
+    };
+  });
+};
+
+const { posts, currentPage, totalPages } = Astro.props;
+
+const previousUrl = currentPage === 2 ? '/' : `/page${currentPage - 1}/`;
+const nextUrl = currentPage < totalPages ? `/page${currentPage + 1}/` : undefined;
+---
+
+<HomeLayout
+  description={siteConfig.description}
+  previousUrl={previousUrl}
+  nextUrl={nextUrl}
+>
+  <ol class="post-card-grid">
+    {posts.map((post) => <PostCard post={post} gridCard={true} />)}
+  </ol>
+</HomeLayout>

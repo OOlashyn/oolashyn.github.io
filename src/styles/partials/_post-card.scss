@@ -1,0 +1,101 @@
+.post-card-box {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  
+  animation-delay: 0.75s;
+  animation-duration: 0.7s;
+  animation-fill-mode: both;
+  animation-name: fadeInDown;
+}
+
+.post-card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-rows: 1fr;
+  gap: 1.5rem;
+  padding: 0;
+  list-style: none;
+  margin: 0 0 2rem;
+
+  animation-delay: 0.75s;
+  animation-duration: 0.7s;
+  animation-fill-mode: both;
+  animation-name: fadeInDown;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.tag-link {
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.post-card {
+  display: flex;
+
+  .post-card-image {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+
+  .post-card-body {
+    padding: 1rem 1rem 1rem 2rem;
+
+    .post-date{
+      margin-left: 10px;
+    }
+
+    .post-card-title{
+      text-decoration: none;
+    }
+
+    .post-card-link {
+      text-decoration: none;
+      display: block;
+    }
+
+    .tag-list{
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+    }
+  
+    .tag{
+      margin-right: 0.5rem;
+    }
+  
+  }
+}
+
+.post-card.grid-card {
+  flex-direction: column;
+  flex: 1;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border: 1px solid var(--light-brd-color);
+  background-color: var(--card-bg-color);
+
+  .card-img-link {
+    display: block;
+    height: 260px;
+    overflow: hidden;
+    flex-shrink: 0;
+
+    .post-card-image {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+      display: block;
+    }
+  }
+
+  .post-card-body {
+    padding: 1rem;
+    flex: 1;
+  }
+}

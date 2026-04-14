@@ -1,0 +1,144 @@
+---
+---
+
+<script>
+  function initHeaderInteractions() {
+    const w = window as unknown as Record<string, unknown>;
+    if (w.__headerAbort) (w.__headerAbort as AbortController).abort();
+    const controller = new AbortController();
+    w.__headerAbort = controller;
+    const { signal } = controller;
+
+    const pageWrapper = document.querySelector<HTMLElement>('div.page-wrapper');
+
+    // Menu open/close
+    document.querySelectorAll<HTMLElement>('.menu-icon, .menu-icon-close').forEach((el) => {
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const isOpen = pageWrapper?.classList.toggle('active') ?? false;
+        document.querySelector<HTMLElement>('.menu-icon')?.setAttribute('aria-expanded', String(isOpen));
+      }, { signal });
+    });
+
+    // Click outside menu to close
+    pageWrapper?.addEventListener('click', (e) => {
+      if (pageWrapper.classList.contains('active') && (e.target as HTMLElement).tagName !== 'A') {
+        pageWrapper.classList.remove('active');
+        document.querySelector<HTMLElement>('.menu-icon')?.setAttribute('aria-expanded', 'false');
+      }
+    }, { signal });
+
+    // Search open
+    document.querySelectorAll<HTMLElement>('.search-icon').forEach((el) => {
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        const searchBox = document.querySelector<HTMLElement>('.search-box');
+        if (searchBox) {
+          searchBox.classList.add('search-active');
+          el.setAttribute('aria-expanded', 'true');
+          searchBox.querySelector<HTMLElement>('input')?.focus();
+        }
+      }, { signal });
+    });
+
+    // Search close
+    document.querySelectorAll<HTMLElement>('.search-icon-close').forEach((el) => {
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        const searchBox = document.querySelector<HTMLElement>('.search-box');
+        if (searchBox) {
+          searchBox.classList.remove('search-active');
+          document.querySelector<HTMLElement>('.search-icon')?.setAttribute('aria-expanded', 'false');
+        }
+      }, { signal });
+    });
+
+    // Subscribe modal open
+    document.querySelectorAll<HTMLElement>('#subscribe-trigger').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const modal = document.querySelector<HTMLElement>('#subscribe-modal');
+        if (!modal) return;
+        modal.classList.add('is-open');
+        btn.setAttribute('aria-expanded', 'true');
+        modal.querySelector<HTMLElement>('#subscribe-modal-email')?.focus();
+      }, { signal });
+    });
+
+    // Focus trap inside subscribe modal
+    document.addEventListener('keydown', (e) => {
+      const modal = document.querySelector<HTMLElement>('#subscribe-modal');
+      if (!modal?.classList.contains('is-open')) return;
+      if (e.key !== 'Tab') return;
+
+      const focusable = Array.from(
+        modal.querySelectorAll<HTMLElement>(
+          'input:not([type="hidden"]), button, [tabindex]:not([tabindex="-1"])'
+        )
+      ).filter((el) => !(el as HTMLInputElement | HTMLButtonElement).disabled);
+
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    }, { signal });
+
+    // Subscribe modal close — X button
+    document.querySelectorAll<HTMLElement>('.subscribe-modal__close').forEach((el) => {
+      el.addEventListener('click', () => {
+        const modal = document.querySelector<HTMLElement>('#subscribe-modal');
+        if (!modal) return;
+        modal.classList.remove('is-open');
+        const trigger = document.querySelector<HTMLElement>('#subscribe-trigger');
+        trigger?.setAttribute('aria-expanded', 'false');
+        trigger?.focus();
+      }, { signal });
+    });
+
+    // Subscribe modal close — click on backdrop (not card)
+    document.querySelectorAll<HTMLElement>('#subscribe-modal').forEach((modal) => {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.classList.remove('is-open');
+          const trigger = document.querySelector<HTMLElement>('#subscribe-trigger');
+          trigger?.setAttribute('aria-expanded', 'false');
+          trigger?.focus();
+        }
+      }, { signal });
+    });
+
+    // Escape key
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const searchBox = document.querySelector<HTMLElement>('.search-box');
+        const modal = document.querySelector<HTMLElement>('#subscribe-modal');
+        if (modal?.classList.contains('is-open')) {
+          modal.classList.remove('is-open');
+          const trigger = document.querySelector<HTMLElement>('#subscribe-trigger');
+          trigger?.setAttribute('aria-expanded', 'false');
+          trigger?.focus();
+        } else if (pageWrapper?.classList.contains('active')) {
+          pageWrapper.classList.remove('active');
+          document.querySelector<HTMLElement>('.menu-icon')?.setAttribute('aria-expanded', 'false');
+        } else if (searchBox?.classList.contains('search-active')) {
+          searchBox.classList.remove('search-active');
+          document.querySelector<HTMLElement>('.search-icon')?.setAttribute('aria-expanded', 'false');
+        }
+      }
+    }, { signal });
+  }
+
+  document.addEventListener('astro:page-load', initHeaderInteractions);
+  window.addEventListener('pageshow', (e) => { if (e.persisted) initHeaderInteractions(); });
+</script>

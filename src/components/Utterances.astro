@@ -1,0 +1,30 @@
+---
+import { siteConfig } from '@/config';
+
+const { repo, issueTerm, label } = siteConfig.utterances;
+---
+
+<div id="light-mode">
+  <script
+    is:inline
+    src="https://utteranc.es/client.js"
+    data-repo={repo}
+    data-issue-term={issueTerm}
+    data-label={label}
+    data-theme="github-light"
+    crossorigin="anonymous"
+    async
+  ></script>
+</div>
+<div id="dark-mode">
+  <script
+    is:inline
+    src="https://utteranc.es/client.js"
+    data-repo={repo}
+    data-issue-term={issueTerm}
+    data-label={label}
+    data-theme="github-dark"
+    crossorigin="anonymous"
+    async
+  ></script>
+</div>

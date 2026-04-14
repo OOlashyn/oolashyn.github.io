@@ -1,0 +1,16 @@
+---
+---
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('.copy-code-button').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const pre = btn.closest('.code-bar')?.nextElementSibling;
+      const code = pre?.querySelector('code');
+      if (!code) return;
+
+      await navigator.clipboard.writeText(code.textContent ?? '');
+      btn.classList.add('copied');
+      setTimeout(() => btn.classList.remove('copied'), 2000);
+    });
+  });
+</script>

@@ -1,0 +1,96 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Footer from '@/components/Footer.astro';
+import UkraineBanner from '@/components/UkraineBanner.astro';
+import Search from '@/components/Search.astro';
+import Newsletter from '@/components/Newsletter.astro';
+import RecentPosts from '@/components/RecentPosts.astro';
+import Utterances from '@/components/Utterances.astro';
+import CopyCode from '@/components/CopyCode.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  date: Date;
+  img?: string;
+  image?: string;
+  tags?: string[];
+  url: string;
+}
+
+const { title, description, date, img, image, tags = [], url } = Astro.props;
+const fullUrl = new URL(url, Astro.site).href;
+const dateStr = date.toLocaleDateString('en-GB', {
+  day: '2-digit',
+  month: 'short',
+  year: 'numeric',
+});
+---
+
+<BaseLayout title={title} description={description} image={image}>
+  <div class="flex-container">
+    <article class="article-page" data-pagefind-body>
+      {img && (
+        <div class="page-image">
+          <div
+            class="cover-image"
+            style={`background: url(/assets/img/${img}) center no-repeat; background-size: cover;`}
+          ></div>
+        </div>
+      )}
+      <div class="wrapper">
+        <div class="page-content">
+          <div class="header-page">
+            <h1 class="page-title">{title}</h1>
+            <div class="page-date">
+              <time datetime={date.toISOString()}>{dateStr}</time>
+            </div>
+          </div>
+          <UkraineBanner />
+          <slot />
+          <Newsletter />
+          <div class="page-footer">
+            <div class="page-tag">
+              <span>Tags:</span>
+              {tags.map((tag) => (
+                <a href={`/tags/#${tag}`} class="tag">| {tag}</a>
+              ))}
+            </div>
+            <div class="page-share">
+              <span>Share:</span>
+              <a
+                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(fullUrl)}`}
+                title="Share on Twitter"
+                rel="noreferrer"
+                target="_blank"
+              >
+                <i class="fab fa-twitter" aria-hidden="true"></i>
+              </a>
+              <a
+                href={`https://facebook.com/sharer.php?u=${encodeURIComponent(fullUrl)}`}
+                title="Share on Facebook"
+                rel="noreferrer"
+                target="_blank"
+              >
+                <i class="fab fa-facebook" aria-hidden="true"></i>
+              </a>
+              <a
+                href={`https://www.linkedin.com/shareArticle?url=${encodeURIComponent(fullUrl)}`}
+                title="Share on Linkedin"
+                rel="noreferrer"
+                target="_blank"
+              >
+                <i class="fab fa-linkedin" aria-hidden="true"></i>
+              </a>
+            </div>
+          </div>
+          <RecentPosts />
+          <Utterances />
+        </div>
+      </div>
+    </article>
+    <Search />
+    <Footer />
+    <CopyCode />
+  </div>
+</BaseLayout>

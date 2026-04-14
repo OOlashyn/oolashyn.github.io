@@ -1,0 +1,13 @@
+---
+interface Props {
+  mp4?: string;
+  webm?: string;
+}
+
+const { mp4, webm } = Astro.props;
+---
+
+<video autoplay loop muted playsinline controls class="video">
+  {webm && <source src={`/assets/videos/${webm}`} type="video/webm" />}
+  {mp4 && <source src={`/assets/videos/${mp4}`} type="video/mp4" />}
+</video>

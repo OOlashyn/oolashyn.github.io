@@ -1,0 +1,28 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Footer from '@/components/Footer.astro';
+import UkraineBanner from '@/components/UkraineBanner.astro';
+import Search from '@/components/Search.astro';
+import Pagination from '@/components/Pagination.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  previousUrl?: string;
+  nextUrl?: string;
+}
+
+const { title, description, previousUrl, nextUrl } = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="flex-container">
+    <div class="content wrapper">
+      <UkraineBanner />
+      <slot />
+      <Search />
+      <Pagination previousUrl={previousUrl} nextUrl={nextUrl} />
+    </div>
+    <Footer />
+  </div>
+</BaseLayout>

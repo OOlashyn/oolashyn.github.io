@@ -1,0 +1,44 @@
+.newsletter-box{
+    display: flex;
+
+    @media only screen and (max-width: 480px){
+        flex-direction: column;
+
+        &_submit{
+            width:100%;
+            margin-top: 10px;
+        }
+    }
+
+    &_email{
+        width:100%;
+        padding: 10px;
+        border-radius: 0.25rem 0 0 0.25rem;
+
+        @media only screen and (max-width: 480px) {
+            border-radius: 0.25rem;
+        }
+    }
+
+    &_submit{
+        color: var(--white);
+        background-color: var(--deep-purple);
+        border: none;
+        padding: 15px 50px;
+        cursor: pointer;
+        text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        border-radius: 0 0.25rem 0.25rem 0;
+        transition: background-color 0.2s ease;
+
+        @media only screen and (max-width: 480px) {
+            border-radius: 0.25rem;
+        }
+
+        &:hover{
+            background-color: var(--dark-purple);
+        }
+    }
+}
+

@@ -1,0 +1,24 @@
+---
+import { getCollection } from 'astro:content';
+import { getPostUrl } from '@/utils';
+
+const allPosts = await getCollection('posts');
+const recentPosts = allPosts
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 4);
+---
+
+<div class="recent-box">
+  <h2 class="recent-title">Recent post</h2>
+  <div class="recent-list">
+    {recentPosts.map((post) => (
+      <a
+        href={getPostUrl(post.id)}
+        class="recent-item"
+        style={`background: url(/assets/img/${post.data.img}) center no-repeat; background-size: cover;`}
+      >
+        <span>{post.data.title}</span>
+      </a>
+    ))}
+  </div>
+</div>

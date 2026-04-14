@@ -1,0 +1,17 @@
+---
+interface Props {
+  importantText?: string;
+}
+
+const { importantText } = Astro.props;
+---
+
+<div class="important-block">
+  <span class="important-block__header">
+    <strong>
+      <i class="fa fa-exclamation-circle" aria-hidden="true" style="font-size: 18px; margin-right: 5px;"></i>IMPORTANT
+    </strong>
+  </span>
+  <br />
+  {importantText ? <Fragment set:html={importantText} /> : <slot />}
+</div>

@@ -1,0 +1,46 @@
+---
+import HomeLayout from '@/layouts/HomeLayout.astro';
+import { projects } from '@/data/projects';
+---
+
+<HomeLayout title="Projects">
+  <div>
+    <div class="projects-main-header">
+      <h1 style="margin-bottom: 5px;">PROJECTS</h1>
+    </div>
+    <div class="projects-container">
+      {projects.map((project) => (
+        <div class="projects-card">
+          <div class="projects-header">
+            <h2 class="projects-title">
+              {project.title}
+              <a class="project-ext-link" href={project.extLink}>
+                <i class="fas fa-external-link-alt" aria-hidden="true"></i>
+              </a>
+            </h2>
+          </div>
+          <div class="projects-description">
+            {project.content}
+          </div>
+          {project.extImgLink && (
+            <img class="projects-video" src={project.extImgLink} alt="" />
+          )}
+          {project.imgLink && (
+            <img class="projects-video" src={`/assets/img/${project.imgLink}`} alt="" />
+          )}
+          {project.videowebm && project.videomp4 && (
+            <video autoplay loop muted playsinline controls class="video">
+              <source src={`/assets/videos/${project.videowebm}`} type="video/webm" />
+              <source src={`/assets/videos/${project.videomp4}`} type="video/mp4" />
+            </video>
+          )}
+          {!project.videowebm && project.videomp4 && (
+            <video autoplay loop muted playsinline controls class="video">
+              <source src={`/assets/videos/${project.videomp4}`} type="video/mp4" />
+            </video>
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
+</HomeLayout>

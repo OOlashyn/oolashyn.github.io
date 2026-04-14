@@ -1,0 +1,50 @@
+---
+import Head from '@/components/Head.astro';
+import Header from '@/components/Header.astro';
+import Analytics from '@/components/Analytics.astro';
+import HeaderInteractions from '@/components/HeaderInteractions.astro';
+import '@/styles/main.scss';
+
+import darkCssUrl from '@/styles/dark.scss?url';
+import lightCssUrl from '@/styles/light.scss?url';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+}
+
+const { title, description, image } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <Head title={title} description={description} image={image} darkCssUrl={darkCssUrl} lightCssUrl={lightCssUrl} />
+  <body>
+    <div class="page-wrapper">
+      <Header />
+      <slot />
+    </div>
+    <HeaderInteractions />
+    <Analytics />
+    <!-- Preserve Font Awesome's dynamically injected styles across ClientRouter navigations -->
+    <script is:inline>
+      document.addEventListener('astro:before-swap', (event) => {
+        document.head.querySelectorAll('style').forEach((style) => {
+          if (style.textContent && style.textContent.includes('svg-inline--fa')) {
+            event.newDocument.head.appendChild(style.cloneNode(true));
+          }
+        });
+        // Preserve dynamically injected Pagefind CSS link
+        document.head.querySelectorAll('link[href="/pagefind/pagefind-ui.css"]').forEach((link) => {
+          event.newDocument.head.appendChild(link.cloneNode(true));
+        });
+      });
+      document.addEventListener('astro:page-load', () => {
+        if (window.FontAwesome) {
+          window.FontAwesome.dom.i2svg();
+        }
+      });
+    </script>
+  </body>
+</html>

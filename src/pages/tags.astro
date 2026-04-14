@@ -1,0 +1,62 @@
+---
+import HomeLayout from '@/layouts/HomeLayout.astro';
+import { getCollection } from 'astro:content';
+import { getPostUrl } from '@/utils';
+
+const allPosts = await getCollection('posts');
+
+// Build tag map: tag -> posts
+const tagMap = new Map<string, typeof allPosts>();
+for (const post of allPosts) {
+  for (const tag of post.data.tags || []) {
+    if (!tagMap.has(tag)) {
+      tagMap.set(tag, []);
+    }
+    tagMap.get(tag)!.push(post);
+  }
+}
+
+// Sort tags alphabetically
+const sortedTags = [...tagMap.keys()].sort();
+
+// Sort posts within each tag by date
+for (const [, posts] of tagMap) {
+  posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+}
+---
+
+<HomeLayout title="Tags">
+  <section class="blog-tags">
+    <h1>Tags in Blog</h1>
+    <ul class="tags">
+      {sortedTags.map((tag) => (
+        <li>
+          <a href={`#${encodeURIComponent(tag)}`} class="tag">
+            {tag} <span>({tagMap.get(tag)!.length})</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+    {sortedTags.map((tag) => (
+      <>
+        <h2 id={encodeURIComponent(tag)}>{tag}</h2>
+        {tagMap.get(tag)!.map((post) => (
+          <div class="tag-list">
+            <span>
+              <a href={getPostUrl(post.id)}>{post.data.title}</a>
+            </span>
+            <small>
+              <span>
+                | {post.data.date.toLocaleDateString('en-GB', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric',
+                  })}
+              </span>
+            </small>
+          </div>
+        ))}
+      </>
+    ))}
+  </section>
+</HomeLayout>

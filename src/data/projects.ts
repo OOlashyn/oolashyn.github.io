@@ -1,0 +1,73 @@
+export interface Project {
+  title: string;
+  extLink: string;
+  content: string;
+  videowebm?: string;
+  videomp4?: string;
+  imgLink?: string;
+  extImgLink?: string;
+}
+
+export const projects: Project[] = [
+  {
+    title: 'Power Pages Lookup to Select',
+    extLink: 'https://www.dancingwithcrm.com/power-pages-lookup-to-select',
+    videomp4: '2024-05-26-lts-full.mp4',
+    content:
+      'jQuery library to easily replace Power Pages lookup control with Select2 control',
+  },
+  {
+    title: 'Power Pages Helper extension for VS Code',
+    extLink:
+      'https://marketplace.visualstudio.com/items?itemName=oleksandr-olashyn.portal-helper-vscode',
+    extImgLink:
+      'https://github.com/OOlashyn/portal-helper-vscode/blob/master/assets/list-portals.gif?raw=true',
+    content:
+      'Extension for VS Code with a set of commands and shortcuts to simplify work with Power Apps CLI for Power Pages',
+  },
+  {
+    title: 'Site Settings & Content Snippets for Power Apps Portals',
+    extLink:
+      'https://github.com/OOlashyn/PowerAppsPortalSiteSettingsAndSnippets',
+    imgLink: '2021-04-15-portal-settings-and-snippets.jpg',
+    content:
+      'List of little known and hidden Content Snippets and Site Settings for Power Apps Portals',
+  },
+  {
+    title: 'Attachment Gallery Component',
+    extLink: 'https://github.com/OOlashyn/PCF-AttachmentGalleryControl',
+    videomp4: 'pcf-gallery-v1.mp4',
+    content:
+      'This is PCF component that shows images and pdf from attached notes and also can show note title and note text',
+  },
+  {
+    title: 'Web Form Steps Visualizer Component',
+    extLink: 'https://github.com/OOlashyn/PCF-WebFormStepVisualizer',
+    videowebm: 'WebFormStepVisualizer_v1.webm',
+    videomp4: 'WebFormStepVisualizer_v1.mp4',
+    content:
+      'Make it easier to work with Web Forms by visualizing your Web Form Steps as a flow chart',
+  },
+  {
+    title: 'Tag Cloud Component',
+    extLink: 'https://github.com/OOlashyn/PCF-TagCloud',
+    videomp4: 'pcf-tagcloud-v1.mp4',
+    content:
+      'Tag Cloud Dataset component using PowerApps Component Framework, React and Fluent UI',
+  },
+  {
+    title: 'Range Slider Component',
+    extLink: 'https://github.com/OOlashyn/PCF-RangeSliderControl',
+    videomp4: 'pcf-rangeslider-v1.mp4',
+    content:
+      'Range Slider Component using Powerapps Component Framework',
+  },
+  {
+    title: 'Stock Market Component',
+    extLink: 'https://github.com/OOlashyn/PCF-StockMarketCard',
+    extImgLink:
+      'https://raw.githubusercontent.com/OOlashyn/PCF-StockMarketCard/master/Screenshots/2019-07-18-stock-card-demo.jpg',
+    content:
+      'Stock Market Update Card using Adaptive Cards and Powerapps Control Framework',
+  },
+];

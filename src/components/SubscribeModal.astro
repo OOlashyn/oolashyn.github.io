@@ -1,0 +1,49 @@
+---
+import { siteConfig } from '@/config';
+---
+
+<div class="subscribe-modal" id="subscribe-modal" role="dialog" aria-modal="true" aria-labelledby="subscribe-modal-title">
+  <div class="subscribe-modal__card">
+    <button class="subscribe-modal__close" aria-label="Close subscribe dialog">
+      <i class="fas fa-times" aria-hidden="true"></i>
+    </button>
+    <h2 class="subscribe-modal__title" id="subscribe-modal-title">
+      Never Miss a Post
+    </h2>
+    <p class="subscribe-modal__body">
+      Subscribe to my blog to receive updates on my future posts, including but not limited to Power Pages and dev news, deep dives, and more. Zero spam, pure value.
+    </p>
+    <form
+      action={siteConfig.mailchimp}
+      method="post"
+      id="subscribe-modal-form"
+      name="subscribe-modal-form"
+      class="validate"
+      target="_blank"
+      novalidate
+    >
+      <input type="hidden" name="u" value={siteConfig.mailchimpU} />
+      <input type="hidden" name="id" value={siteConfig.mailchimpId} />
+      <div class="subscribe-modal__form-row">
+        <input
+          type="email"
+          aria-label="Email address"
+          name="MERGE0"
+          id="subscribe-modal-email"
+          placeholder="Enter your email address..."
+          class="subscribe-modal__email"
+          required
+        />
+        <input
+          type="submit"
+          value="Subscribe"
+          name="subscribe"
+          class="subscribe-modal__submit"
+        />
+      </div>
+    </form>
+    <p class="subscribe-modal__disclaimer">
+      Unsubscribe any time
+    </p>
+  </div>
+</div>

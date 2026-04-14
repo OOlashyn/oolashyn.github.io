@@ -1,0 +1,28 @@
+{
+    "dir": "ltr",
+    "lang": "en",
+    "name": "Dancing with CRM",
+    "short_name": "Dancing with CRM",
+    "scope": "/",
+    "display": "standalone",
+    "start_url": "https://www.dancingwithcrm.com/",
+    "background_color": "#000000",
+    "theme_color": "#311e3e",
+    "description": "Oleksandr's Olashyn personal blog about Power Platform, Dynamics 365 and many more",
+    "orientation": "any",
+    "related_applications": [],
+    "prefer_related_applications": false,
+    "icons": [
+        {
+            "src": "/assets/img/logo/pwa-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/assets/img/logo/pwa-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "url": "https://www.dancingwithcrm.com/"
+}

@@ -1,0 +1,23 @@
+---
+interface Props {
+  previousUrl?: string;
+  nextUrl?: string;
+}
+
+const { previousUrl, nextUrl } = Astro.props;
+---
+
+{(previousUrl || nextUrl) && (
+  <div class="pagination clearfix">
+    {previousUrl && (
+      <a href={previousUrl} class="previous">
+        <i class="fas fa-angle-left" aria-hidden="true"></i> Previous
+      </a>
+    )}
+    {nextUrl && (
+      <a href={nextUrl} class="next">
+        Next <i class="fas fa-angle-right" aria-hidden="true"></i>
+      </a>
+    )}
+  </div>
+)}

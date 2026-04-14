@@ -1,0 +1,208 @@
+.main-header {
+  font-family: var(--font-lato);
+  background-color: var(--main-bg-color);
+  box-shadow: 0px -5px 15px rgba(0,0,0,.3);
+
+  .header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+
+    .img-logo {
+      height: 70px;
+      display: block;
+    }
+  }
+}
+
+// Desktop inline nav — default (>768px)
+.main-nav {
+  display: flex;
+  align-items: center;
+
+  .menu-icon-close {
+    display: none;
+  }
+
+  ul {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+
+    li {
+      a {
+        display: block;
+        padding: 8px 12px;
+        text-decoration: none;
+        text-transform: uppercase;
+        font-weight: 400;
+        font-size: 15px;
+        color: var(--main-text-color);
+        &:hover {
+          opacity: .8;
+          color: var(--main-text-color);
+        }
+      }
+
+      &.mobile-only {
+        display: none;
+      }
+
+      &.nav-subscribe-item {
+        display: flex;
+        align-items: center;
+        padding: 0 4px;
+      }
+    }
+  }
+}
+
+.nav-subscribe-btn {
+  background-color: var(--deep-purple);
+  color: var(--white);
+  border: none;
+  border-radius: 0.2rem;
+  padding: 0.4rem 1.1rem;
+  font-family: var(--font-lato);
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: var(--dark-purple);
+    color: var(--white);
+  }
+}
+
+// Hamburger hidden on desktop
+.menu-icon-container {
+  display: none;
+}
+
+.search-icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-left: auto;
+}
+
+dark-mode-toggle::part(toggleLabel)::before {
+  margin-top: -10px;
+}
+
+/* Reset default browser button styles for icon buttons, then apply icon styling */
+.menu-icon,
+.menu-icon-close,
+.search-icon,
+.search-icon-close {
+  background: none;
+  border: none;
+  padding: 10px;
+  margin: 0;
+  cursor: pointer;
+  color: var(--icon-color);
+  font-size: 18px;
+  line-height: inherit;
+  transition: all .4s;
+  &:hover {
+    color: var(--icon--hover-color);
+  }
+}
+
+// Mobile — restore hamburger + centered logo + sidebar nav
+@media only screen and (max-width: 768px) {
+  .menu-icon-container {
+    display: block;
+    width: 25%;
+    text-align: left;
+  }
+
+  .main-header {
+    .logo {
+      .img-logo {
+        height: 55px;
+      }
+    }
+  }
+
+  .search-icon-container {
+    width: 25%;
+    margin-left: 0;
+  }
+
+  .main-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    width: 300px;
+    height: 100%;
+    background-color: var(--main-bg-color);
+    padding: 25px 30px;
+    transform: translate3d(-300px, 0, 0);
+    display: block;
+
+    .menu-icon-close {
+      display: inline-flex;
+    }
+
+    ul {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0;
+      padding: 15px 0 0;
+
+      li {
+        width: 100%;
+        border-bottom: 1px solid var(--lighten-gray);
+
+        &.mobile-only {
+          display: list-item;
+        }
+
+        &.nav-subscribe-item {
+          padding: 0;
+          display: list-item;
+
+          .nav-subscribe-btn {
+            background: none;
+            border-radius: 0;
+            padding: 15px 0;
+            font-size: 18px;
+            font-weight: 400;
+            letter-spacing: 0;
+            text-transform: uppercase;
+            color: var(--main-text-color);
+            width: 100%;
+            text-align: left;
+            display: block;
+
+            &:hover {
+              background: none;
+              color: var(--main-text-color);
+              opacity: 0.8;
+            }
+          }
+        }
+
+        a {
+          padding: 15px 0;
+          font-size: 18px;
+        }
+      }
+    }
+  }
+}

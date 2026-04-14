@@ -1,0 +1,31 @@
+---
+import HomeLayout from '@/layouts/HomeLayout.astro';
+import PostCard from '@/components/PostCard.astro';
+import HeroPost from '@/components/HeroPost.astro';
+import { getCollection } from 'astro:content';
+import { siteConfig } from '@/config';
+
+const allPosts = await getCollection('posts');
+const sortedPosts = allPosts.sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+
+const postsPerPage = siteConfig.postsPerPage;
+// Subtract 1 from total because the hero post is displayed separately above the grid
+const totalPages = Math.ceil((sortedPosts.length - 1) / postsPerPage);
+
+const heroPost = sortedPosts[0];
+const posts = sortedPosts.slice(1, postsPerPage + 1);
+
+const nextUrl = totalPages > 1 ? '/page2/' : undefined;
+---
+
+<HomeLayout
+  description={siteConfig.description}
+  nextUrl={nextUrl}
+>
+  <HeroPost post={heroPost} />
+  <ol class="post-card-grid">
+    {posts.map((post) => <PostCard post={post} gridCard={true} />)}
+  </ol>
+</HomeLayout>
