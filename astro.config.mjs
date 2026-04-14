@@ -1,6 +1,7 @@
 import { defineConfig, fontProviders } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
+import icon from 'astro-icon';
 import rehypeExternalLinks from 'rehype-external-links';
 import rehypeCodeBar from './src/plugins/rehypeCodeBar.mjs';
 
@@ -27,6 +28,7 @@ export default defineConfig({
   integrations: [
     mdx(),
     sitemap(),
+    icon(),
   ],
   markdown: {
     shikiConfig: {

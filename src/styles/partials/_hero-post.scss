@@ -57,9 +57,12 @@
     font-size: 0.85rem;
     color: var(--tag-date-color);
     white-space: nowrap;
+    display: flex;
+    align-items: center;
 
-    i {
+    svg {
       margin-right: 0.35rem;
+      flex-shrink: 0;
     }
   }
 
