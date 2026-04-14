@@ -1,0 +1,16 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Footer from '@/components/Footer.astro';
+import SubscribeForm from '@/components/SubscribeForm.astro';
+---
+
+<BaseLayout title="Subscribe" description="Subscribe to Dancing with CRM to receive updates on future posts about Power Pages, Power Platform, and more.">
+  <div class="flex-container">
+    <div class="subscribe-page">
+      <div class="subscribe-modal__card">
+        <SubscribeForm formId="subscribe-page-form" emailId="subscribe-page-email" />
+      </div>
+    </div>
+    <Footer />
+  </div>
+</BaseLayout>

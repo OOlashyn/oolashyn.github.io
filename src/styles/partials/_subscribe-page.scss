@@ -1,0 +1,17 @@
+.subscribe-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 3rem 1rem;
+
+  .subscribe-modal__card {
+    width: 100%;
+    max-width: 560px;
+  }
+
+  .subscribe-modal__title {
+    font-size: 1.6rem;
+    margin-right: 0;
+  }
+}

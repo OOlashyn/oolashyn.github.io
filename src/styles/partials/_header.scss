@@ -174,28 +174,7 @@ dark-mode-toggle::part(toggleLabel)::before {
         }
 
         &.nav-subscribe-item {
-          padding: 0;
-          display: list-item;
-
-          .nav-subscribe-btn {
-            background: none;
-            border-radius: 0;
-            padding: 15px 0;
-            font-size: 18px;
-            font-weight: 400;
-            letter-spacing: 0;
-            text-transform: uppercase;
-            color: var(--main-text-color);
-            width: 100%;
-            text-align: left;
-            display: block;
-
-            &:hover {
-              background: none;
-              color: var(--main-text-color);
-              opacity: 0.8;
-            }
-          }
+          display: none;
         }
 
         a {
