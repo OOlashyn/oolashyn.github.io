@@ -21,21 +21,23 @@
     }
 
     &_submit{
-        color: white;
-        background-color: var(--newsletter-btn-color);
-        border: 5px solid var(--newsletter-btn-color);
+        color: var(--white);
+        background-color: var(--deep-purple);
+        border: none;
         padding: 15px 50px;
         cursor: pointer;
         text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: 0.04em;
         border-radius: 0 0.25rem 0.25rem 0;
+        transition: background-color 0.2s ease;
 
         @media only screen and (max-width: 480px) {
             border-radius: 0.25rem;
         }
 
         &:hover{
-            border: 5px solid var(--newsletter-btn-clr-hvr);
-            color:  var(--newsletter-btn-clr-hvr-txt);
+            background-color: var(--dark-purple);
         }
     }
 }
