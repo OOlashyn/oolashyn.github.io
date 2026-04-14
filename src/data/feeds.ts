@@ -142,3 +142,25 @@ export async function generateFeed(context: APIContext): Promise<Feed> {
 
   return feed;
 }
+
+export async function generateRssXml(context: APIContext): Promise<string> {
+  const feed = await generateFeed(context);
+
+  // Switch to RSS 2.0 and add xmlns:media namespace for Mailchimp <media:content> support
+  let xml = feed.rss2();
+
+  xml = xml.replace(
+    '<rss version="2.0">',
+    '<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/">'
+  );
+
+  // The feed package renders item images as <enclosure url="..." length="0" type="image/jpg"/>
+  // Append <media:content> alongside each enclosure so Mailchimp picks it up via *|RSSITEM:IMAGE|*
+  xml = xml.replace(
+    /<enclosure url="([^"]+)" length="0" type="image\/jpg"\/>/g,
+    (match, url) =>
+      `${match}\n        <media:content url="${url}" medium="image"/>`
+  );
+
+  return xml;
+}

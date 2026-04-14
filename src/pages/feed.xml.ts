@@ -1,9 +1,9 @@
 import type { APIContext } from 'astro';
-import { generateFeed } from '@/data/feeds';
+import { generateRssXml } from '@/data/feeds';
 
 export async function GET(context: APIContext) {
-  const feed = await generateFeed(context);
-  return new Response(feed.atom1(), {
-    headers: { 'Content-Type': 'application/atom+xml; charset=utf-8' },
+  const xml = await generateRssXml(context);
+  return new Response(xml, {
+    headers: { 'Content-Type': 'application/rss+xml; charset=utf-8' },
   });
 }
