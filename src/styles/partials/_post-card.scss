@@ -45,8 +45,13 @@
   .post-card-body {
     padding: 1rem 1rem 1rem 2rem;
 
+    .post-date-wrapper {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
     .post-date{
-      margin-left: 10px;
     }
 
     .post-card-title{

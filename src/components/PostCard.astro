@@ -22,7 +22,7 @@ const { post, gridCard = false } = Astro.props;
     </a>
     <div class={gridCard ? 'post-card-body' : 'col-item post-card-body'}>
       <div>
-        <span>
+        <span class="post-date-wrapper">
           <Icon name="lucide:clock" aria-hidden="true" />
           <time class="post-date" datetime={post.data.date.toISOString()}>
             {post.data.date.toLocaleDateString('en-GB', {
