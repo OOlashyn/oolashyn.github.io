@@ -4,27 +4,64 @@ import { siteConfig } from '@/config';
 const { repo, issueTerm, label } = siteConfig.utterances;
 ---
 
-<div id="light-mode">
-  <script
-    is:inline
-    src="https://utteranc.es/client.js"
-    data-repo={repo}
-    data-issue-term={issueTerm}
-    data-label={label}
-    data-theme="github-light"
-    crossorigin="anonymous"
-    async
-  ></script>
-</div>
-<div id="dark-mode">
-  <script
-    is:inline
-    src="https://utteranc.es/client.js"
-    data-repo={repo}
-    data-issue-term={issueTerm}
-    data-label={label}
-    data-theme="github-dark"
-    crossorigin="anonymous"
-    async
-  ></script>
-</div>
+<div id="utterances-dark-sentinel" aria-hidden="true"></div>
+<div id="utterances-light-sentinel" aria-hidden="true"></div>
+<div
+  id="utterances-container"
+  data-repo={repo}
+  data-issue-term={issueTerm}
+  data-label={label}
+></div>
+
+<script>
+  function utterancesThemeFromScheme(scheme: string): string {
+    return scheme === 'dark' ? 'github-dark' : 'github-light';
+  }
+
+  function getUtterancesTheme(): string {
+    const dark = document.getElementById('utterances-dark-sentinel');
+    return dark && getComputedStyle(dark).display !== 'none' ? 'github-dark' : 'github-light';
+  }
+
+  function sendThemeToIframe(theme: string): void {
+    const iframe = document.querySelector<HTMLIFrameElement>('iframe.utterances-frame');
+    iframe?.contentWindow?.postMessage(
+      { type: 'set-theme', theme },
+      'https://utteranc.es',
+    );
+  }
+
+  function loadUtterances(theme?: string): void {
+    const container = document.getElementById('utterances-container');
+    if (!container) return;
+
+    const { repo, issueTerm, label } = container.dataset;
+    if (!repo || !issueTerm || !label) return;
+
+    container.innerHTML = '';
+
+    const script = document.createElement('script');
+    script.src = 'https://utteranc.es/client.js';
+    script.setAttribute('data-repo', repo);
+    script.setAttribute('data-issue-term', issueTerm);
+    script.setAttribute('data-label', label);
+    script.setAttribute('data-theme', theme ?? getUtterancesTheme());
+    script.setAttribute('crossorigin', 'anonymous');
+    script.async = true;
+
+    container.appendChild(script);
+  }
+
+  document.addEventListener('astro:page-load', () => loadUtterances());
+
+  document.addEventListener('colorschemechange', (e) => {
+    const scheme = (e as CustomEvent<{ colorScheme: string }>).detail?.colorScheme;
+    const theme = utterancesThemeFromScheme(scheme ?? '');
+    const iframe = document.querySelector<HTMLIFrameElement>('iframe.utterances-frame');
+    if (iframe) {
+      sendThemeToIframe(theme);
+    } else {
+      loadUtterances(theme);
+    }
+  });
+</script>
