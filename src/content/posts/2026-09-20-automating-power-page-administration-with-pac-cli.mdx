@@ -1,0 +1,79 @@
+---
+title: Automating Power Pages Administration with PAC CLI
+date: "2026-09-20 21:45:20 -0500"
+description: The arrival of the new pac power-pages CLI command group marks a major step forward for Power Pages administration and DevOps. In this post, I review some of these commands that solve issues commonly faced by everyday administrators, such as managing SSL certificates, controlling site lifecycles, and handling break-glass governance exceptions, as well as how these new commands help to automate these tasks. Check it out to find out more.
+excerpt: The arrival of the new pac power-pages CLI command group marks a major step forward for Power Pages administration and DevOps. In this post, I review some of these commands that solve issues commonly faced by everyday administrators, such as managing SSL certificates, controlling site lifecycles, and handling break-glass governance exceptions, as well as how these new commands help to automate these tasks. Check it out to find out more.
+shortDescription: The arrival of the new pac power-pages CLI command group marks a major step forward for Power Pages administration and DevOps. In this post, I review some of these commands that solve issues commonly faced by everyday administrators, such as managing SSL certificates, controlling site lifecycles, and handling break-glass governance exceptions, as well as how these new commands help to automate these tasks.
+img: 2026-09-20-cover.jpg
+image: /assets/img/2026-09-20-cover-rss.jpg
+tags: ['PowerPages']
+---
+
+import ImportantBlock from "@/components/mdx/ImportantBlock.astro";
+
+Administering a Power Pages site was always a chore. Historically, it meant juggling multiple apps, interfaces, and websites to manage different aspects of a site, without a truly unified platform. A lot of this was addressed when Microsoft added Power Pages to the Power Platform Admin APIs. However, you still need to know the proper endpoints and get proper auth tokens.
+
+Now, we finally have an easy way to automate our admin tasks - with the latest PAC CLI 2.12.X update, all those Admin APIs are exposed as dedicated commands.
+
+My only pet peeve with this release is the command name **pac power-pages**, which is confusing since we already have pac pages to work with site content and ALM. Furthermore, power-pages on its own doesn’t articulate that these are admin commands. Since these commands are currently in preview, I really hope that MS will reconsider the naming convention before GA.
+
+<ImportantBlock>
+As of writing this article, pac power-pages commands are in Preview.
+</ImportantBlock>
+
+With this release, Microsoft introduced 40 new commands under **pac power-pages**. For the whole list of commands, see [the official documentation](https://learn.microsoft.com/en-us/power-platform/developer/cli/reference/power-pages).
+
+In this article, we will review the ones I find the most interesting and how they fit into real-world admin scenarios.
+
+## Automated Certificate Management
+
+One of the most annoying tasks in Power Pages is managing custom SSL certificates. As standard security practice dictates, these certificates need to be rotated often, based on your company's security policy. The typical process was as follows: set up a calendar reminder for when the certificate is about to expire, obtain the new one and manually upload the certificate through the UI. I kid you not - I still have meeting invites in my calendar from some of my previous clients specifically to update their certificates.
+
+Finally, all of this can become a thing of the past with the introduction of 2 new commands:
+
+* **pac power-pages upload-certificate** - allows you to upload a certificate for the specified website
+* **pac power-pages add-ssl-binding-by-portal** - allows you to bind a certificate to the specified site
+
+Now, instead of doing everything manually, you can set up a fully automated workflow, for example, using Azure Key Vault automated renewals paired with a deployment pipeline. When a certificate is renewed, an automated pipeline can get the new certificate as a .pfx file, upload it, and bind it using PAC CLI.
+
+And no more “renewal” meetings in your calendar or calls about an “unsecure” website.
+
+
+## Site Lifecycle Controls
+
+How often, after deploying changes to your website, do you need to go to the admin center to manually hit that sweet “Restart Website” button to fully “nuke” server-side cache and allow your changes to take effect? And how many times have you wished to have a short command to do it or even make it part of the deployment?
+
+Well, now your wish has been granted- the new **pac power-pages restart-website** command can do just that - hard restart your website. 
+
+In addition, two new commands, **start-website** and **stop-website**, can help you manage your site state much more easily. However, be careful - **stop-website** will actually stop your website completely, instead of putting it into maintenance mode. This means that your users will be greeted by generic 503 or error pages, so make sure you are using this command intentionally.
+
+This is actually my only grievance with this command group, as having a simple command to put the website into maintenance mode would be an ideal addition for the proper ALM pipeline.
+
+## Exception Governance
+
+Power Pages as a platform constantly evolves, and Microsoft is constantly introducing new changes. This also means that some functionality is being deprecated (either by being legacy/outdated or because of security implications). The most recent example of this is Web API wildcard deprecation. This setting led to the recent data leaks and hacker attacks. Starting last week (September 14, 2026), your website can no longer use wildcards as a Web API option, making it much more secure.
+
+However, not all of the deprecations are equal. Sometimes, your company needs more time to adjust its website. Or legacy code is just too complex and process-dependent, and the deprecation timeline just isn’t feasible. What should you do in that case? 
+
+Well, that's where the exception functionality comes into play.
+
+Exception functionality allows you to grant a break-glass admin exception for a specific exception type for a specific website. Admins need to explicitly acknowledge the risk of granting the exception.
+
+Microsoft provides the following commands to manage exceptions:
+
+* **pac power-pages get-affected-sites** - get the list of sites that are affected by a specific exception type
+* **pac power-pages get-exceptions** - get the list of exceptions applied at the tenant level
+* **pac power-pages grant-exception** - grants an exception for a specific exception type to a specific site
+* **pac power-pages revoke-exception** - revokes a previously granted exception
+
+Currently, the only exception supported is “WebApiStarRetirement”, which is directly related to the recent wildcard deprecation. However, I would definitely not recommend granting an exception for this one if you can avoid it - it is indeed too permissive, and you should definitely limit its scope.
+
+In the future, when new deprecations arrive, using the commands above will allow you to better prepare and remediate deprecations without full-blown production downtime.
+
+## Conclusion
+
+The introduction of the pac power-pages commands is a massive step forward for Power Pages administration. No longer do we need to rely on manual steps or complex REST API calls. Having a unified set of commands that are easily scriptable opens the door for a much more maintainable and structured DevOps and management story. I still hope that MS will adjust the name to something more appropriate before GA to avoid confusing users, but having these capabilities natively in the CLI is a major milestone for Power Pages governance.
+
+## Credits
+
+Image by <a href="https://pixabay.com/users/dimitri_k-30935610/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=7925618">Dimitrios K</a> from <a href="https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=7925618">Pixabay</a>
