@@ -12,12 +12,15 @@ const recentPosts = allPosts
   <h2 class="recent-title">Recent post</h2>
   <div class="recent-list">
     {recentPosts.map((post) => (
-      <a
-        href={getPostUrl(post.id)}
-        class="recent-item"
-        style={`background: url(/assets/img/${post.data.img}) center no-repeat; background-size: cover;`}
-      >
-        <span>{post.data.title}</span>
+      <a href={getPostUrl(post.id)} class="recent-item">
+        <img
+          class="recent-item__image"
+          src={`/assets/img/${post.data.img}`}
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+        <span class="recent-item__title">{post.data.title}</span>
       </a>
     ))}
   </div>

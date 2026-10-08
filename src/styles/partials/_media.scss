@@ -1,26 +1,5 @@
 /* Small Devices, Tablets */
 @media only screen and (max-width: 768px) {
-  .recent-box {
-    .recent-list {
-      .recent-item {
-        position: relative;
-        display: inline-block;
-        width: 49%;
-        height: 150px;
-        margin-left: 0.5%;
-        margin-bottom: 0.5%;
-
-        span {
-          position: absolute;
-          font-size: 12px;
-          left: 2.5%;
-          bottom: 10%;
-          color: var(--white);
-        }
-      }
-    }
-  }
-
   .center-gif{
     margin: 0 auto;
     display: block;
@@ -60,27 +39,6 @@
 
   .page-image {
     height: 380px;
-  }
-
-  .recent-box {
-    .recent-list {
-      .recent-item {
-        position: relative;
-        display: inline-block;
-        width: 99%;
-        height: 150px;
-        margin-left: 0.5%;
-        margin-bottom: 0.5%;
-
-        span {
-          position: absolute;
-          font-size: 12px;
-          left: 2.5%;
-          bottom: 10%;
-          color: var(--white);
-        }
-      }
-    }
   }
 
   .about-body {
