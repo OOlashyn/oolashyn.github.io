@@ -1,6 +1,6 @@
 ---
 import HomeLayout from '@/layouts/HomeLayout.astro';
-import { formatPostDate, getPostUrl, getSortedPosts } from '@/utils';
+import { formatPostDate, getPostUrl, getSortedPosts, getTagAnchor } from '@/utils';
 
 // Posts are already newest first, so each tag's list keeps that order
 const allPosts = await getSortedPosts();
@@ -26,7 +26,7 @@ const sortedTags = [...tagMap.keys()].sort();
     <ul class="tags">
       {sortedTags.map((tag) => (
         <li>
-          <a href={`#${encodeURIComponent(tag)}`} class="tag">
+          <a href={`#${encodeURIComponent(getTagAnchor(tag))}`} class="tag">
             {tag} <span>({tagMap.get(tag)!.length})</span>
           </a>
         </li>
@@ -34,7 +34,7 @@ const sortedTags = [...tagMap.keys()].sort();
     </ul>
     {sortedTags.map((tag) => (
       <>
-        <h2 id={encodeURIComponent(tag)}>{tag}</h2>
+        <h2 id={getTagAnchor(tag)}>{tag}</h2>
         {tagMap.get(tag)!.map((post) => (
           <div class="tag-list">
             <span>

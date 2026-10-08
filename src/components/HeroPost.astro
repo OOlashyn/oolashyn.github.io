@@ -1,6 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import { formatPostDate, getPostUrl } from '@/utils';
+import { formatPostDate, getPostUrl, getTagUrl } from '@/utils';
 import { Icon } from 'astro-icon/components';
 import CoverImage from '@/components/CoverImage.astro';
 
@@ -26,7 +26,7 @@ const category = post.data.tags?.[0] ?? null;
       {category && (
         <ul class="tag-list hero-post__tags">
           <li class="tag">
-            <a href={`/tags/#${category}`} class="tag-link">#{category}</a>
+            <a href={getTagUrl(category)} class="tag-link">#{category}</a>
           </li>
         </ul>
       )}

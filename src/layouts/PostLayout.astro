@@ -9,7 +9,7 @@ import Utterances from '@/components/Utterances.astro';
 import CopyCode from '@/components/CopyCode.astro';
 import CoverImage from '@/components/CoverImage.astro';
 import { Icon } from 'astro-icon/components';
-import { formatPostDate } from '@/utils';
+import { formatPostDate, getTagUrl } from '@/utils';
 import type { ImageMetadata } from 'astro';
 
 interface Props {
@@ -50,7 +50,7 @@ const dateStr = formatPostDate(date);
             <div class="page-tag">
               <span>Tags:</span>
               {tags.map((tag) => (
-                <a href={`/tags/#${tag}`} class="tag" data-pagefind-filter={`tag:${tag}`}>| {tag}</a>
+                <a href={getTagUrl(tag)} class="tag" data-pagefind-filter={`tag:${tag}`}>| {tag}</a>
               ))}
             </div>
             <div class="page-share">

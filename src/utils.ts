@@ -16,6 +16,22 @@ export function getPostUrl(postId: string): string {
 }
 
 /**
+ * Get the anchor id for a tag's section on the tags page.
+ * Whitespace isn't allowed in ids, so it becomes a hyphen; other characters are kept so
+ * existing links like /tags/#PowerPages keep working.
+ */
+export function getTagAnchor(tag: string): string {
+  return tag.trim().replace(/\s+/g, '-');
+}
+
+/**
+ * Get the URL of a tag's section on the tags page.
+ */
+export function getTagUrl(tag: string): string {
+  return `/tags/#${encodeURIComponent(getTagAnchor(tag))}`;
+}
+
+/**
  * Get all posts, newest first.
  */
 export async function getSortedPosts(): Promise<CollectionEntry<'posts'>[]> {

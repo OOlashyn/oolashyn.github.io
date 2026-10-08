@@ -183,7 +183,8 @@ const isOpen = pageWrapper?.classList.toggle('active') ?? false;
 
 - Blog posts are `.md` or `.mdx` files in `src/content/posts/`.
 - Use the helpers in `src/utils.ts` instead of re-implementing them: `getSortedPosts()` (all
-  posts, newest first), `formatPostDate()`, `getPostSlug()` / `getPostUrl()`.
+  posts, newest first), `formatPostDate()`, `getPostSlug()` / `getPostUrl()`, and
+  `getTagUrl()` / `getTagAnchor()` for links to a tag's section on the tags page.
 - The post list is `index.astro` (hero + first page) and `page[page].astro` (`/page2/` onwards,
   via Astro's `paginate()`).
 - Required frontmatter fields are validated by the Zod schema in `src/content.config.ts`.

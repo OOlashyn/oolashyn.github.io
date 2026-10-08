@@ -1,6 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import { formatPostDate, getPostUrl } from '@/utils';
+import { formatPostDate, getPostUrl, getTagUrl } from '@/utils';
 import { Icon } from 'astro-icon/components';
 import CoverImage from '@/components/CoverImage.astro';
 
@@ -39,7 +39,7 @@ const { post, gridCard = false } = Astro.props;
       <ul class="tag-list">
         {(post.data.tags || []).map((tag) => (
           <li class="tag">
-            <a href={`/tags/#${tag}`} class="tag-link">#{tag}</a>
+            <a href={getTagUrl(tag)} class="tag-link">#{tag}</a>
           </li>
         ))}
       </ul>
