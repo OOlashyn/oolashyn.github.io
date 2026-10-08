@@ -1,0 +1,35 @@
+---
+import HomeLayout from '@/layouts/HomeLayout.astro';
+import PostCard from '@/components/PostCard.astro';
+import { siteConfig } from '@/config';
+import { getSortedPosts } from '@/utils';
+import type { CollectionEntry } from 'astro:content';
+import type { GetStaticPaths, Page } from 'astro';
+
+interface Props {
+  page: Page<CollectionEntry<'posts'>>;
+}
+
+// Generates /page2/, /page3/, ... Page 1 is index.astro, which shows the newest post
+// as a hero above the grid, so it's excluded from the paginated posts.
+export const getStaticPaths = (async ({ paginate }) => {
+  const [, ...posts] = await getSortedPosts();
+  return paginate(posts, {
+    pageSize: siteConfig.postsPerPage,
+    // Page 1 lives at the site root, not /page1/
+    format: (url) => (url === '/page1/' ? '/' : url),
+  }).filter(({ params }) => params.page !== '1');
+}) satisfies GetStaticPaths;
+
+const { page } = Astro.props;
+---
+
+<HomeLayout
+  description={siteConfig.description}
+  previousUrl={page.url.prev}
+  nextUrl={page.url.next}
+>
+  <ol class="post-card-grid">
+    {page.data.map((post) => <PostCard post={post} gridCard={true} />)}
+  </ol>
+</HomeLayout>

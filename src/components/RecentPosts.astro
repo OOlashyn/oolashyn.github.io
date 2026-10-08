@@ -1,12 +1,8 @@
 ---
-import { getCollection } from 'astro:content';
-import { getPostUrl } from '@/utils';
+import { getPostUrl, getSortedPosts } from '@/utils';
 import CoverImage from '@/components/CoverImage.astro';
 
-const allPosts = await getCollection('posts');
-const recentPosts = allPosts
-  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-  .slice(0, 4);
+const recentPosts = (await getSortedPosts()).slice(0, 4);
 ---
 
 <div class="recent-box" data-pagefind-ignore>

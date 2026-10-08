@@ -182,6 +182,10 @@ const isOpen = pageWrapper?.classList.toggle('active') ?? false;
 ### Content (Blog Posts)
 
 - Blog posts are `.md` or `.mdx` files in `src/content/posts/`.
+- Use the helpers in `src/utils.ts` instead of re-implementing them: `getSortedPosts()` (all
+  posts, newest first), `formatPostDate()`, `getPostSlug()` / `getPostUrl()`.
+- The post list is `index.astro` (hero + first page) and `page[page].astro` (`/page2/` onwards,
+  via Astro's `paginate()`).
 - Required frontmatter fields are validated by the Zod schema in `src/content.config.ts`.
 - Custom MDX components (code blocks, callouts, videos, etc.) are in `src/components/mdx/`.
 - Cover images (`img:`) live in `src/assets/covers/` and are referenced relative to the post

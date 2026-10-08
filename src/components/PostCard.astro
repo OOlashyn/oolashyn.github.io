@@ -1,6 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import { getPostUrl } from '@/utils';
+import { formatPostDate, getPostUrl } from '@/utils';
 import { Icon } from 'astro-icon/components';
 import CoverImage from '@/components/CoverImage.astro';
 
@@ -26,11 +26,7 @@ const { post, gridCard = false } = Astro.props;
         <span class="post-date-wrapper">
           <Icon name="lucide:clock" aria-hidden="true" />
           <time class="post-date" datetime={post.data.date.toISOString()}>
-            {post.data.date.toLocaleDateString('en-GB', {
-              day: '2-digit',
-              month: 'short',
-              year: 'numeric',
-            })}
+            {formatPostDate(post.data.date)}
           </time>
         </span>
       </div>

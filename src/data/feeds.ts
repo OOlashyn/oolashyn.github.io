@@ -2,7 +2,6 @@ import type { Root as HastRoot, RootContent } from 'hast';
 import type { Root as MdastRoot } from 'mdast';
 import type { APIContext } from 'astro';
 
-import { getCollection } from 'astro:content';
 import { Feed } from 'feed';
 import minifyHtml from '@minify-html/node';
 import rehypeStringify from 'rehype-stringify';
@@ -12,7 +11,7 @@ import remarkRehype from 'remark-rehype';
 import { type Plugin, unified } from 'unified';
 
 import { siteConfig } from '@/config';
-import { getPostUrl } from '@/utils';
+import { getPostUrl, getSortedPosts } from '@/utils';
 
 type UrlLike = URL | string;
 
@@ -110,10 +109,7 @@ export async function generateFeed(context: APIContext): Promise<Feed> {
     },
   });
 
-  const posts = await getCollection('posts');
-  const sortedPosts = posts.sort(
-    (a, b) => b.data.date.getTime() - a.data.date.getTime()
-  );
+  const sortedPosts = await getSortedPosts();
 
   for (const post of sortedPosts) {
     const link = new URL(getPostUrl(post.id), site).href;

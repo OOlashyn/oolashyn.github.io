@@ -1,9 +1,9 @@
 ---
 import HomeLayout from '@/layouts/HomeLayout.astro';
-import { getCollection } from 'astro:content';
-import { getPostUrl } from '@/utils';
+import { formatPostDate, getPostUrl, getSortedPosts } from '@/utils';
 
-const allPosts = await getCollection('posts');
+// Posts are already newest first, so each tag's list keeps that order
+const allPosts = await getSortedPosts();
 
 // Build tag map: tag -> posts
 const tagMap = new Map<string, typeof allPosts>();
@@ -18,11 +18,6 @@ for (const post of allPosts) {
 
 // Sort tags alphabetically
 const sortedTags = [...tagMap.keys()].sort();
-
-// Sort posts within each tag by date
-for (const [, posts] of tagMap) {
-  posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
-}
 ---
 
 <HomeLayout title="Tags">
@@ -47,11 +42,7 @@ for (const [, posts] of tagMap) {
             </span>
             <small>
               <span>
-                | {post.data.date.toLocaleDateString('en-GB', {
-                    day: '2-digit',
-                    month: 'short',
-                    year: 'numeric',
-                  })}
+                | {formatPostDate(post.data.date)}
               </span>
             </small>
           </div>

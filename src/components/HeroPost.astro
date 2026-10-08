@@ -1,6 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import { getPostUrl } from '@/utils';
+import { formatPostDate, getPostUrl } from '@/utils';
 import { Icon } from 'astro-icon/components';
 import CoverImage from '@/components/CoverImage.astro';
 
@@ -33,11 +33,7 @@ const category = post.data.tags?.[0] ?? null;
       <span class="hero-post__date">
         <Icon name="lucide:clock" aria-hidden="true" />
         <time datetime={post.data.date.toISOString()}>
-          {post.data.date.toLocaleDateString('en-GB', {
-            day: '2-digit',
-            month: 'short',
-            year: 'numeric',
-          })}
+          {formatPostDate(post.data.date)}
         </time>
       </span>
     </div>
