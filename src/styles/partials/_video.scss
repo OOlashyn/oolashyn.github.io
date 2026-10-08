@@ -1,3 +1,39 @@
 .video{
     max-width: 100%;
 }
+
+.youtube-facade {
+    background-color: var(--black);
+
+    .youtube-facade__link {
+        position: absolute;
+        inset: 0;
+        display: block;
+        cursor: pointer;
+    }
+
+    .youtube-facade__thumb {
+        width: 100%;
+        height: 100%;
+        // hqdefault thumbnails are 4:3 with letterboxing; cover crops it to 16:9
+        object-fit: cover;
+    }
+
+    .youtube-facade__play {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 68px;
+        height: 48px;
+        transform: translate(-50%, -50%);
+        fill: #212121;
+        fill-opacity: .8;
+        transition: fill .2s, fill-opacity .2s;
+    }
+
+    .youtube-facade__link:hover .youtube-facade__play,
+    .youtube-facade__link:focus-visible .youtube-facade__play {
+        fill: #f00;
+        fill-opacity: 1;
+    }
+}

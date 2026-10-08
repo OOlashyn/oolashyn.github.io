@@ -1,17 +1,54 @@
 ---
 interface Props {
   id: string;
+  title?: string;
 }
 
-const { id } = Astro.props;
+const { id, title = 'YouTube video' } = Astro.props;
 ---
 
-<div class="embed-container">
-  <iframe
-    width="560"
-    height="315"
-    src={`https://www.youtube.com/embed/${id}`}
-    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-    allowfullscreen
-  ></iframe>
+<!--
+  Lightweight facade: shows the thumbnail and only loads the YouTube player (~1 MB of
+  scripts) when clicked. Without JS the link simply opens the video on YouTube.
+-->
+<div class="embed-container youtube-facade">
+  <a
+    href={`https://www.youtube.com/watch?v=${id}`}
+    class="youtube-facade__link"
+    data-youtube-id={id}
+    data-youtube-title={title}
+    aria-label={`Play video: ${title}`}
+  >
+    <img
+      class="youtube-facade__thumb"
+      src={`https://i.ytimg.com/vi/${id}/hqdefault.jpg`}
+      alt=""
+      loading="lazy"
+      decoding="async"
+    />
+    <svg class="youtube-facade__play" viewBox="0 0 68 48" aria-hidden="true">
+      <path d="M66.5 7.7c-.8-2.9-3-5.2-5.9-6C55.3.3 34 .3 34 .3s-21.3 0-26.6 1.4c-2.9.8-5.2 3.1-5.9 6C.1 13 .1 24 .1 24s0 11 1.4 16.3c.8 2.9 3 5.2 5.9 6C12.7 47.7 34 47.7 34 47.7s21.3 0 26.6-1.4c2.9-.8 5.2-3.1 5.9-6C67.9 35 67.9 24 67.9 24s0-11-1.4-16.3z" />
+      <path d="M45 24 27 14v20z" fill="#fff" />
+    </svg>
+  </a>
 </div>
+
+<script>
+  // Delegated listener survives ClientRouter navigations (bundled scripts run only once)
+  document.addEventListener('click', (e) => {
+    const link = (e.target as Element | null)?.closest<HTMLAnchorElement>('a[data-youtube-id]');
+    if (!link) return;
+    // Let modifier clicks open YouTube in a new tab as a normal link
+    if (e.ctrlKey || e.metaKey || e.shiftKey || e.button !== 0) return;
+    e.preventDefault();
+
+    const iframe = document.createElement('iframe');
+    iframe.src = `https://www.youtube-nocookie.com/embed/${link.dataset.youtubeId}?autoplay=1`;
+    iframe.title = link.dataset.youtubeTitle ?? 'YouTube video';
+    iframe.allow = 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture';
+    iframe.allowFullscreen = true;
+
+    link.replaceWith(iframe);
+    iframe.focus();
+  });
+</script>

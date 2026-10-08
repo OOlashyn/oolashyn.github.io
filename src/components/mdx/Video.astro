@@ -7,7 +7,62 @@ interface Props {
 const { mp4, webm } = Astro.props;
 ---
 
-<video autoplay loop muted playsinline controls class="video">
+<!--
+  No autoplay attribute: the script below plays the video only while it is on screen,
+  so a post with several demos doesn't download all of them on page load.
+-->
+<video loop muted playsinline controls preload="metadata" class="video" data-play-in-view>
   {webm && <source src={`/assets/videos/${webm}`} type="video/webm" />}
   {mp4 && <source src={`/assets/videos/${mp4}`} type="video/mp4" />}
 </video>
+
+<script>
+  let observer: IntersectionObserver | undefined;
+  let controller: AbortController | undefined;
+
+  function initVideos(): void {
+    observer?.disconnect();
+    controller?.abort();
+
+    const videos = document.querySelectorAll<HTMLVideoElement>('video[data-play-in-view]');
+    if (videos.length === 0) return;
+    // Respect reduced motion: leave playback to the user via the controls
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    controller = new AbortController();
+    const { signal } = controller;
+
+    observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        const video = entry.target as HTMLVideoElement;
+        if (entry.isIntersecting) {
+          if (video.dataset.userPaused === 'true') continue;
+          // play() rejects if a pause interrupts it (e.g. fast scrolling) — safe to ignore
+          video.play().catch(() => {});
+        } else if (!video.paused) {
+          video.dataset.autoPaused = 'true';
+          video.pause();
+        }
+      }
+    }, { threshold: 0.25 });
+
+    videos.forEach((video) => {
+      // Remember a manual pause so scrolling back doesn't restart the video
+      video.addEventListener('pause', () => {
+        if (video.dataset.autoPaused === 'true') {
+          delete video.dataset.autoPaused;
+        } else if (document.visibilityState === 'visible') {
+          // Browsers pause media themselves in hidden tabs — that isn't the reader's choice
+          video.dataset.userPaused = 'true';
+        }
+      }, { signal });
+      video.addEventListener('play', () => {
+        delete video.dataset.userPaused;
+      }, { signal });
+
+      observer?.observe(video);
+    });
+  }
+
+  document.addEventListener('astro:page-load', initVideos);
+</script>
