@@ -99,15 +99,12 @@
   margin-left: auto;
 }
 
-dark-mode-toggle::part(toggleLabel)::before {
-  margin-top: -10px;
-}
-
 /* Reset default browser button styles for icon buttons, then apply icon styling */
 .menu-icon,
 .menu-icon-close,
 .search-icon,
-.search-icon-close {
+.search-icon-close,
+.theme-toggle {
   background: none;
   border: none;
   padding: 10px;
@@ -118,7 +115,7 @@ dark-mode-toggle::part(toggleLabel)::before {
   line-height: inherit;
   transition: all .4s;
   &:hover {
-    color: var(--icon--hover-color);
+    color: var(--icon-hover-color);
   }
 }
 

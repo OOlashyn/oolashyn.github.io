@@ -8,11 +8,9 @@ interface Props {
   title?: string;
   description?: string;
   image?: string;
-  darkCssUrl: string;
-  lightCssUrl: string;
 }
 
-const { title, description, image, darkCssUrl, lightCssUrl } = Astro.props;
+const { title, description, image } = Astro.props;
 const pageTitle = title ? `${title} - ${siteConfig.title}` : siteConfig.title;
 const pageDescription = description || siteConfig.description;
 const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url);
@@ -24,6 +22,22 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url);
   <meta name="description" content={pageDescription} />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Theme: runs before first paint to avoid a flash of the wrong theme -->
+  <script is:inline>
+    (function () {
+      var root = document.documentElement;
+      var stored = null;
+      try { stored = localStorage.getItem('dark-mode-toggle'); } catch (e) {}
+      root.dataset.theme = stored === 'dark' || stored === 'light'
+        ? stored
+        : matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      // ClientRouter replaces <html> attributes on navigation: carry the theme over
+      document.addEventListener('astro:before-swap', function (e) {
+        e.newDocument.documentElement.dataset.theme = root.dataset.theme;
+      });
+    })();
+  </script>
   <link rel="manifest" href="/manifest.json" />
   <link rel="canonical" href={canonicalUrl.href} />
 
@@ -52,16 +66,9 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url);
   <meta name="msapplication-navbutton-color" content="#311e3e" />
   <meta name="apple-mobile-web-app-status-bar-style" content="#311e3e" />
 
-  <!-- Theme stylesheets -->
-  <link rel="stylesheet" href={darkCssUrl} media="(prefers-color-scheme: dark)" />
-  <link rel="stylesheet" href={lightCssUrl} media="(prefers-color-scheme: light)" />
-
   <!-- Fonts -->
   <Font cssVariable="--font-montserrat" preload />
   <Font cssVariable="--font-lato" preload />
-
-  <!-- Dark mode toggle web component -->
-  <script is:inline type="module" src="https://unpkg.com/dark-mode-toggle"></script>
 
   <!-- Google verification -->
   <meta name="google-site-verification" content="e33KPrSW7_LHxFoA9XP_rkj1noTjubwKyfeCRAV9seg" />

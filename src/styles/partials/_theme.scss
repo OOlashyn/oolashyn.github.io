@@ -1,0 +1,187 @@
+// Light / dark theme.
+//
+// An inline script in <head> (see Head.astro) sets <html data-theme="light|dark"> before
+// first paint, from the reader's saved choice or their OS preference. Without JS there is
+// no data-theme, so the OS preference applies through the media query fallbacks below.
+
+@mixin light-vars {
+  --black: #000;
+  --white: #fff;
+  --blue: #2d89ec;
+  --dark-purple: #311e3e;
+  --dark-pink: #87314e;
+  --gray: #efefef;
+  --light-gray: #999999;
+  --lighten-gray: #d9d9d9;
+  --dark-gray: #3e3e40;
+  --light-brd-color: hsl(220, 13%, 86%);
+  --purple: #5d47c6;
+  --deep-purple: #4733a7;
+  --dark-grey: #2b2c34;
+  --code-bar-bg: #3b3b3b;
+  --code-bar-bg-hover: #656c7a;
+  --card-bg-color: hsl(220, 20%, 97%);
+
+  --icon-color: var(--light-gray);
+  --icon-hover-color: var(--dark-pink);
+  --link-color: var(--purple);
+  --link-hover-color: var(--deep-purple);
+  --main-text-color: var(--dark-gray);
+  --main-bg-color: var(--white);
+  --main-h-color: var(--dark-purple);
+  --blockquote-brd-color: var(--dark-purple);
+  --blockquote-color: var(--dark-purple);
+  --post-page-footer: var(--lighten-gray);
+  --recent-post-brd-color: var(--lighten-gray);
+  --important-block-bg-color: #7cd7ff66;
+  --important-block-header-color: var(--dark-gray);
+  --update-block-bg-color: #efd9fd;
+  --update-block-header-color: var(--dark-gray);
+  --footer-bg-color: #efefef;
+  --tag-date-color: var(--dark-purple);
+}
+
+@mixin dark-vars {
+  --black: #000;
+  --white: #fff;
+  --blue: #2d89ec;
+  --dark-purple: #311e3e;
+  --dark-pink: #87314e;
+  --gray: #efefef;
+  --light-gray: #999999;
+  --lighten-gray: #d9d9d9;
+  --dark-gray: #3e3e40;
+  --light-brd-color: hsl(0, 0%, 30%);
+  --purple: #7f5af0;
+  --deep-purple: #4733a7;
+  --dark-grey: #2b2c34;
+  --code-bar-bg: #2a2a2a;
+  --code-bar-bg-hover: #4a4f5a;
+  --card-bg-color: hsl(200, 3%, 16%);
+
+  --icon-color: var(--light-gray);
+  --icon-hover-color: #bbe1fa;
+  --link-color: #bbe1fa;
+  --link-hover-color: #86cbf8;
+  --main-text-color: hsl(0, 0%, 85%);
+  --main-bg-color: hsl(200, 3%, 12%);
+  --main-h-color: hsl(0, 0%, 85%);
+  --blockquote-brd-color: hsl(0, 0%, 85%);
+  --blockquote-color: hsl(0, 0%, 85%);
+  --post-page-footer: var(--light-brd-color);
+  --recent-post-brd-color: var(--light-brd-color);
+  --important-block-bg-color: #002b4d;
+  --important-block-header-color: #a3d7ff;
+  --update-block-bg-color: #3b2e58;
+  --update-block-header-color: #efd9fd;
+  --footer-bg-color: hsl(200, 3%, 12%);
+  --tag-date-color: #bbe1fa;
+}
+
+// Scope rules to one theme: `.foo { @include when-dark { ... } }`
+@mixin when-light {
+  :root[data-theme="light"] & { @content; }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme]) & { @content; }
+  }
+}
+
+@mixin when-dark {
+  :root[data-theme="dark"] & { @content; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) & { @content; }
+  }
+}
+
+// Variables
+:root {
+  @include light-vars;
+}
+
+:root[data-theme="dark"] {
+  @include dark-vars;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    @include dark-vars;
+  }
+}
+
+// Light-only rules
+.post-card-title {
+  @include when-light {
+    color: var(--dark-gray);
+
+    &:hover {
+      color: var(--deep-purple);
+    }
+  }
+}
+
+.tag-link {
+  @include when-light {
+    color: #101010a8;
+  }
+}
+
+.previous,
+.next {
+  @include when-light {
+    color: #101010a8 !important;
+  }
+}
+
+// Dark-only rules
+.code-bar {
+  @include when-dark {
+    border-top: 1px solid var(--light-brd-color);
+    border-right: 1px solid var(--light-brd-color);
+    border-left: 1px solid var(--light-brd-color);
+  }
+}
+
+.main-footer {
+  @include when-dark {
+    border-top: 1px solid var(--light-brd-color);
+  }
+}
+
+.main-header {
+  @include when-dark {
+    border-bottom: 1px solid var(--light-brd-color);
+  }
+}
+
+.img-logo {
+  @include when-dark {
+    filter: invert(100%) sepia(0%) saturate(1848%) hue-rotate(47deg) brightness(111%) contrast(101%);
+  }
+}
+
+.projects-card {
+  @include when-dark {
+    border: 1px solid var(--light-brd-color);
+  }
+}
+
+.page-content {
+  @include when-dark {
+    border: 1px solid var(--light-brd-color);
+  }
+}
+
+// Theme toggle button: show the icon for the theme you'd switch to
+.theme-toggle {
+  :root:not([data-theme]) & {
+    display: none; // no JS, nothing to toggle
+  }
+
+  .theme-toggle__sun {
+    @include when-light { display: none; }
+  }
+
+  .theme-toggle__moon {
+    @include when-dark { display: none; }
+  }
+}

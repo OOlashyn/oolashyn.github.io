@@ -4,8 +4,6 @@ import { siteConfig } from '@/config';
 const { repo, issueTerm, label } = siteConfig.utterances;
 ---
 
-<div id="utterances-dark-sentinel" aria-hidden="true"></div>
-<div id="utterances-light-sentinel" aria-hidden="true"></div>
 <div
   id="utterances-container"
   data-pagefind-ignore
@@ -15,13 +13,9 @@ const { repo, issueTerm, label } = siteConfig.utterances;
 ></div>
 
 <script>
-  function utterancesThemeFromScheme(scheme: string): string {
-    return scheme === 'dark' ? 'github-dark' : 'github-light';
-  }
-
+  // The site theme lives on <html data-theme> (set in Head.astro, toggled in Header.astro)
   function getUtterancesTheme(): string {
-    const dark = document.getElementById('utterances-dark-sentinel');
-    return dark && getComputedStyle(dark).display !== 'none' ? 'github-dark' : 'github-light';
+    return document.documentElement.dataset.theme === 'dark' ? 'github-dark' : 'github-light';
   }
 
   function sendThemeToIframe(theme: string): void {
@@ -32,7 +26,7 @@ const { repo, issueTerm, label } = siteConfig.utterances;
     );
   }
 
-  function loadUtterances(theme?: string): void {
+  function loadUtterances(): void {
     const container = document.getElementById('utterances-container');
     if (!container) return;
 
@@ -46,7 +40,7 @@ const { repo, issueTerm, label } = siteConfig.utterances;
     script.setAttribute('data-repo', repo);
     script.setAttribute('data-issue-term', issueTerm);
     script.setAttribute('data-label', label);
-    script.setAttribute('data-theme', theme ?? getUtterancesTheme());
+    script.setAttribute('data-theme', getUtterancesTheme());
     script.setAttribute('crossorigin', 'anonymous');
     script.async = true;
 
@@ -55,14 +49,11 @@ const { repo, issueTerm, label } = siteConfig.utterances;
 
   document.addEventListener('astro:page-load', () => loadUtterances());
 
-  document.addEventListener('colorschemechange', (e) => {
-    const scheme = (e as CustomEvent<{ colorScheme: string }>).detail?.colorScheme;
-    const theme = utterancesThemeFromScheme(scheme ?? '');
-    const iframe = document.querySelector<HTMLIFrameElement>('iframe.utterances-frame');
-    if (iframe) {
-      sendThemeToIframe(theme);
+  document.addEventListener('themechange', () => {
+    if (document.querySelector('iframe.utterances-frame')) {
+      sendThemeToIframe(getUtterancesTheme());
     } else {
-      loadUtterances(theme);
+      loadUtterances();
     }
   });
 </script>

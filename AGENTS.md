@@ -172,7 +172,11 @@ const isOpen = pageWrapper?.classList.toggle('active') ?? false;
 - All styles live in `src/styles/`. The entry point is `main.scss`, which `@use`s partials.
 - Use the SCSS `@use` module system (not `@import`).
 - Each component has a corresponding partial in `src/styles/partials/` named `_component-name.scss`.
-- Color variables for light/dark mode are defined in `light.scss` and `dark.scss`.
+- Light/dark theme lives in `partials/_theme.scss`: color variables per theme, plus
+  `@include when-light { ... }` / `@include when-dark { ... }` for theme-specific rules.
+  The active theme is `<html data-theme="light|dark">`, set before first paint by the inline
+  script in `Head.astro` and toggled by the button in `Header.astro` (which dispatches a
+  `themechange` event). Without JS, `prefers-color-scheme` applies.
 - CSS classes use `kebab-case`.
 
 ### Content (Blog Posts)
