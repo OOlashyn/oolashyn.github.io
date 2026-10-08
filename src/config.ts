@@ -11,7 +11,7 @@ export const siteConfig = {
   authorPic: 'face-min.jpg',
   authorPicFull: 'face.jpg',
   aboutAuthor:
-    'My name is Oleksandr Olashyn. I am a Microsoft Business Application MVP, MCT, certified Dynamics 365 Architect with passion for coding and dancing.',
+    'My name is Oleksandr Olashyn. I am former Microsoft Business Application MVP (5x), MCT, certified Power Platform Architect with passion for coding and dancing.',
   email: 'oleksandr@dancingwithcrm.com',
 
   // Social / Contact
