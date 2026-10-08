@@ -140,3 +140,8 @@ td, th {
 table {
   border-collapse: collapse;
 }
+
+// <picture> wrapper from CoverImage: let the inner <img> size against the parent
+.cover-picture {
+  display: contents;
+}

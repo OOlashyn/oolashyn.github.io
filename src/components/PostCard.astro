@@ -2,6 +2,7 @@
 import type { CollectionEntry } from 'astro:content';
 import { getPostUrl } from '@/utils';
 import { Icon } from 'astro-icon/components';
+import CoverImage from '@/components/CoverImage.astro';
 
 interface Props {
   post: CollectionEntry<'posts'>;
@@ -14,10 +15,10 @@ const { post, gridCard = false } = Astro.props;
 <li class={gridCard ? 'article grid-item' : 'article'}>
   <article class={`flex-column post-card${gridCard ? ' grid-card' : ' flex-row-lg'}`}>
     <a href={getPostUrl(post.id)} aria-label={post.data.title} class={gridCard ? 'card-img-link' : 'col-item'}>
-      <img
+      <CoverImage
+        src={post.data.img}
         class="post-card-image"
-        src={`/assets/img/${post.data.img}`}
-        alt=""
+        sizes="(max-width: 768px) 100vw, 450px"
       />
     </a>
     <div class={gridCard ? 'post-card-body' : 'col-item post-card-body'}>

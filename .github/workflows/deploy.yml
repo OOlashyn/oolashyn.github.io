@@ -21,6 +21,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
+      # Still needed: `bun run` executes the astro CLI on Node, and Astro 7 requires Node >= 22.12
       - name: Setup Node.js
         uses: actions/setup-node@v5
         with:
@@ -29,8 +30,27 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
 
+      - name: Cache Bun packages
+        uses: actions/cache@v6
+        with:
+          path: ~/.bun/install/cache
+          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
+          restore-keys: bun-${{ runner.os }}-
+
+      # Fail instead of silently updating bun.lock if it's out of sync with package.json
       - name: Install dependencies
-        run: bun install
+        run: bun install --frozen-lockfile
+
+      - name: Type check
+        run: bun run check
+
+      # Reuse optimized cover images between runs (cold build ~70s, cached ~20s)
+      - name: Cache optimized images
+        uses: actions/cache@v6
+        with:
+          path: node_modules/.astro
+          key: astro-assets-${{ hashFiles('src/assets/**') }}
+          restore-keys: astro-assets-
 
       - name: Build Astro
         run: bun run build

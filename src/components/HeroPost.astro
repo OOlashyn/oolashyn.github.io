@@ -2,6 +2,7 @@
 import type { CollectionEntry } from 'astro:content';
 import { getPostUrl } from '@/utils';
 import { Icon } from 'astro-icon/components';
+import CoverImage from '@/components/CoverImage.astro';
 
 interface Props {
   post: CollectionEntry<'posts'>;
@@ -13,10 +14,11 @@ const category = post.data.tags?.[0] ?? null;
 
 <div class="hero-post">
   <a href={getPostUrl(post.id)} aria-label={post.data.title} class="hero-post__image-link">
-    <img
+    <CoverImage
+      src={post.data.img}
       class="hero-post__image"
-      src={`/assets/img/${post.data.img}`}
-      alt=""
+      sizes="(max-width: 768px) 100vw, 720px"
+      priority
     />
   </a>
   <div class="hero-post__content">

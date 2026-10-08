@@ -4,13 +4,11 @@ interface Props {
   title?: string;
 }
 
+// Lightweight facade: shows the thumbnail and only loads the YouTube player (~1 MB of
+// scripts) when clicked. Without JS the link simply opens the video on YouTube.
 const { id, title = 'YouTube video' } = Astro.props;
 ---
 
-<!--
-  Lightweight facade: shows the thumbnail and only loads the YouTube player (~1 MB of
-  scripts) when clicked. Without JS the link simply opens the video on YouTube.
--->
 <div class="embed-container youtube-facade">
   <a
     href={`https://www.youtube.com/watch?v=${id}`}

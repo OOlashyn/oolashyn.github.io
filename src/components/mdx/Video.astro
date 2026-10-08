@@ -4,13 +4,11 @@ interface Props {
   webm?: string;
 }
 
+// No autoplay attribute: the script below plays the video only while it is on screen,
+// so a post with several demos doesn't download all of them on page load.
 const { mp4, webm } = Astro.props;
 ---
 
-<!--
-  No autoplay attribute: the script below plays the video only while it is on screen,
-  so a post with several demos doesn't download all of them on page load.
--->
 <video loop muted playsinline controls preload="metadata" class="video" data-play-in-view>
   {webm && <source src={`/assets/videos/${webm}`} type="video/webm" />}
   {mp4 && <source src={`/assets/videos/${mp4}`} type="video/mp4" />}

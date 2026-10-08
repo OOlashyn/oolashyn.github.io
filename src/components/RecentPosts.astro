@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import { getPostUrl } from '@/utils';
+import CoverImage from '@/components/CoverImage.astro';
 
 const allPosts = await getCollection('posts');
 const recentPosts = allPosts
@@ -13,12 +14,10 @@ const recentPosts = allPosts
   <div class="recent-list">
     {recentPosts.map((post) => (
       <a href={getPostUrl(post.id)} class="recent-item">
-        <img
+        <CoverImage
+          src={post.data.img}
           class="recent-item__image"
-          src={`/assets/img/${post.data.img}`}
-          alt=""
-          loading="lazy"
-          decoding="async"
+          sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 225px"
         />
         <span class="recent-item__title">{post.data.title}</span>
       </a>

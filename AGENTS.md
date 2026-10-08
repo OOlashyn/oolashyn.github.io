@@ -180,6 +180,10 @@ const isOpen = pageWrapper?.classList.toggle('active') ?? false;
 - Blog posts are `.md` or `.mdx` files in `src/content/posts/`.
 - Required frontmatter fields are validated by the Zod schema in `src/content.config.ts`.
 - Custom MDX components (code blocks, callouts, videos, etc.) are in `src/components/mdx/`.
+- Cover images (`img:`) live in `src/assets/covers/` and are referenced relative to the post
+  (`img: ../../assets/covers/2026-10-06-cover.jpg`) so Astro optimizes them; render them with
+  `CoverImage.astro`. The RSS/Open Graph image (`image:`) stays in `public/assets/img/` because
+  it needs a stable URL.
 
 ### Site Configuration
 
@@ -192,6 +196,8 @@ const isOpen = pageWrapper?.classList.toggle('active') ?? false;
 
 - GitHub Actions workflow: `.github/workflows/deploy.yml`
 - Trigger: push to `master` branch (or manual `workflow_dispatch`).
-- Steps: `bun install` → `bun run build` → upload `dist/` → deploy to GitHub Pages.
-- There are no separate lint, type-check, or test steps in CI — run `bun run check` locally
-  before pushing.
+- Steps: `bun install --frozen-lockfile` → `bun run check` → `bun run build` → upload `dist/` →
+  deploy to GitHub Pages. Bun packages and optimized images (`node_modules/.astro`) are cached.
+- A type error or a `bun.lock` that is out of sync with `package.json` fails the deploy — run
+  `bun run check` and commit `bun.lock` together with `package.json` changes.
+- There are no lint or test steps in CI.
