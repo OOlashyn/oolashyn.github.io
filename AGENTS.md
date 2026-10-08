@@ -7,7 +7,7 @@ working in this repository.
 
 ## Project Overview
 
-A personal blog/portfolio built with **Astro 6** (static output), **TypeScript** (strict mode),
+A personal blog/portfolio built with **Astro 7** (static output), **TypeScript** (strict mode),
 **SCSS**, and **MDX** for content. No React/Vue/Svelte — all UI components are pure `.astro` files.
 Deployed to GitHub Pages via GitHub Actions. Package manager: **Bun**.
 
