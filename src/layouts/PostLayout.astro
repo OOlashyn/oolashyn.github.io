@@ -50,11 +50,11 @@ const dateStr = date.toLocaleDateString('en-GB', {
           <UkraineBanner />
           <slot />
           <Newsletter />
-          <div class="page-footer">
+          <div class="page-footer" data-pagefind-ignore>
             <div class="page-tag">
               <span>Tags:</span>
               {tags.map((tag) => (
-                <a href={`/tags/#${tag}`} class="tag">| {tag}</a>
+                <a href={`/tags/#${tag}`} class="tag" data-pagefind-filter={`tag:${tag}`}>| {tag}</a>
               ))}
             </div>
             <div class="page-share">
