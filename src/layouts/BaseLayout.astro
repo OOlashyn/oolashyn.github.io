@@ -1,7 +1,6 @@
 ---
 import Head from '@/components/Head.astro';
 import Header from '@/components/Header.astro';
-import Analytics from '@/components/Analytics.astro';
 import HeaderInteractions from '@/components/HeaderInteractions.astro';
 import '@/styles/main.scss';
 
@@ -26,7 +25,6 @@ const { title, description, image } = Astro.props;
       <slot />
     </div>
     <HeaderInteractions />
-    <Analytics />
     <script is:inline>
       document.addEventListener('astro:before-swap', (event) => {
         // Preserve dynamically injected Pagefind CSS link

@@ -42,8 +42,10 @@ export const siteConfig = {
     theme: 'github-dark',
   },
 
-  // Analytics
-  analytics: 'UA-141204351-1',
+  // Analytics (Cloudflare Web Analytics; empty token disables the beacon)
+  analytics: {
+    cloudflareToken: '0b72638e91eb4c07bcf270882d8ec924',
+  },
 
   // Pagination
   postsPerPage: 6,

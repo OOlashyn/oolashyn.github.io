@@ -1,20 +1,19 @@
 ---
 import { siteConfig } from '@/config';
+
+const { cloudflareToken } = siteConfig.analytics;
 ---
 
-<!-- Google Analytics -->
-<script
-  is:inline
-  define:vars={{ analyticsId: siteConfig.analytics }}
->
-  (function() {
-    var script = document.createElement('script');
-    script.async = true;
-    script.src = 'https://www.googletagmanager.com/gtag/js?id=' + analyticsId;
-    document.head.appendChild(script);
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){window.dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', analyticsId, { 'anonymize_ip': true });
-  })();
-</script>
+<!--
+  Cloudflare Web Analytics (cookieless). Rendered in <head> so ClientRouter keeps the
+  identical script across navigations instead of re-running it; the beacon tracks
+  client-side route changes itself via the History API.
+-->
+{cloudflareToken && (
+  <script
+    is:inline
+    defer
+    src="https://static.cloudflareinsights.com/beacon.min.js"
+    data-cf-beacon={JSON.stringify({ token: cloudflareToken })}
+  ></script>
+)}

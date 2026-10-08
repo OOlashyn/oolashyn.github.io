@@ -2,6 +2,7 @@
 import { siteConfig } from '@/config';
 import { Font } from 'astro:assets';
 import { ClientRouter } from 'astro:transitions';
+import Analytics from '@/components/Analytics.astro';
 
 interface Props {
   title?: string;
@@ -64,6 +65,8 @@ const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url);
 
   <!-- Google verification -->
   <meta name="google-site-verification" content="e33KPrSW7_LHxFoA9XP_rkj1noTjubwKyfeCRAV9seg" />
+
+  <Analytics />
 
   <ClientRouter />
 </head>
