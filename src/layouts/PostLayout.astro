@@ -69,13 +69,14 @@ const dateStr = formatPostDate(date);
               >
                 <Icon name="simple-icons:twitter" aria-hidden="true" />
               </a>
+              {/* Mastodon has no central share URL; Share₂Fedi lets readers pick their own instance */}
               <a
-                href={`https://facebook.com/sharer.php?u=${encodeURIComponent(fullUrl)}`}
-                title="Share on Facebook"
+                href={`https://s2f.kytta.dev/?text=${encodeURIComponent(`${title}\n\n${fullUrl}`)}`}
+                title="Share on Mastodon"
                 rel="noreferrer"
                 target="_blank"
               >
-                <Icon name="simple-icons:facebook" aria-hidden="true" />
+                <Icon name="simple-icons:mastodon" aria-hidden="true" />
               </a>
               <a
                 href={`https://www.linkedin.com/shareArticle?url=${encodeURIComponent(fullUrl)}`}
