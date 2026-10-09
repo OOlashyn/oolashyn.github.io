@@ -121,7 +121,7 @@ export async function generateFeed(context: APIContext): Promise<Feed> {
       link,
       date: post.data.date,
       published: post.data.date,
-      description: post.data.description || post.data.excerpt || '',
+      description: post.data.description,
       content,
       author: [
         {

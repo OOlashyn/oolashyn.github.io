@@ -187,7 +187,10 @@ const isOpen = pageWrapper?.classList.toggle('active') ?? false;
   `getTagUrl()` / `getTagAnchor()` for links to a tag's section on the tags page.
 - The post list is `index.astro` (hero + first page) and `page[page].astro` (`/page2/` onwards,
   via Astro's `paginate()`).
-- Required frontmatter fields are validated by the Zod schema in `src/content.config.ts`.
+- Required frontmatter fields are validated by the Zod schema in `src/content.config.ts`, which
+  also documents what each field is for. Some only look redundant: `description` (SEO, RSS and
+  the Mailchimp newsletter) and `cardDescription` (post cards); `img` (site cover) and `image`
+  (stable RSS/Open Graph URL) are separate on purpose. Don't merge them.
 - Custom MDX components (code blocks, callouts, videos, etc.) are in `src/components/mdx/`.
 - Cover images (`img:`) live in `src/assets/covers/` and are referenced relative to the post
   (`img: ../../assets/covers/2026-10-06-cover.jpg`) so Astro optimizes them; render them with

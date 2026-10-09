@@ -35,7 +35,7 @@ const { post, gridCard = false } = Astro.props;
           {post.data.title}
         </a>
       </h2>
-      <p>{post.data.shortDescription || post.data.description}</p>
+      <p>{post.data.cardDescription || post.data.description}</p>
       <ul class="tag-list">
         {(post.data.tags || []).map((tag) => (
           <li class="tag">

@@ -43,7 +43,7 @@ const category = post.data.tags?.[0] ?? null;
       </a>
     </h2>
     <p class="hero-post__description">
-      {post.data.shortDescription || post.data.description}
+      {post.data.cardDescription || post.data.description}
     </p>
     <a href={getPostUrl(post.id)} class="hero-post__cta">
       Read the Full Article
