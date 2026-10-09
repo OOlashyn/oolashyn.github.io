@@ -12,11 +12,10 @@
     "check": "bunx --bun astro check",
     "build": "astro build && pagefind --site dist",
     "preview": "astro build && pagefind --site dist && astro preview",
-    "clean-vite": "Remove-Item -Recurse -Force node_modules\\.vite",
+    "clean-vite": "bun -e \"require('fs').rmSync('node_modules/.vite', { recursive: true, force: true })\"",
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/check": "0.9.10",
     "@astrojs/markdown-remark": "7.3.2",
     "@astrojs/mdx": "8.0.3",
     "@astrojs/sitemap": "3.7.4",
@@ -25,10 +24,10 @@
     "astro": "7.3.7",
     "astro-icon": "^1.2.0",
     "rehype-external-links": "^3.0.0",
-    "sass": "^1.105.1",
-    "typescript": "^5.9.3"
+    "sass": "^1.105.1"
   },
   "devDependencies": {
+    "@astrojs/check": "0.9.10",
     "@minify-html/node": "^0.18.1",
     "@types/bun": "^1.4.2",
     "feed": "^5.2.1",
@@ -37,6 +36,7 @@
     "remark-mdx": "^3.1.1",
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.1.2",
+    "typescript": "^5.9.3",
     "unified": "^11.0.5",
     "unist-util-visit": "^5.1.0"
   }

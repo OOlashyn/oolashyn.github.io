@@ -34,12 +34,11 @@ export const siteConfig = {
   mailchimpU: '146d1df030bf451984f7700fb',
   mailchimpId: 'ba3c34cafb',
 
-  // Comments (Utterances)
+  // Comments (Utterances). The theme follows the site's light/dark mode (see Utterances.astro).
   utterances: {
     repo: 'OOlashyn/oolashyn.github.io',
     issueTerm: 'title',
     label: 'Comment',
-    theme: 'github-dark',
   },
 
   // Analytics (Cloudflare Web Analytics; empty token disables the beacon)

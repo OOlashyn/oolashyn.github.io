@@ -40,8 +40,9 @@ bun run preview
   `.astro`, `.ts`, and `.tsx` files. Always run this after making TypeScript changes.
 - `bun run build` must be run before `bun run preview` — the search index (`pagefind`) is built
   as a post-build step and is not available in `astro dev`.
-- The `clean-vite` script (`Remove-Item -Recurse -Force node_modules\.vite`) is Windows/PowerShell
-  only; on Linux/Mac, use `rm -rf node_modules/.vite` instead.
+- `bun run clean-vite` deletes Vite's dependency cache (`node_modules/.vite`) on any OS. Use it
+  when a build or check fails with `EBUSY: resource busy or locked` on Windows (another process,
+  such as an editor's language server or a running dev/preview server, is holding the cache).
 - The default branch is `master` (not `main`).
 
 ---
