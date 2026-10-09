@@ -13,7 +13,9 @@ const { title, description } = Astro.props;
 
 <BaseLayout title={title} description={description}>
   <div class="flex-container">
-    <slot />
+    <main>
+      <slot />
+    </main>
     <Search />
     <Footer />
   </div>

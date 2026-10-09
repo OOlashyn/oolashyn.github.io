@@ -29,6 +29,7 @@ const dateStr = formatPostDate(date);
 
 <BaseLayout title={title} description={description} image={image}>
   <div class="flex-container">
+    <main>
     <article class="article-page" data-pagefind-body>
       {img && (
         <div class="page-image">
@@ -86,6 +87,7 @@ const dateStr = formatPostDate(date);
         </div>
       </div>
     </article>
+    </main>
     <Search />
     <Footer />
     <CopyCode />

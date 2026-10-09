@@ -17,12 +17,12 @@ const { title, description, previousUrl, nextUrl } = Astro.props;
 
 <BaseLayout title={title} description={description}>
   <div class="flex-container">
-    <div class="content wrapper">
+    <main class="content wrapper">
       <UkraineBanner />
       <slot />
       <Search />
       <Pagination previousUrl={previousUrl} nextUrl={nextUrl} />
-    </div>
+    </main>
     <Footer />
   </div>
 </BaseLayout>
