@@ -49,4 +49,8 @@ export const siteConfig = {
 
   // Pagination
   postsPerPage: 6,
+
+  // RSS feed: number of newest posts to include. Mailchimp only sends items newer than its
+  // last send, so this just needs to exceed the posts published between two campaign runs.
+  feedItemLimit: 20,
 } as const;

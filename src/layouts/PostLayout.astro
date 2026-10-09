@@ -27,7 +27,12 @@ const fullUrl = new URL(url, Astro.site).href;
 const dateStr = formatPostDate(date);
 ---
 
-<BaseLayout title={title} description={description} image={image}>
+<BaseLayout
+  title={title}
+  description={description}
+  image={image}
+  article={{ publishedTime: date, tags }}
+>
   <div class="flex-container">
     <main>
     <article class="article-page" data-pagefind-body>

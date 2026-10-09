@@ -1,5 +1,5 @@
 ---
-import Head from '@/components/Head.astro';
+import Head, { type ArticleMeta } from '@/components/Head.astro';
 import Header from '@/components/Header.astro';
 import HeaderInteractions from '@/components/HeaderInteractions.astro';
 import '@/styles/main.scss';
@@ -8,14 +8,15 @@ interface Props {
   title?: string;
   description?: string;
   image?: string;
+  article?: ArticleMeta;
 }
 
-const { title, description, image } = Astro.props;
+const { title, description, image, article } = Astro.props;
 ---
 
 <!DOCTYPE html>
 <html lang="en">
-  <Head title={title} description={description} image={image} />
+  <Head title={title} description={description} image={image} article={article} />
   <body>
     <div class="page-wrapper">
       <Header />

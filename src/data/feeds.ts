@@ -1,5 +1,5 @@
 import type { Root as HastRoot, RootContent } from 'hast';
-import type { Root as MdastRoot } from 'mdast';
+import type { Root as MdastRoot, RootContent as MdastNode } from 'mdast';
 import type { APIContext } from 'astro';
 
 import { Feed } from 'feed';
@@ -9,6 +9,7 @@ import remarkMdx from 'remark-mdx';
 import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
 import { type Plugin, unified } from 'unified';
+import { SKIP, visit } from 'unist-util-visit';
 
 import { siteConfig } from '@/config';
 import { getPostUrl, getSortedPosts } from '@/utils';
@@ -23,14 +24,61 @@ const remarkRemoveImports: Plugin<[], MdastRoot> = () => {
   };
 };
 
-// Custom remark plugin: remove MDX JSX elements (custom components like <Video>, <YouTubePlayer>)
-const remarkRemoveMdxJsx: Plugin<[], MdastRoot> = () => {
+// Minimal shape of the MDX JSX nodes produced by remark-mdx
+interface MdxJsxElement {
+  type: 'mdxJsxFlowElement' | 'mdxJsxTextElement';
+  name: string | null;
+  attributes: Array<{ type: string; name?: string; value?: unknown }>;
+  children: MdastNode[];
+  data?: { hName?: string; hProperties?: Record<string, string> };
+}
+
+function isMdxJsxElement(node: { type: string }): node is MdxJsxElement {
+  return node.type === 'mdxJsxFlowElement' || node.type === 'mdxJsxTextElement';
+}
+
+// Callout components rendered as a labelled blockquote in the feed
+const feedCallouts: Record<string, string> = {
+  ImportantBlock: 'Important',
+  UpdateBlock: 'Update',
+};
+
+// Custom remark plugin: turn MDX JSX into plain HTML for feed readers and Mailchimp.
+// - Plain HTML tags written in MDX (<a href>, <strong>, <i>, ...) become real elements
+// - Callouts (<ImportantBlock>, <UpdateBlock>) become a blockquote with a label
+// - Other components (<Video>, <YouTubePlayer>, ...) can't render in email and are dropped
+const remarkMdxJsxToHtml: Plugin<[], MdastRoot> = () => {
   return (tree) => {
-    tree.children = tree.children.filter(
-      (node) =>
-        node.type !== 'mdxJsxFlowElement' &&
-        node.type !== 'mdxJsxTextElement'
-    );
+    visit(tree, (node, index, parent) => {
+      if (!isMdxJsxElement(node) || !parent || index === undefined) return;
+
+      const name = node.name ?? '';
+      const label = feedCallouts[name];
+
+      if (label) {
+        node.data = { hName: 'blockquote' };
+        node.children.unshift({
+          type: 'paragraph',
+          children: [{ type: 'strong', children: [{ type: 'text', value: label }] }],
+        } as MdastNode);
+        return;
+      }
+
+      if (/^[a-z]/.test(name)) {
+        const hProperties: Record<string, string> = {};
+        for (const attr of node.attributes) {
+          // Skip spread and {expression} attributes: they can't be evaluated here
+          if (attr.type !== 'mdxJsxAttribute' || !attr.name) continue;
+          if (typeof attr.value !== 'string' && attr.value !== null) continue;
+          hProperties[attr.name === 'class' ? 'className' : attr.name] = attr.value ?? '';
+        }
+        node.data = { hName: name, hProperties };
+        return;
+      }
+
+      parent.children.splice(index, 1);
+      return [SKIP, index];
+    });
     return tree;
   };
 };
@@ -78,7 +126,7 @@ export async function mdxToHtml(
     .use(remarkParse)
     .use(remarkMdx)
     .use(remarkRemoveImports)
-    .use(remarkRemoveMdxJsx)
+    .use(remarkMdxJsxToHtml)
     .use(remarkRehype)
     .use(rehypeAbsoluteUrls, site)
     .use(rehypeStringify)
@@ -104,14 +152,15 @@ export async function generateFeed(context: APIContext): Promise<Feed> {
       email: siteConfig.email,
       link: site,
     },
+    // The feed is RSS 2.0; this adds its <atom:link rel="self"> self-reference
     feedLinks: {
-      atom: new URL('feed.xml', site).href,
+      rss: new URL('feed.xml', site).href,
     },
   });
 
-  const sortedPosts = await getSortedPosts();
+  const latestPosts = (await getSortedPosts()).slice(0, siteConfig.feedItemLimit);
 
-  for (const post of sortedPosts) {
+  for (const post of latestPosts) {
     const link = new URL(getPostUrl(post.id), site).href;
     const content = post.body ? await mdxToHtml(post.body, site) : '';
 

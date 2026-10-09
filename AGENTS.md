@@ -192,6 +192,9 @@ const isOpen = pageWrapper?.classList.toggle('active') ?? false;
   the Mailchimp newsletter) and `cardDescription` (post cards); `img` (site cover) and `image`
   (stable RSS/Open Graph URL) are separate on purpose. Don't merge them.
 - Custom MDX components (code blocks, callouts, videos, etc.) are in `src/components/mdx/`.
+  The RSS feed (`src/data/feeds.ts`) renders MDX itself: plain HTML tags pass through, callouts
+  listed in `feedCallouts` become labelled blockquotes, and any other component is dropped. Add a
+  new callout component to `feedCallouts` so its text reaches feed readers and Mailchimp.
 - Cover images (`img:`) live in `src/assets/covers/` and are referenced relative to the post
   (`img: ../../assets/covers/2026-10-06-cover.jpg`) so Astro optimizes them; render them with
   `CoverImage.astro`. The RSS/Open Graph image (`image:`) stays in `public/assets/img/` because
