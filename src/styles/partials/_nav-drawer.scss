@@ -1,0 +1,161 @@
+// Mobile navigation drawer (NavDrawer.astro). A full-viewport manual popover holds a
+// horizontal scroller with two snap stops: the sheet (open) and an empty spacer (closed).
+// Swiping is native scrolling; the backdrop opacity follows the scroll position.
+.nav-drawer {
+  // Caps the sheet on wide phones and always leaves page content peeking out, the cue that
+  // tapping outside dismisses the drawer
+  --drawer-width: min(300px, 80dvw);
+  // 0 = closed (transparent backdrop), 1 = open. Driven by a scroll-driven animation, or by
+  // JS where those aren't supported.
+  --drawer-backdrop: 0;
+
+  // Reset the UA popover box so it fills the viewport
+  inset: 0;
+  width: auto;
+  height: auto;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  overflow: visible;
+
+  &::backdrop {
+    background: #000;
+    opacity: calc(var(--drawer-backdrop) / 2);
+  }
+}
+
+.nav-drawer__scroller {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--drawer-width) 100%;
+  overflow-x: scroll;
+  // Don't chain the swipe into the page scroll at either snap edge
+  overscroll-behavior: none;
+  scrollbar-width: none;
+  // Always settle fully open or fully closed
+  scroll-snap-type: x mandatory;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  // The "closed" snap stop. The popover opens already scrolled here (drawer off-screen),
+  // so opening only has to scroll the sheet in.
+  &::after {
+    content: '';
+    scroll-snap-align: end;
+    scroll-initial-target: nearest;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .nav-drawer__scroller {
+    scroll-behavior: smooth;
+  }
+}
+
+.nav-drawer__sheet {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  // svh, not dvh: the height must not jump when the iOS address bar resizes mid-swipe
+  height: 100svh;
+  padding: max(25px, env(safe-area-inset-top)) 30px max(25px, env(safe-area-inset-bottom)) max(30px, env(safe-area-inset-left));
+  overflow-y: auto;
+  scroll-snap-align: start;
+  scrollbar-width: none;
+  font-family: var(--font-lato);
+  background-color: var(--main-bg-color);
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.3);
+
+  // Focus lands on the sheet itself when the drawer opens; it's a container, not a control
+  &:focus {
+    outline: none;
+  }
+
+  ul {
+    width: 100%;
+    padding: 15px 0 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  li {
+    border-bottom: 1px solid var(--lighten-gray);
+  }
+
+  a {
+    display: block;
+    padding: 15px 0;
+    font-size: 18px;
+    font-weight: 400;
+    text-decoration: none;
+    text-transform: uppercase;
+    color: var(--main-text-color);
+    -webkit-tap-highlight-color: transparent;
+
+    &:hover {
+      opacity: 0.8;
+      color: var(--main-text-color);
+    }
+  }
+}
+
+// Links fade and slide in one after another as the drawer opens
+@media (prefers-reduced-motion: no-preference) {
+  .nav-drawer:popover-open li {
+    transition:
+      opacity 0.35s ease calc(0.1s + var(--i, 0) * 0.04s),
+      translate 0.45s cubic-bezier(0.32, 0.72, 0, 1) calc(0.1s + var(--i, 0) * 0.04s);
+
+    @for $i from 1 through 6 {
+      &:nth-child(#{$i}) {
+        --i: #{$i};
+      }
+    }
+
+    @starting-style {
+      opacity: 0;
+      translate: -16px 0;
+    }
+  }
+}
+
+// Lock page scroll behind the open drawer
+html:has(.nav-drawer:popover-open) {
+  overflow: hidden;
+}
+
+// Wrapped in @supports: browsers without animation-timeline would otherwise apply the
+// keyframes' 0% value permanently and leave the backdrop fully dark
+@supports (animation-timeline: scroll()) {
+  .nav-drawer {
+    // Lets .nav-drawer use the timeline defined on its descendant scroller
+    timeline-scope: --drawer-fade;
+    // Longhands on purpose: the minifier folds `animation` + `animation-timeline` into one
+    // shorthand, which browsers reject because the shorthand can't carry a timeline
+    animation-name: nav-drawer-backdrop;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-timeline: --drawer-fade;
+  }
+
+  .nav-drawer__scroller {
+    scroll-timeline: --drawer-fade x;
+  }
+
+  // Registered so the value interpolates instead of jumping between 0 and 1
+  @property --drawer-backdrop {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+  }
+
+  @keyframes nav-drawer-backdrop {
+    0% { --drawer-backdrop: 1; }
+    100% { --drawer-backdrop: 0; }
+  }
+}

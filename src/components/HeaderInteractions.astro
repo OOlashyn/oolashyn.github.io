@@ -10,24 +10,88 @@
     const { signal } = controller;
 
     const pageWrapper = document.querySelector<HTMLElement>('div.page-wrapper');
+    const menuButton = document.querySelector<HTMLElement>('.menu-icon');
+    const drawer = document.querySelector<HTMLElement>('#nav-drawer');
+    const scroller = drawer?.querySelector<HTMLElement>('.nav-drawer__scroller');
+    const sheet = drawer?.querySelector<HTMLElement>('.nav-drawer__sheet');
 
-    // Menu open/close
-    document.querySelectorAll<HTMLElement>('.menu-icon, .menu-icon-close').forEach((el) => {
-      el.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const isOpen = pageWrapper?.classList.toggle('active') ?? false;
-        document.querySelector<HTMLElement>('.menu-icon')?.setAttribute('aria-expanded', String(isOpen));
-      }, { signal });
-    });
+    const isDrawerOpen = (): boolean => drawer?.matches(':popover-open') ?? false;
 
-    // Click outside menu to close
-    pageWrapper?.addEventListener('click', (e) => {
-      if (pageWrapper.classList.contains('active') && (e.target as HTMLElement).tagName !== 'A') {
-        pageWrapper.classList.remove('active');
-        document.querySelector<HTMLElement>('.menu-icon')?.setAttribute('aria-expanded', 'false');
+    // Navigation drawer. The swipe is native scroll snapping, so opening and closing are just
+    // scrolls; the IntersectionObserver below reacts to every way the sheet can move.
+    async function openDrawer(): Promise<void> {
+      if (!drawer || !scroller) return;
+      drawer.showPopover();
+      // Without scroll-initial-target the popover opens scrolled to the sheet: jump to the
+      // closed stop first so it slides in. Two frames let the jump commit before scrolling back.
+      if (!CSS.supports('scroll-initial-target', 'nearest')) {
+        scroller.scrollTo({ left: scroller.scrollWidth, behavior: 'instant' });
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
       }
-    }, { signal });
+      // 'auto' defers to the CSS scroll-behavior: smooth unless reduced motion is preferred
+      scroller.scrollTo({ left: 0, behavior: 'auto' });
+    }
+
+    function closeDrawer(): void {
+      // The observer hides the popover once the sheet is off-screen, so the slide-out shows
+      scroller?.scrollTo({ left: scroller.scrollWidth, behavior: 'auto' });
+    }
+
+    function onDrawerOpened(): void {
+      if (pageWrapper) pageWrapper.inert = true;
+      menuButton?.setAttribute('aria-expanded', 'true');
+      sheet?.focus({ preventScroll: true });
+    }
+
+    function onDrawerClosed(): void {
+      if (!drawer || !isDrawerOpen()) return;
+      const hadFocus = drawer.contains(document.activeElement);
+      drawer.hidePopover();
+      if (pageWrapper) pageWrapper.inert = false;
+      menuButton?.setAttribute('aria-expanded', 'false');
+      if (hadFocus) menuButton?.focus({ preventScroll: true });
+    }
+
+    if (drawer && scroller && sheet) {
+      // Any visible pixel of the sheet counts as "not closed"
+      const visibleThreshold = 1 / window.innerWidth;
+      const observer = new IntersectionObserver((entries) => {
+        // Only the latest entry describes the current position
+        const entry = entries.at(-1);
+        if (!entry) return;
+        if (entry.intersectionRatio < visibleThreshold) onDrawerClosed();
+        if (entry.intersectionRatio === 1) onDrawerOpened();
+      }, { root: drawer, threshold: [visibleThreshold, 1] });
+      observer.observe(sheet);
+      signal.addEventListener('abort', () => observer.disconnect());
+
+      // Without scroll-driven animations, fade the backdrop from a scroll listener instead
+      if (!CSS.supports('animation-timeline: scroll()')) {
+        scroller.addEventListener('scroll', () => {
+          const ratio = 1 - scroller.scrollLeft / sheet.offsetWidth;
+          drawer.style.setProperty('--drawer-backdrop', String(Math.min(Math.max(ratio, 0), 1)));
+        }, { passive: true, signal });
+      }
+
+      menuButton?.addEventListener('click', (e) => {
+        e.preventDefault();
+        void openDrawer();
+      }, { signal });
+
+      drawer.querySelector<HTMLElement>('.nav-drawer__close')?.addEventListener('click', closeDrawer, { signal });
+
+      // Light dismiss: a tap on the dimmed area, outside the sheet
+      drawer.addEventListener('click', (e) => {
+        if (!sheet.contains(e.target as Node)) closeDrawer();
+      }, { signal });
+
+      // Leaving the mobile layout (where the menu button is hidden) closes the drawer at once
+      window.matchMedia('(max-width: 768px)').addEventListener('change', (e) => {
+        if (e.matches || !isDrawerOpen()) return;
+        scroller.scrollTo({ left: scroller.scrollWidth, behavior: 'instant' });
+        onDrawerClosed();
+      }, { signal });
+    }
 
     // Search open
     document.querySelectorAll<HTMLElement>('.search-icon').forEach((el) => {
@@ -128,9 +192,8 @@
           const trigger = document.querySelector<HTMLElement>('#subscribe-trigger');
           trigger?.setAttribute('aria-expanded', 'false');
           trigger?.focus();
-        } else if (pageWrapper?.classList.contains('active')) {
-          pageWrapper.classList.remove('active');
-          document.querySelector<HTMLElement>('.menu-icon')?.setAttribute('aria-expanded', 'false');
+        } else if (isDrawerOpen()) {
+          closeDrawer();
         } else if (searchBox?.classList.contains('search-active')) {
           searchBox.classList.remove('search-active');
           document.querySelector<HTMLElement>('.search-icon')?.setAttribute('aria-expanded', 'false');

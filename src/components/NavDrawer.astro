@@ -1,0 +1,25 @@
+---
+import { Icon } from 'astro-icon/components';
+---
+
+<!--
+  Mobile navigation drawer. The swipe is native scrolling: the scroller snaps between the
+  sheet ("open") and an empty spacer ("closed"), so momentum and velocity come from the
+  browser. popover="manual" puts it in the top layer; dismissal is handled in
+  HeaderInteractions.astro. Rendered outside .page-wrapper so the page can be made inert.
+-->
+<div class="nav-drawer" id="nav-drawer" popover="manual">
+  <div class="nav-drawer__scroller">
+    <nav class="nav-drawer__sheet" tabindex="-1" aria-label="Main">
+      <button class="nav-drawer__close" type="button" aria-label="Close menu">
+        <Icon name="lucide:x" aria-hidden="true" />
+      </button>
+      <ul>
+        <li><a href="/">Blog</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/projects/">Projects</a></li>
+        <li><a href="/subscribe/">Subscribe</a></li>
+      </ul>
+    </nav>
+  </div>
+</div>

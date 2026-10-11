@@ -26,10 +26,6 @@
   display: flex;
   align-items: center;
 
-  .menu-icon-close {
-    display: none;
-  }
-
   ul {
     display: flex;
     flex-direction: row;
@@ -52,10 +48,6 @@
           opacity: .8;
           color: var(--main-text-color);
         }
-      }
-
-      &.mobile-only {
-        display: none;
       }
 
       &.nav-subscribe-item {
@@ -101,7 +93,7 @@
 
 /* Reset default browser button styles for icon buttons, then apply icon styling */
 .menu-icon,
-.menu-icon-close,
+.nav-drawer__close,
 .search-icon,
 .search-icon-close,
 .theme-toggle {
@@ -140,45 +132,8 @@
     margin-left: 0;
   }
 
+  // Links move into the swipeable drawer (see _nav-drawer.scss)
   .main-nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 10;
-    width: 300px;
-    height: 100%;
-    background-color: var(--main-bg-color);
-    padding: 25px 30px;
-    transform: translate3d(-300px, 0, 0);
-    display: block;
-
-    .menu-icon-close {
-      display: inline-flex;
-    }
-
-    ul {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0;
-      padding: 15px 0 0;
-
-      li {
-        width: 100%;
-        border-bottom: 1px solid var(--lighten-gray);
-
-        &.mobile-only {
-          display: list-item;
-        }
-
-        &.nav-subscribe-item {
-          display: none;
-        }
-
-        a {
-          padding: 15px 0;
-          font-size: 18px;
-        }
-      }
-    }
+    display: none;
   }
 }

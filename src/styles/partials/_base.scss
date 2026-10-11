@@ -75,21 +75,6 @@ pre {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  transition: transform .4s cubic-bezier(0.16, 0.68, 0.43, 0.99);
-}
-
-.page-wrapper.active {
-  transform: translate3d(300px, 0, 0);
-  &::after {
-    content: "";
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 2;
-    background-color: rgba(0,0,0,0.5);
-  }
 }
 
 .flex-container {
