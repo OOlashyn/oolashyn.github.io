@@ -9,25 +9,161 @@
     w.__headerAbort = controller;
     const { signal } = controller;
 
-    const pageWrapper = document.querySelector<HTMLElement>('div.page-wrapper');
+    const nav = document.querySelector<HTMLElement>('.main-nav');
+    const scrim = document.querySelector<HTMLElement>('.nav-scrim');
+    const menuButton = document.querySelector<HTMLElement>('.menu-icon');
+    const mobileQuery = window.matchMedia('(max-width: 768px)');
 
-    // Menu open/close
-    document.querySelectorAll<HTMLElement>('.menu-icon, .menu-icon-close').forEach((el) => {
-      el.addEventListener('click', (e) => {
+    const isMenuOpen = (): boolean => nav?.classList.contains('is-open') ?? false;
+
+    function setMenuOpen(open: boolean, { duration, restoreFocus = true }: { duration?: number; restoreFocus?: boolean } = {}): void {
+      if (!nav) return;
+      const wasOpen = isMenuOpen();
+      nav.style.removeProperty('--nav-drag');
+      nav.style.removeProperty('--nav-progress');
+      scrim?.style.removeProperty('--nav-progress');
+      // A swipe hands over its speed so the drawer finishes the motion instead of restarting it
+      const value = duration === undefined ? '' : `${duration}ms`;
+      nav.style.setProperty('--nav-duration', value);
+      scrim?.style.setProperty('--nav-duration', value);
+      nav.classList.remove('is-dragging');
+      nav.classList.toggle('is-open', open);
+      menuButton?.setAttribute('aria-expanded', String(open));
+      if (open && !wasOpen) {
+        nav.querySelector<HTMLElement>('.menu-icon-close')?.focus({ preventScroll: true });
+      } else if (restoreFocus && nav.contains(document.activeElement)) {
+        menuButton?.focus({ preventScroll: true });
+      }
+    }
+
+    menuButton?.addEventListener('click', (e) => {
+      e.preventDefault();
+      setMenuOpen(!isMenuOpen());
+    }, { signal });
+
+    nav?.querySelector<HTMLElement>('.menu-icon-close')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      setMenuOpen(false);
+    }, { signal });
+
+    scrim?.addEventListener('click', () => setMenuOpen(false), { signal });
+
+    // Leaving the mobile layout with the drawer open would leave the page scroll-locked
+    mobileQuery.addEventListener('change', (e) => {
+      if (!e.matches && isMenuOpen()) setMenuOpen(false, { restoreFocus: false });
+    }, { signal });
+
+    // Keep keyboard focus inside the open drawer
+    nav?.addEventListener('keydown', (e) => {
+      if (e.key !== 'Tab' || !isMenuOpen() || !mobileQuery.matches) return;
+      const focusable = Array.from(nav.querySelectorAll<HTMLElement>('a[href], button'))
+        .filter((el) => el.offsetParent !== null);
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
         e.preventDefault();
-        e.stopPropagation();
-        const isOpen = pageWrapper?.classList.toggle('active') ?? false;
-        document.querySelector<HTMLElement>('.menu-icon')?.setAttribute('aria-expanded', String(isOpen));
-      }, { signal });
-    });
-
-    // Click outside menu to close
-    pageWrapper?.addEventListener('click', (e) => {
-      if (pageWrapper.classList.contains('active') && (e.target as HTMLElement).tagName !== 'A') {
-        pageWrapper.classList.remove('active');
-        document.querySelector<HTMLElement>('.menu-icon')?.setAttribute('aria-expanded', 'false');
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
       }
     }, { signal });
+
+    // Swipe left on the drawer (or the backdrop) to close it. The drawer follows the finger,
+    // then either snaps back or closes depending on how far and how fast it was thrown.
+    if (nav) {
+      const AXIS_LOCK_DISTANCE = 8;
+      const CLOSE_DISTANCE_RATIO = 0.35;
+      const CLOSE_VELOCITY = 0.4; // px per ms
+      let pointerId: number | null = null;
+      let startX = 0;
+      let startY = 0;
+      let offset = 0;
+      let dragging = false;
+      let suppressClick = false;
+      let samples: { x: number; t: number }[] = [];
+
+      const onPointerDown = (e: PointerEvent): void => {
+        if (!isMenuOpen() || !mobileQuery.matches || pointerId !== null) return;
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+        pointerId = e.pointerId;
+        startX = e.clientX;
+        startY = e.clientY;
+        offset = 0;
+        dragging = false;
+        samples = [{ x: e.clientX, t: e.timeStamp }];
+      };
+
+      const onPointerMove = (e: PointerEvent): void => {
+        if (e.pointerId !== pointerId) return;
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+
+        if (!dragging) {
+          if (Math.hypot(dx, dy) < AXIS_LOCK_DISTANCE) return;
+          // A mostly vertical move is a scroll: let the browser have it
+          if (Math.abs(dy) > Math.abs(dx)) {
+            pointerId = null;
+            return;
+          }
+          dragging = true;
+          (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+          nav.classList.add('is-dragging');
+        }
+
+        const width = nav.offsetWidth;
+        // Free movement to the left; a little rubber-band resistance to the right
+        offset = dx < 0 ? Math.max(dx, -width) : Math.min(dx * 0.2, 24);
+        const progress = 1 + Math.min(offset, 0) / width;
+        nav.style.setProperty('--nav-drag', `${offset}px`);
+        scrim?.style.setProperty('--nav-progress', String(progress));
+
+        samples.push({ x: e.clientX, t: e.timeStamp });
+        samples = samples.filter((s) => e.timeStamp - s.t < 100);
+      };
+
+      const onPointerEnd = (e: PointerEvent): void => {
+        if (e.pointerId !== pointerId) return;
+        pointerId = null;
+        if (!dragging) return;
+        dragging = false;
+        // The release fires a click on whatever is under the finger: don't follow a link
+        suppressClick = true;
+        setTimeout(() => { suppressClick = false; }, 0);
+
+        const width = nav.offsetWidth;
+        // Only the last moments count: a finger that stopped before lifting is not a fling
+        samples.push({ x: e.clientX, t: e.timeStamp });
+        samples = samples.filter((s) => e.timeStamp - s.t < 100);
+        const first = samples[0];
+        const last = samples[samples.length - 1];
+        const elapsed = last.t - first.t;
+        const velocity = elapsed > 0 ? (last.x - first.x) / elapsed : 0;
+        const shouldClose = e.type !== 'pointercancel'
+          && (offset < -width * CLOSE_DISTANCE_RATIO || velocity < -CLOSE_VELOCITY);
+
+        if (shouldClose) {
+          const remaining = width + offset;
+          const duration = velocity < 0 ? remaining / -velocity : 300;
+          setMenuOpen(false, { duration: Math.round(Math.min(Math.max(duration, 150), 350)) });
+        } else {
+          setMenuOpen(true, { duration: 300 });
+        }
+      };
+
+      for (const surface of [nav, scrim]) {
+        surface?.addEventListener('pointerdown', onPointerDown, { signal });
+        surface?.addEventListener('pointermove', onPointerMove, { signal });
+        surface?.addEventListener('pointerup', onPointerEnd, { signal });
+        surface?.addEventListener('pointercancel', onPointerEnd, { signal });
+        surface?.addEventListener('click', (e) => {
+          if (!suppressClick) return;
+          e.preventDefault();
+          e.stopImmediatePropagation();
+        }, { capture: true, signal });
+      }
+    }
 
     // Search open
     document.querySelectorAll<HTMLElement>('.search-icon').forEach((el) => {
@@ -128,9 +264,8 @@
           const trigger = document.querySelector<HTMLElement>('#subscribe-trigger');
           trigger?.setAttribute('aria-expanded', 'false');
           trigger?.focus();
-        } else if (pageWrapper?.classList.contains('active')) {
-          pageWrapper.classList.remove('active');
-          document.querySelector<HTMLElement>('.menu-icon')?.setAttribute('aria-expanded', 'false');
+        } else if (isMenuOpen()) {
+          setMenuOpen(false);
         } else if (searchBox?.classList.contains('search-active')) {
           searchBox.classList.remove('search-active');
           document.querySelector<HTMLElement>('.search-icon')?.setAttribute('aria-expanded', 'false');

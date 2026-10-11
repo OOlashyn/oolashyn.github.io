@@ -87,8 +87,9 @@
   }
 }
 
-// Hamburger hidden on desktop
-.menu-icon-container {
+// Hamburger and drawer backdrop hidden on desktop
+.menu-icon-container,
+.nav-scrim {
   display: none;
 }
 
@@ -140,17 +141,45 @@
     margin-left: 0;
   }
 
+  // Off-canvas drawer that slides over the page. JS sets --nav-drag (px, <= 0) and
+  // --nav-progress (0–1) while the reader swipes, and --nav-duration on release so the
+  // settle animation continues at the speed of the swipe.
   .main-nav {
+    --nav-ease: cubic-bezier(0.32, 0.72, 0, 1);
     position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 10;
-    width: 300px;
-    height: 100%;
-    background-color: var(--main-bg-color);
-    padding: 25px 30px;
-    transform: translate3d(-300px, 0, 0);
+    inset: 0 auto 0 0;
+    z-index: 50;
     display: block;
+    width: min(300px, 85vw);
+    height: 100dvh;
+    padding: max(25px, env(safe-area-inset-top)) 30px max(25px, env(safe-area-inset-bottom)) max(30px, env(safe-area-inset-left));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    // Vertical scrolling stays native; horizontal moves reach the swipe handler
+    touch-action: pan-y;
+    background-color: var(--main-bg-color);
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0);
+    transform: translate3d(-100%, 0, 0);
+    visibility: hidden;
+    transition:
+      transform var(--nav-duration, 0.4s) var(--nav-ease),
+      box-shadow var(--nav-duration, 0.4s) var(--nav-ease),
+      visibility 0s linear var(--nav-duration, 0.4s);
+
+    &.is-open {
+      transform: translate3d(var(--nav-drag, 0px), 0, 0);
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.3);
+      visibility: visible;
+      transition:
+        transform var(--nav-duration, 0.4s) var(--nav-ease),
+        box-shadow var(--nav-duration, 0.4s) var(--nav-ease),
+        visibility 0s;
+    }
+
+    &.is-dragging {
+      transition: none;
+      user-select: none;
+    }
 
     .menu-icon-close {
       display: inline-flex;
@@ -165,6 +194,18 @@
       li {
         width: 100%;
         border-bottom: 1px solid var(--lighten-gray);
+        // Links fade and slide in one after another as the drawer opens
+        opacity: 0;
+        transform: translate3d(-16px, 0, 0);
+        transition:
+          opacity 0.2s ease,
+          transform 0.2s ease;
+
+        @for $i from 1 through 6 {
+          &:nth-child(#{$i}) {
+            --i: #{$i};
+          }
+        }
 
         &.mobile-only {
           display: list-item;
@@ -177,8 +218,56 @@
         a {
           padding: 15px 0;
           font-size: 18px;
+          -webkit-tap-highlight-color: transparent;
         }
       }
     }
+
+    &.is-open ul li {
+      opacity: 1;
+      transform: none;
+      transition:
+        opacity 0.35s ease calc(0.08s + var(--i, 0) * 0.04s),
+        transform 0.45s var(--nav-ease) calc(0.08s + var(--i, 0) * 0.04s);
+    }
+  }
+
+  .nav-scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    display: block;
+    background-color: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    pointer-events: none;
+    touch-action: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: opacity var(--nav-duration, 0.4s) var(--nav-ease, ease);
+
+    .main-nav.is-open + & {
+      opacity: var(--nav-progress, 1);
+      pointer-events: auto;
+    }
+
+    .main-nav.is-dragging + & {
+      transition: none;
+    }
+  }
+
+  // Lock page scroll behind the open drawer
+  html:has(.main-nav.is-open) {
+    overflow: hidden;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .main-nav,
+  .main-nav.is-open,
+  .main-nav ul li,
+  .main-nav.is-open ul li,
+  .nav-scrim {
+    --nav-duration: 0.01s;
+    transition-duration: 0.01s !important;
+    transition-delay: 0s !important;
   }
 }
