@@ -1,4 +1,7 @@
 ---
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+
 interface Props {
   mp4?: string;
   webm?: string;
@@ -7,9 +10,40 @@ interface Props {
 // No autoplay attribute: the script below plays the video only while it is on screen,
 // so a post with several demos doesn't download all of them on page load.
 const { mp4, webm } = Astro.props;
+
+// Intrinsic size for width/height, so the page doesn't jump when the video loads (an unloaded
+// <video> is 300x150). Read at build time from the MP4's first video track header (tkhd box,
+// whose last 8 bytes are width and height in 16.16 fixed point).
+function readMp4Dimensions(file: string): { width: number; height: number } | undefined {
+  const buf = readFileSync(join(process.cwd(), 'public/assets/videos', file));
+  let from = 0;
+  while (true) {
+    const at = buf.indexOf('tkhd', from, 'latin1');
+    if (at < 4) return undefined;
+    const end = at - 4 + buf.readUInt32BE(at - 4);
+    const width = Math.round(buf.readUInt32BE(end - 8) / 65536);
+    const height = Math.round(buf.readUInt32BE(end - 4) / 65536);
+    // Audio tracks have a 0x0 tkhd: keep looking for the video track
+    if (width > 0 && height > 0) return { width, height };
+    from = at + 4;
+  }
+}
+
+const size = mp4 ? readMp4Dimensions(mp4) : undefined;
+if (!size) console.warn(`Video: could not read dimensions for ${mp4 ?? webm}; it may shift the layout when it loads.`);
 ---
 
-<video loop muted playsinline controls preload="metadata" class="video" data-play-in-view>
+<video
+  loop
+  muted
+  playsinline
+  controls
+  preload="metadata"
+  class="video"
+  width={size?.width}
+  height={size?.height}
+  data-play-in-view
+>
   {webm && <source src={`/assets/videos/${webm}`} type="video/webm" />}
   {mp4 && <source src={`/assets/videos/${mp4}`} type="video/mp4" />}
 </video>

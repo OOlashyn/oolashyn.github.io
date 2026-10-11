@@ -16,7 +16,7 @@ const { title, description, previousUrl, nextUrl } = Astro.props;
 
 <BaseLayout title={title} description={description}>
   <div class="flex-container">
-    <main class="content wrapper">
+    <main id="content" tabindex="-1" class="content wrapper">
       <UkraineBanner />
       <slot />
       <Pagination previousUrl={previousUrl} nextUrl={nextUrl} />
