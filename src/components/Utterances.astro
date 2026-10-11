@@ -50,7 +50,7 @@ const { repo, issueTerm, label } = siteConfig.utterances;
     container.appendChild(script);
   }
 
-  document.addEventListener('astro:page-load', () => loadUtterances());
+  loadUtterances();
 
   document.addEventListener('themechange', () => {
     if (document.querySelector('iframe.utterances-frame')) {
