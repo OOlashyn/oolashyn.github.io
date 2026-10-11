@@ -2,7 +2,6 @@
 import BaseLayout from './BaseLayout.astro';
 import Footer from '@/components/Footer.astro';
 import UkraineBanner from '@/components/UkraineBanner.astro';
-import Search from '@/components/Search.astro';
 import Pagination from '@/components/Pagination.astro';
 
 interface Props {
@@ -20,7 +19,6 @@ const { title, description, previousUrl, nextUrl } = Astro.props;
     <main class="content wrapper">
       <UkraineBanner />
       <slot />
-      <Search />
       <Pagination previousUrl={previousUrl} nextUrl={nextUrl} />
     </main>
     <Footer />

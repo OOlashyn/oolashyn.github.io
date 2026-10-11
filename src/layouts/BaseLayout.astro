@@ -3,6 +3,7 @@ import Head, { type ArticleMeta } from '@/components/Head.astro';
 import Header from '@/components/Header.astro';
 import HeaderInteractions from '@/components/HeaderInteractions.astro';
 import NavDrawer from '@/components/NavDrawer.astro';
+import Search from '@/components/Search.astro';
 import '@/styles/main.scss';
 
 interface Props {
@@ -24,6 +25,7 @@ const { title, description, image, article } = Astro.props;
       <slot />
     </div>
     <NavDrawer />
+    <Search />
     <HeaderInteractions />
     <script is:inline>
       document.addEventListener('astro:before-swap', (event) => {
