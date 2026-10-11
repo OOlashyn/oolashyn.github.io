@@ -1,15 +1,62 @@
+// Native <dialog> (SubscribeModal.astro). The dialog box is exactly the card, so a click outside
+// it is a click on ::backdrop (light dismiss). Entry/exit follow the animate-to-from-top-layer
+// guide; [data-closing] drives the exit where display/overlay can't be transitioned (Firefox,
+// Safari), see closeSubscribeModal() in HeaderInteractions.astro.
 .subscribe-modal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 200;
-  background-color: rgba(0, 0, 0, 0.65);
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
+  width: calc(100% - 2rem);
+  max-width: 520px;
+  max-height: calc(100dvh - 2rem);
+  padding: 0;
+  margin: auto;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  // Short phone screens in landscape: scroll the card rather than clip it
+  overflow-y: auto;
+  opacity: 0;
+  scale: 0.95;
+  transition-property: opacity, scale, display, overlay;
+  transition-duration: 0.25s;
+  transition-timing-function: ease-out;
+  transition-behavior: allow-discrete;
 
-  &.is-open {
-    display: flex;
+  &::backdrop {
+    background-color: rgb(0 0 0 / 0);
+    transition-property: background-color, display, overlay;
+    transition-duration: 0.25s;
+    transition-timing-function: ease-out;
+    transition-behavior: allow-discrete;
+  }
+
+  &[open]:where(:not([data-closing])) {
+    opacity: 1;
+    scale: 1;
+
+    @starting-style {
+      opacity: 0;
+      scale: 0.95;
+    }
+
+    &::backdrop {
+      background-color: rgb(0 0 0 / 0.65);
+
+      @starting-style {
+        background-color: rgb(0 0 0 / 0);
+      }
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    scale: none;
+    transition-duration: 0.1s;
+
+    &[open]:where(:not([data-closing])) {
+      scale: none;
+
+      @starting-style {
+        scale: none;
+      }
+    }
   }
 
   &__card {
@@ -125,4 +172,9 @@
     color: var(--light-gray);
     margin: 0;
   }
+}
+
+// Lock page scroll behind the open dialog
+html:has(.subscribe-modal[open]) {
+  overflow: hidden;
 }

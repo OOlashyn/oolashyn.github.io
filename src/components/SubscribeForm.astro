@@ -4,9 +4,11 @@ import { siteConfig } from '@/config';
 interface Props {
   formId?: string;
   emailId?: string;
+  // Focus the email field when the form appears (e.g. when its dialog opens)
+  autofocus?: boolean;
 }
 
-const { formId = 'subscribe-form', emailId = 'subscribe-email' } = Astro.props;
+const { formId = 'subscribe-form', emailId = 'subscribe-email', autofocus = false } = Astro.props;
 ---
 
 <h2 class="subscribe-modal__title" id={`${formId}-title`}>
@@ -34,6 +36,7 @@ const { formId = 'subscribe-form', emailId = 'subscribe-email' } = Astro.props;
       id={emailId}
       placeholder="Enter your email address..."
       class="subscribe-modal__email"
+      autofocus={autofocus}
       required
     />
     <input

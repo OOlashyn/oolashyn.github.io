@@ -93,111 +93,98 @@
       }, { signal });
     }
 
-    // Search open
-    document.querySelectorAll<HTMLElement>('.search-icon').forEach((el) => {
-      el.addEventListener('click', (e) => {
-        e.preventDefault();
-        const searchBox = document.querySelector<HTMLElement>('.search-box');
-        if (searchBox) {
-          searchBox.classList.add('search-active');
-          el.setAttribute('aria-expanded', 'true');
-          searchBox.querySelector<HTMLElement>('input')?.focus();
+    // Search and subscribe are native modal <dialog>s: showModal() handles focus, the focus trap,
+    // inertness, Escape and focus restore.
+    const searchDialog = document.querySelector<HTMLDialogElement>('#search-dialog');
+    const searchButton = document.querySelector<HTMLElement>('.search-icon');
+    const subscribeModal = document.querySelector<HTMLDialogElement>('#subscribe-modal');
+    const subscribeTrigger = document.querySelector<HTMLElement>('#subscribe-trigger');
+
+    // Exit animations need transitionable display + overlay (not in Firefox/Safari yet). Firefox
+    // parses allow-discrete without honouring it for display, so probe the real behaviour.
+    const supportsTopLayerExit = (): boolean => {
+      if (!CSS.supports('overlay', 'auto') || !CSS.supports('transition-behavior', 'allow-discrete')) return false;
+      const probe = document.createElement('div');
+      probe.style.cssText = 'transition: display 1s allow-discrete !important; display: block;';
+      document.body.appendChild(probe);
+      getComputedStyle(probe).display;
+      probe.style.display = 'none';
+      const supported = getComputedStyle(probe).display === 'block';
+      probe.remove();
+      return supported;
+    };
+
+    async function closeDialog(dialog: HTMLDialogElement): Promise<void> {
+      if (!dialog.open) return;
+      if (!supportsTopLayerExit()) {
+        // Play the exit transition while the dialog is still open, then close it
+        dialog.setAttribute('data-closing', '');
+        const animations = dialog.getAnimations({ subtree: true });
+        if (animations.length > 0) {
+          await Promise.race([
+            Promise.allSettled(animations.map((a) => a.finished)),
+            new Promise((resolve) => setTimeout(resolve, 1000)),
+          ]);
         }
-      }, { signal });
-    });
-
-    // Search close
-    document.querySelectorAll<HTMLElement>('.search-icon-close').forEach((el) => {
-      el.addEventListener('click', (e) => {
-        e.preventDefault();
-        const searchBox = document.querySelector<HTMLElement>('.search-box');
-        if (searchBox) {
-          searchBox.classList.remove('search-active');
-          document.querySelector<HTMLElement>('.search-icon')?.setAttribute('aria-expanded', 'false');
-        }
-      }, { signal });
-    });
-
-    // Subscribe modal open
-    document.querySelectorAll<HTMLElement>('#subscribe-trigger').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const modal = document.querySelector<HTMLElement>('#subscribe-modal');
-        if (!modal) return;
-        modal.classList.add('is-open');
-        btn.setAttribute('aria-expanded', 'true');
-        modal.querySelector<HTMLElement>('#subscribe-modal-email')?.focus();
-      }, { signal });
-    });
-
-    // Focus trap inside subscribe modal
-    document.addEventListener('keydown', (e) => {
-      const modal = document.querySelector<HTMLElement>('#subscribe-modal');
-      if (!modal?.classList.contains('is-open')) return;
-      if (e.key !== 'Tab') return;
-
-      const focusable = Array.from(
-        modal.querySelectorAll<HTMLElement>(
-          'input:not([type="hidden"]), button, [tabindex]:not([tabindex="-1"])'
-        )
-      ).filter((el) => !(el as HTMLInputElement | HTMLButtonElement).disabled);
-
-      if (focusable.length === 0) return;
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-
-      if (e.shiftKey) {
-        if (document.activeElement === first) {
-          e.preventDefault();
-          last.focus();
-        }
-      } else {
-        if (document.activeElement === last) {
-          e.preventDefault();
-          first.focus();
-        }
+        if (!dialog.hasAttribute('data-closing')) return;
+        dialog.removeAttribute('data-closing');
       }
-    }, { signal });
+      dialog.close();
+    }
 
-    // Subscribe modal close — X button
-    document.querySelectorAll<HTMLElement>('.subscribe-modal__close').forEach((el) => {
-      el.addEventListener('click', () => {
-        const modal = document.querySelector<HTMLElement>('#subscribe-modal');
-        if (!modal) return;
-        modal.classList.remove('is-open');
-        const trigger = document.querySelector<HTMLElement>('#subscribe-trigger');
+    // Shared wiring: open from the trigger, animated close from the × button and from close
+    // requests (Escape, Android back, light dismiss), aria-expanded kept in sync
+    function setUpDialog(dialog: HTMLDialogElement, trigger: HTMLElement | null, closeSelector: string, onOpen?: () => void): void {
+      trigger?.addEventListener('click', (e) => {
+        e.preventDefault();
+        dialog.removeAttribute('data-closing');
+        dialog.showModal();
+        trigger.setAttribute('aria-expanded', 'true');
+        onOpen?.();
+      }, { signal });
+
+      dialog.querySelector<HTMLElement>(closeSelector)
+        ?.addEventListener('click', () => void closeDialog(dialog), { signal });
+
+      dialog.addEventListener('cancel', (e) => {
+        e.preventDefault();
+        void closeDialog(dialog);
+      }, { signal });
+
+      dialog.addEventListener('close', () => {
         trigger?.setAttribute('aria-expanded', 'false');
-        trigger?.focus();
       }, { signal });
-    });
+    }
 
-    // Subscribe modal close — click on backdrop (not card)
-    document.querySelectorAll<HTMLElement>('#subscribe-modal').forEach((modal) => {
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-          modal.classList.remove('is-open');
-          const trigger = document.querySelector<HTMLElement>('#subscribe-trigger');
-          trigger?.setAttribute('aria-expanded', 'false');
-          trigger?.focus();
-        }
-      }, { signal });
-    });
+    if (searchDialog) {
+      // Pagefind renders its input after load, so it can't carry autofocus: focus it on open
+      setUpDialog(searchDialog, searchButton, '.search-icon-close', () => {
+        searchDialog.querySelector<HTMLElement>('.pagefind-ui__search-input')?.focus();
+      });
+    }
+
+    if (subscribeModal) {
+      setUpDialog(subscribeModal, subscribeTrigger, '.subscribe-modal__close');
+
+      // Light dismiss where closedby isn't supported (Safari): a click on the backdrop targets
+      // the dialog itself, outside its box (the box is exactly the card)
+      if (!('closedBy' in HTMLDialogElement.prototype)) {
+        subscribeModal.addEventListener('click', (e) => {
+          if (e.target !== subscribeModal) return;
+          const rect = subscribeModal.getBoundingClientRect();
+          const inside = rect.top <= e.clientY && e.clientY <= rect.bottom
+            && rect.left <= e.clientX && e.clientX <= rect.right;
+          if (!inside) void closeDialog(subscribeModal);
+        }, { signal });
+      }
+    }
 
     // Escape key
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
-        const searchBox = document.querySelector<HTMLElement>('.search-box');
-        const modal = document.querySelector<HTMLElement>('#subscribe-modal');
-        if (modal?.classList.contains('is-open')) {
-          modal.classList.remove('is-open');
-          const trigger = document.querySelector<HTMLElement>('#subscribe-trigger');
-          trigger?.setAttribute('aria-expanded', 'false');
-          trigger?.focus();
-        } else if (isDrawerOpen()) {
-          closeDrawer();
-        } else if (searchBox?.classList.contains('search-active')) {
-          searchBox.classList.remove('search-active');
-          document.querySelector<HTMLElement>('.search-icon')?.setAttribute('aria-expanded', 'false');
-        }
+        // Open dialogs handle their own Escape (see the cancel listener in setUpDialog)
+        if (subscribeModal?.open || searchDialog?.open) return;
+        if (isDrawerOpen()) closeDrawer();
       }
     }, { signal });
   }

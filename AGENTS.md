@@ -167,6 +167,10 @@ const isOpen = pageWrapper?.classList.toggle('active') ?? false;
   (unless it's a shared utility).
 - Use `astro:page-load` instead of `DOMContentLoaded` to support Astro's `ClientRouter` (view
   transitions / SPA mode).
+- Header behaviour (mobile drawer, search overlay, subscribe modal, Escape handling) lives in
+  `HeaderInteractions.astro`. The mobile nav is `NavDrawer.astro`: a `popover="manual"` rendered
+  outside `.page-wrapper` (so the page can be made `inert` while it is open) whose swipe is native
+  CSS scroll snap, not pointer-event code. The desktop links stay in `Header.astro`.
 
 ### SCSS / Styles
 
@@ -175,10 +179,33 @@ const isOpen = pageWrapper?.classList.toggle('active') ?? false;
 - Each component has a corresponding partial in `src/styles/partials/` named `_component-name.scss`.
 - Light/dark theme lives in `partials/_theme.scss`: color variables per theme, plus
   `@include when-light { ... }` / `@include when-dark { ... }` for theme-specific rules.
-  The active theme is `<html data-theme="light|dark">`, set before first paint by the inline
-  script in `Head.astro` and toggled by the button in `Header.astro` (which dispatches a
-  `themechange` event). Without JS, `prefers-color-scheme` applies.
+  By default the site follows the OS (`prefers-color-scheme`). `<html data-theme="light|dark">`
+  exists only when the reader has overridden it with the toggle in `Header.astro`; the inline
+  script in `Head.astro` applies a stored override before first paint and adds the `js` class.
+  The toggle follows the `dark-mode-toggle` guide: switching back to the OS theme clears the
+  override instead of storing it. Read the rendered theme as `data-theme` falling back to
+  `matchMedia('(prefers-color-scheme: dark)')`, never `data-theme` alone, and listen for the
+  `themechange` event (also fired on OS changes while no override is set). `color-scheme` on
+  `:root` follows the theme so native UI (scrollbars, inputs) matches.
 - CSS classes use `kebab-case`.
+- Write `animation-name` / `animation-timing-function` / `animation-fill-mode` as longhands
+  whenever `animation-timeline` is set. The build's CSS minifier otherwise folds them into the
+  `animation` shorthand, which can't carry a timeline, so browsers drop the whole declaration.
+  Check the built CSS in `dist/_astro/` when a modern CSS feature works in source but not on the site.
+
+### Modern Web Guidance (front-end work)
+
+- Before building or changing UI, interaction, motion or other client-side HTML/CSS/JS, search
+  Chrome's modern-web-guidance skill for an existing pattern and follow it, adapted to this repo:
+  `npx -y modern-web-guidance@latest search "<what you want to achieve>"`, then
+  `npx -y modern-web-guidance@latest retrieve "<id>"`. Both are pre-approved in
+  `.claude/settings.json`, which also enables the plugin.
+- Search first, not after: `NavDrawer.astro` was rebuilt once because a hand-rolled version
+  already existed when the `navigation-drawer` guide turned up.
+- Browser support follows the skill's default: Baseline Widely available features need no
+  fallback; anything newer gets the fallback the guide prescribes.
+- Test gestures with real touch input (e.g. Playwright CDP `Input.dispatchTouchEvent`), not
+  `Input.synthesizeScrollGesture`, which doesn't drive scroll-snap swipes in headless Chromium.
 
 ### Content (Blog Posts)
 

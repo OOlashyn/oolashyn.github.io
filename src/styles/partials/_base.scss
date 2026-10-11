@@ -27,6 +27,53 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-lato);
   font-weight: 400;
+  // Even line lengths instead of a lone word on the last line (short text only: the
+  // algorithm is costly and gives up beyond ~6 lines)
+  text-wrap: balance;
+}
+
+// Avoid single-word last lines in body copy. Progressive: ignored where unsupported.
+p, blockquote, li {
+  text-wrap: pretty;
+}
+
+// Hidden visually but kept for assistive tech. Focusable content (the skip link) shows itself
+// while focused.
+.visually-hidden:where(:not(:focus-within, :active)) {
+  position: absolute !important;
+  clip-path: inset(50%) !important;
+  overflow: hidden !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  white-space: nowrap !important;
+}
+
+// Fixed so revealing it on focus doesn't shift the page
+.skip-link {
+  position: fixed;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 300;
+  padding: 0.6rem 1rem;
+  border-radius: 0.25rem;
+  font-family: var(--font-lato);
+  font-weight: 700;
+  color: var(--white);
+  background-color: var(--deep-purple);
+  text-decoration: none;
+
+  &:focus-visible {
+    outline: 2px solid var(--white);
+    outline-offset: 2px;
+  }
+}
+
+// The skip link's target: focusable from script/anchor only, so no focus ring of its own
+main:focus {
+  outline: none;
 }
 
 h3 {

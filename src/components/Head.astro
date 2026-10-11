@@ -53,18 +53,26 @@ const jsonLdHtml = jsonLd && JSON.stringify(jsonLd).replace(/</g, '\\u003c');
   <meta name="description" content={pageDescription} />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Theme: runs before first paint to avoid a flash of the wrong theme -->
+  <!-- Theme: runs before first paint to avoid a flash of the wrong theme. No stored value means
+       "follow the OS" (CSS media queries); data-theme and the color-scheme meta mark an override. -->
+  <meta name="color-scheme" content="light dark" />
   <script is:inline>
     (function () {
       var root = document.documentElement;
       var stored = null;
       try { stored = localStorage.getItem('dark-mode-toggle'); } catch (e) {}
-      root.dataset.theme = stored === 'dark' || stored === 'light'
-        ? stored
-        : matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      // ClientRouter replaces <html> attributes on navigation: carry the theme over
+      if (stored === 'dark' || stored === 'light') {
+        root.dataset.theme = stored;
+        document.querySelector('meta[name="color-scheme"]').content = stored;
+      }
+      root.classList.add('js');
+      // ClientRouter replaces <html> attributes and <head> on navigation: carry the theme over
       document.addEventListener('astro:before-swap', function (e) {
-        e.newDocument.documentElement.dataset.theme = root.dataset.theme;
+        var next = e.newDocument;
+        next.documentElement.classList.add('js');
+        if (root.dataset.theme) next.documentElement.dataset.theme = root.dataset.theme;
+        var meta = next.querySelector('meta[name="color-scheme"]');
+        if (meta) meta.content = root.dataset.theme || 'light dark';
       });
     })();
   </script>

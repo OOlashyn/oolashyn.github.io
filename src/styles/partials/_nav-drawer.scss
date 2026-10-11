@@ -76,6 +76,13 @@
     outline: none;
   }
 
+  // Top-right, where native sheets put their close control. The negative margin lines the
+  // icon up with the end of the link dividers instead of the button's padding.
+  .nav-drawer__close {
+    align-self: flex-end;
+    margin-right: -10px;
+  }
+
   ul {
     width: 100%;
     padding: 15px 0 0;
