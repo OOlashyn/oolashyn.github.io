@@ -44,44 +44,65 @@ import { Icon } from 'astro-icon/components';
 <script>
   // The initial theme is set by the inline script in Head.astro before first paint.
   // Same storage key as the old dark-mode-toggle component, so saved choices carry over.
+  // Follows the dark-mode-toggle guide: no stored value = follow the OS; the toggle only stores
+  // an override that differs from the OS, and clears it when switching back to the OS theme.
   const STORAGE_KEY = 'dark-mode-toggle';
   type Theme = 'light' | 'dark';
 
+  const systemQuery = window.matchMedia('(prefers-color-scheme: dark)');
+  const systemTheme = (): Theme => (systemQuery.matches ? 'dark' : 'light');
+  const isTheme = (value: string | null | undefined): value is Theme => value === 'light' || value === 'dark';
+
+  // The rendered theme: the reader's override if any, else the OS preference
   function currentTheme(): Theme {
-    return document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
+    const override = document.documentElement.dataset.theme;
+    return isTheme(override) ? override : systemTheme();
   }
 
   function syncToggle(): void {
     document.querySelector('.theme-toggle')?.setAttribute('aria-pressed', String(currentTheme() === 'dark'));
   }
 
-  function applyTheme(theme: Theme): void {
-    document.documentElement.dataset.theme = theme;
+  function notifyThemeChange(): void {
     syncToggle();
-    document.dispatchEvent(new CustomEvent('themechange', { detail: { theme } }));
+    document.dispatchEvent(new CustomEvent('themechange', { detail: { theme: currentTheme() } }));
+  }
+
+  // null = follow the OS. CSS reads data-theme; color-scheme follows it for native UI.
+  function applyOverride(theme: Theme | null): void {
+    const root = document.documentElement;
+    if (theme) root.dataset.theme = theme;
+    else delete root.dataset.theme;
+    document.querySelector('meta[name="color-scheme"]')?.setAttribute('content', theme ?? 'light dark');
+    notifyThemeChange();
   }
 
   // Delegated listener survives ClientRouter navigations (bundled scripts run only once)
   document.addEventListener('click', (e) => {
     if (!(e.target as Element | null)?.closest('.theme-toggle')) return;
-    const next: Theme = currentTheme() === 'dark' ? 'light' : 'dark';
+    const target: Theme = currentTheme() === 'dark' ? 'light' : 'dark';
+    // Switching back to the OS theme undoes the override instead of pinning it, so the site
+    // keeps following automatic day/night switching
+    const override = target === systemTheme() ? null : target;
     try {
-      localStorage.setItem(STORAGE_KEY, next);
+      if (override) localStorage.setItem(STORAGE_KEY, override);
+      else localStorage.removeItem(STORAGE_KEY);
     } catch {
       // Storage unavailable (e.g. private mode): the choice lasts for this page only
     }
-    applyTheme(next);
+    applyOverride(override);
   });
 
-  // Follow OS theme changes until the reader picks a theme themselves
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-    let stored: string | null = null;
-    try {
-      stored = localStorage.getItem(STORAGE_KEY);
-    } catch {
-      // Treat as no saved choice
-    }
-    if (stored !== 'dark' && stored !== 'light') applyTheme(e.matches ? 'dark' : 'light');
+  // CSS already follows OS changes when there's no override; keep the toggle and listeners
+  // (e.g. Utterances) in step. An existing override is kept even if the OS now matches it.
+  systemQuery.addEventListener('change', () => {
+    if (!isTheme(document.documentElement.dataset.theme)) notifyThemeChange();
+  });
+
+  // Another tab changed the theme
+  window.addEventListener('storage', (e) => {
+    if (e.key !== STORAGE_KEY && e.key !== null) return;
+    applyOverride(isTheme(e.newValue) ? e.newValue : null);
   });
 
   document.addEventListener('astro:page-load', syncToggle);

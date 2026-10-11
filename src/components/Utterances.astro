@@ -13,9 +13,12 @@ const { repo, issueTerm, label } = siteConfig.utterances;
 ></div>
 
 <script>
-  // The site theme lives on <html data-theme> (set in Head.astro, toggled in Header.astro)
+  // <html data-theme> holds the reader's override (set in Head.astro, toggled in Header.astro);
+  // without one the site follows the OS preference
   function getUtterancesTheme(): string {
-    return document.documentElement.dataset.theme === 'dark' ? 'github-dark' : 'github-light';
+    const override = document.documentElement.dataset.theme;
+    const dark = override ? override === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+    return dark ? 'github-dark' : 'github-light';
   }
 
   function sendThemeToIframe(theme: string): void {
