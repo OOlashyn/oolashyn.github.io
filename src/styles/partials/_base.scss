@@ -118,6 +118,23 @@ pre {
   width:57%;
 }
 
+// Native cross-document view transitions: same-origin navigations cross-fade (Chromium,
+// Safari; others navigate instantly). Off for reduced motion.
+@view-transition {
+  navigation: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @view-transition {
+    navigation: none;
+  }
+}
+
+// The header is identical on every page: keep it still while the content cross-fades
+.main-header {
+  view-transition-name: site-header;
+}
+
 .page-wrapper {
   display: flex;
   flex-direction: column;

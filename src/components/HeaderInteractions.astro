@@ -2,13 +2,9 @@
 ---
 
 <script>
-  function initHeaderInteractions() {
-    const w = window as unknown as Record<string, unknown>;
-    if (w.__headerAbort) (w.__headerAbort as AbortController).abort();
-    const controller = new AbortController();
-    w.__headerAbort = controller;
-    const { signal } = controller;
-
+  // Full page loads (native cross-document view transitions, no client-side router), so this
+  // module runs once per page and its listeners need no teardown.
+  function initHeaderInteractions(): void {
     const pageWrapper = document.querySelector<HTMLElement>('div.page-wrapper');
     const menuButton = document.querySelector<HTMLElement>('.menu-icon');
     const drawer = document.querySelector<HTMLElement>('#nav-drawer');
@@ -63,34 +59,33 @@
         if (entry.intersectionRatio === 1) onDrawerOpened();
       }, { root: drawer, threshold: [visibleThreshold, 1] });
       observer.observe(sheet);
-      signal.addEventListener('abort', () => observer.disconnect());
 
       // Without scroll-driven animations, fade the backdrop from a scroll listener instead
       if (!CSS.supports('animation-timeline: scroll()')) {
         scroller.addEventListener('scroll', () => {
           const ratio = 1 - scroller.scrollLeft / sheet.offsetWidth;
           drawer.style.setProperty('--drawer-backdrop', String(Math.min(Math.max(ratio, 0), 1)));
-        }, { passive: true, signal });
+        }, { passive: true });
       }
 
       menuButton?.addEventListener('click', (e) => {
         e.preventDefault();
         void openDrawer();
-      }, { signal });
+      });
 
-      drawer.querySelector<HTMLElement>('.nav-drawer__close')?.addEventListener('click', closeDrawer, { signal });
+      drawer.querySelector<HTMLElement>('.nav-drawer__close')?.addEventListener('click', closeDrawer);
 
       // Light dismiss: a tap on the dimmed area, outside the sheet
       drawer.addEventListener('click', (e) => {
         if (!sheet.contains(e.target as Node)) closeDrawer();
-      }, { signal });
+      });
 
       // Leaving the mobile layout (where the menu button is hidden) closes the drawer at once
       window.matchMedia('(max-width: 768px)').addEventListener('change', (e) => {
         if (e.matches || !isDrawerOpen()) return;
         scroller.scrollTo({ left: scroller.scrollWidth, behavior: 'instant' });
         onDrawerClosed();
-      }, { signal });
+      });
     }
 
     // Search and subscribe are native modal <dialog>s: showModal() handles focus, the focus trap,
@@ -141,19 +136,19 @@
         dialog.showModal();
         trigger.setAttribute('aria-expanded', 'true');
         onOpen?.();
-      }, { signal });
+      });
 
       dialog.querySelector<HTMLElement>(closeSelector)
-        ?.addEventListener('click', () => void closeDialog(dialog), { signal });
+        ?.addEventListener('click', () => void closeDialog(dialog));
 
       dialog.addEventListener('cancel', (e) => {
         e.preventDefault();
         void closeDialog(dialog);
-      }, { signal });
+      });
 
       dialog.addEventListener('close', () => {
         trigger?.setAttribute('aria-expanded', 'false');
-      }, { signal });
+      });
     }
 
     if (searchDialog) {
@@ -175,9 +170,23 @@
           const inside = rect.top <= e.clientY && e.clientY <= rect.bottom
             && rect.left <= e.clientX && e.clientX <= rect.right;
           if (!inside) void closeDialog(subscribeModal);
-        }, { signal });
+        });
       }
     }
+
+    // Back/forward cache restores the page exactly as it was left, e.g. with the drawer open after
+    // following one of its links. Reset overlays instantly so the restored page starts clean.
+    window.addEventListener('pageshow', (e) => {
+      if (!e.persisted) return;
+      if (isDrawerOpen() && scroller) {
+        scroller.scrollTo({ left: scroller.scrollWidth, behavior: 'instant' });
+        onDrawerClosed();
+      }
+      for (const dialog of [searchDialog, subscribeModal]) {
+        dialog?.removeAttribute('data-closing');
+        dialog?.close();
+      }
+    });
 
     // Escape key
     window.addEventListener('keydown', (e) => {
@@ -186,9 +195,8 @@
         if (subscribeModal?.open || searchDialog?.open) return;
         if (isDrawerOpen()) closeDrawer();
       }
-    }, { signal });
+    });
   }
 
-  document.addEventListener('astro:page-load', initHeaderInteractions);
-  window.addEventListener('pageshow', (e) => { if (e.persisted) initHeaderInteractions(); });
+  initHeaderInteractions();
 </script>

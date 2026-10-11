@@ -1,7 +1,6 @@
 ---
 import { siteConfig } from '@/config';
 import { Font } from 'astro:assets';
-import { ClientRouter } from 'astro:transitions';
 import Analytics from '@/components/Analytics.astro';
 
 export interface ArticleMeta {
@@ -66,14 +65,6 @@ const jsonLdHtml = jsonLd && JSON.stringify(jsonLd).replace(/</g, '\\u003c');
         document.querySelector('meta[name="color-scheme"]').content = stored;
       }
       root.classList.add('js');
-      // ClientRouter replaces <html> attributes and <head> on navigation: carry the theme over
-      document.addEventListener('astro:before-swap', function (e) {
-        var next = e.newDocument;
-        next.documentElement.classList.add('js');
-        if (root.dataset.theme) next.documentElement.dataset.theme = root.dataset.theme;
-        var meta = next.querySelector('meta[name="color-scheme"]');
-        if (meta) meta.content = root.dataset.theme || 'light dark';
-      });
     })();
   </script>
   <link rel="manifest" href="/manifest.json" />
@@ -120,7 +111,28 @@ const jsonLdHtml = jsonLd && JSON.stringify(jsonLd).replace(/</g, '\\u003c');
   <!-- Google verification -->
   <meta name="google-site-verification" content="e33KPrSW7_LHxFoA9XP_rkj1noTjubwKyfeCRAV9seg" />
 
-  <Analytics />
+  <!-- Page transitions are native cross-document view transitions (@view-transition in
+       _base.scss). Hold the new page's first paint until <main> is parsed, so the cross-fade
+       never animates to a blank page. -->
+  <link rel="expect" href="#content" blocking="render" />
 
-  <ClientRouter />
+  <!-- Prerender same-origin pages on hover/touch so navigation is near-instant (Chromium;
+       ignored elsewhere). The feed and Pagefind's files aren't pages. -->
+  <script is:inline type="speculationrules">
+    {
+      "prerender": [{
+        "where": {
+          "and": [
+            { "href_matches": "/*" },
+            { "not": { "href_matches": "/feed.xml" } },
+            { "not": { "href_matches": "/pagefind/*" } },
+            { "not": { "selector_matches": "[rel~=nofollow], [download]" } }
+          ]
+        },
+        "eagerness": "moderate"
+      }]
+    }
+  </script>
+
+  <Analytics />
 </head>
