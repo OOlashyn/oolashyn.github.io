@@ -118,81 +118,83 @@
       }, { signal });
     });
 
-    // Subscribe modal open
-    document.querySelectorAll<HTMLElement>('#subscribe-trigger').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const modal = document.querySelector<HTMLElement>('#subscribe-modal');
-        if (!modal) return;
-        modal.classList.add('is-open');
-        btn.setAttribute('aria-expanded', 'true');
-        modal.querySelector<HTMLElement>('#subscribe-modal-email')?.focus();
-      }, { signal });
-    });
+    // Subscribe modal: a native <dialog>. showModal() handles focus, the focus trap, inertness,
+    // Escape and focus restore; closedby="any" adds light dismiss where supported.
+    const subscribeModal = document.querySelector<HTMLDialogElement>('#subscribe-modal');
+    const subscribeTrigger = document.querySelector<HTMLElement>('#subscribe-trigger');
 
-    // Focus trap inside subscribe modal
-    document.addEventListener('keydown', (e) => {
-      const modal = document.querySelector<HTMLElement>('#subscribe-modal');
-      if (!modal?.classList.contains('is-open')) return;
-      if (e.key !== 'Tab') return;
+    // Exit animations need transitionable display + overlay (not in Firefox/Safari yet). Firefox
+    // parses allow-discrete without honouring it for display, so probe the real behaviour.
+    const supportsTopLayerExit = (): boolean => {
+      if (!CSS.supports('overlay', 'auto') || !CSS.supports('transition-behavior', 'allow-discrete')) return false;
+      const probe = document.createElement('div');
+      probe.style.cssText = 'transition: display 1s allow-discrete !important; display: block;';
+      document.body.appendChild(probe);
+      getComputedStyle(probe).display;
+      probe.style.display = 'none';
+      const supported = getComputedStyle(probe).display === 'block';
+      probe.remove();
+      return supported;
+    };
 
-      const focusable = Array.from(
-        modal.querySelectorAll<HTMLElement>(
-          'input:not([type="hidden"]), button, [tabindex]:not([tabindex="-1"])'
-        )
-      ).filter((el) => !(el as HTMLInputElement | HTMLButtonElement).disabled);
-
-      if (focusable.length === 0) return;
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-
-      if (e.shiftKey) {
-        if (document.activeElement === first) {
-          e.preventDefault();
-          last.focus();
+    async function closeSubscribeModal(): Promise<void> {
+      if (!subscribeModal?.open) return;
+      if (!supportsTopLayerExit()) {
+        // Play the exit transition while the dialog is still open, then close it
+        subscribeModal.setAttribute('data-closing', '');
+        const animations = subscribeModal.getAnimations({ subtree: true });
+        if (animations.length > 0) {
+          await Promise.race([
+            Promise.allSettled(animations.map((a) => a.finished)),
+            new Promise((resolve) => setTimeout(resolve, 1000)),
+          ]);
         }
-      } else {
-        if (document.activeElement === last) {
-          e.preventDefault();
-          first.focus();
-        }
+        if (!subscribeModal.hasAttribute('data-closing')) return;
+        subscribeModal.removeAttribute('data-closing');
       }
-    }, { signal });
+      subscribeModal.close();
+    }
 
-    // Subscribe modal close — X button
-    document.querySelectorAll<HTMLElement>('.subscribe-modal__close').forEach((el) => {
-      el.addEventListener('click', () => {
-        const modal = document.querySelector<HTMLElement>('#subscribe-modal');
-        if (!modal) return;
-        modal.classList.remove('is-open');
-        const trigger = document.querySelector<HTMLElement>('#subscribe-trigger');
-        trigger?.setAttribute('aria-expanded', 'false');
-        trigger?.focus();
+    if (subscribeModal) {
+      subscribeTrigger?.addEventListener('click', () => {
+        subscribeModal.removeAttribute('data-closing');
+        subscribeModal.showModal();
+        subscribeTrigger.setAttribute('aria-expanded', 'true');
       }, { signal });
-    });
 
-    // Subscribe modal close — click on backdrop (not card)
-    document.querySelectorAll<HTMLElement>('#subscribe-modal').forEach((modal) => {
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-          modal.classList.remove('is-open');
-          const trigger = document.querySelector<HTMLElement>('#subscribe-trigger');
-          trigger?.setAttribute('aria-expanded', 'false');
-          trigger?.focus();
-        }
+      subscribeModal.querySelector<HTMLElement>('.subscribe-modal__close')
+        ?.addEventListener('click', () => void closeSubscribeModal(), { signal });
+
+      // Route Escape and native light dismiss through the same animated close
+      subscribeModal.addEventListener('cancel', (e) => {
+        e.preventDefault();
+        void closeSubscribeModal();
       }, { signal });
-    });
+
+      subscribeModal.addEventListener('close', () => {
+        subscribeTrigger?.setAttribute('aria-expanded', 'false');
+      }, { signal });
+
+      // Light dismiss where closedby isn't supported (Safari): a click on the backdrop targets
+      // the dialog itself, outside its box (the box is exactly the card)
+      if (!('closedBy' in HTMLDialogElement.prototype)) {
+        subscribeModal.addEventListener('click', (e) => {
+          if (e.target !== subscribeModal) return;
+          const rect = subscribeModal.getBoundingClientRect();
+          const inside = rect.top <= e.clientY && e.clientY <= rect.bottom
+            && rect.left <= e.clientX && e.clientX <= rect.right;
+          if (!inside) void closeSubscribeModal();
+        }, { signal });
+      }
+    }
 
     // Escape key
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         const searchBox = document.querySelector<HTMLElement>('.search-box');
-        const modal = document.querySelector<HTMLElement>('#subscribe-modal');
-        if (modal?.classList.contains('is-open')) {
-          modal.classList.remove('is-open');
-          const trigger = document.querySelector<HTMLElement>('#subscribe-trigger');
-          trigger?.setAttribute('aria-expanded', 'false');
-          trigger?.focus();
-        } else if (isDrawerOpen()) {
+        // The open dialog handles its own Escape (see the cancel listener above)
+        if (subscribeModal?.open) return;
+        if (isDrawerOpen()) {
           closeDrawer();
         } else if (searchBox?.classList.contains('search-active')) {
           searchBox.classList.remove('search-active');
