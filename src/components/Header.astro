@@ -7,7 +7,7 @@ import { Icon } from 'astro-icon/components';
   <div class="wrapper">
     <div class="header-flex">
       <div class="menu-icon-container">
-        <button class="menu-icon" aria-label="Open menu" aria-expanded="false" aria-controls="main-nav">
+        <button class="menu-icon" aria-label="Open menu" aria-expanded="false" aria-controls="nav-drawer">
           <Icon name="lucide:menu" aria-hidden="true" />
         </button>
       </div>
@@ -16,12 +16,8 @@ import { Icon } from 'astro-icon/components';
           <img class="img-logo" src="/assets/img/logo_big.svg" alt="" />
         </a>
       </p>
-      <nav class="main-nav" id="main-nav" aria-label="Main">
-        <button class="menu-icon-close" aria-label="Close menu">
-          <Icon name="lucide:x" aria-hidden="true" />
-        </button>
+      <nav class="main-nav" aria-label="Main">
         <ul>
-          <li class="mobile-only"><a href="/">Blog</a></li>
           <li><a href="/about/">About</a></li>
           <li><a href="/projects/">Projects</a></li>
           <li class="nav-subscribe-item">
@@ -29,10 +25,8 @@ import { Icon } from 'astro-icon/components';
               Subscribe
             </button>
           </li>
-          <li class="mobile-only"><a href="/subscribe/">Subscribe</a></li>
         </ul>
       </nav>
-      <div class="nav-scrim" aria-hidden="true"></div>
       <div class="search-icon-container">
         <button class="search-icon" aria-label="Open search" aria-expanded="false">
           <Icon name="lucide:search" aria-hidden="true" />
