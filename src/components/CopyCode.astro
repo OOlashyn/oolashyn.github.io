@@ -6,8 +6,7 @@
 <div class="visually-hidden" role="status" id="copy-status"></div>
 
 <script>
-  // Delegated listener on document: bundled scripts run only once with ClientRouter,
-  // but document survives page swaps, so this keeps working after navigation.
+  // One delegated listener covers every code block on the page
   document.addEventListener('click', async (e) => {
     const btn = (e.target as Element | null)?.closest<HTMLButtonElement>('.copy-code-button');
     if (!btn) return;

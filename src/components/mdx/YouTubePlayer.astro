@@ -32,7 +32,7 @@ const { id, title = 'YouTube video' } = Astro.props;
 </div>
 
 <script>
-  // Delegated listener survives ClientRouter navigations (bundled scripts run only once)
+  // One delegated listener covers every facade on the page
   document.addEventListener('click', (e) => {
     const link = (e.target as Element | null)?.closest<HTMLAnchorElement>('a[data-youtube-id]');
     if (!link) return;

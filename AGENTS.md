@@ -147,7 +147,9 @@ tagMap.get(tag)!.push(post);
   artifacts).
 - No `try/catch` is used anywhere in the codebase for async operations; do not introduce them
   without a clear reason.
-- Use `AbortController` to clean up event listeners across Astro's `astro:page-load` transitions.
+- Every navigation is a full page load, so scripts run once per page and listeners need no
+  teardown. Handle `pageshow` with `event.persisted` when a page restored from the back/forward
+  cache must reset state (e.g. close an open overlay).
 
 ```typescript
 // Good — guard clause
@@ -165,8 +167,13 @@ const isOpen = pageWrapper?.classList.toggle('active') ?? false;
 - Define `Props` interface at the top of the frontmatter script and destructure from `Astro.props`.
 - Client-side scripts go in `<script>` blocks inside `.astro` files, not in separate `.ts` files
   (unless it's a shared utility).
-- Use `astro:page-load` instead of `DOMContentLoaded` to support Astro's `ClientRouter` (view
-  transitions / SPA mode).
+- There is no client-side router (no `ClientRouter`, no `astro:page-load` / `astro:before-swap`).
+  Page transitions are native cross-document view transitions (`@view-transition` in
+  `_base.scss`, off for reduced motion), and speculation rules in `Head.astro` prerender
+  same-origin links on hover. Component `<script>` modules run after the DOM is parsed, so call
+  init code directly. Prerendered pages run scripts before the reader sees them: defer anything
+  that must only happen on a real visit (like analytics) until `document.prerendering` is false
+  (see `Analytics.astro`).
 - Header behaviour (mobile drawer, search overlay, subscribe modal, Escape handling) lives in
   `HeaderInteractions.astro`. The mobile nav is `NavDrawer.astro`: a `popover="manual"` rendered
   outside `.page-wrapper` (so the page can be made `inert` while it is open) whose swipe is native

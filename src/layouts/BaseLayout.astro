@@ -28,13 +28,5 @@ const { title, description, image, article } = Astro.props;
     <NavDrawer />
     <Search />
     <HeaderInteractions />
-    <script is:inline>
-      document.addEventListener('astro:before-swap', (event) => {
-        // Preserve dynamically injected Pagefind CSS link
-        document.head.querySelectorAll('link[href="/pagefind/pagefind-ui.css"]').forEach((link) => {
-          event.newDocument.head.appendChild(link.cloneNode(true));
-        });
-      });
-    </script>
   </body>
 </html>

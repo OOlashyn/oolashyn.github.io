@@ -1,17 +1,28 @@
 ---
 import { siteConfig } from '@/config';
 
-// Cloudflare Web Analytics (cookieless). Rendered in <head> so ClientRouter keeps the
-// identical script across navigations instead of re-running it; the beacon tracks
-// client-side route changes itself via the History API.
+// Cloudflare Web Analytics (cookieless). Pages can be prerendered by the speculation rules in
+// Head.astro before the reader opens them (or without them ever doing so), so the beacon loads
+// only once the page is actually shown; otherwise prerendered pages would count as visits.
 const { cloudflareToken } = siteConfig.analytics;
+const beacon = cloudflareToken && JSON.stringify({ token: cloudflareToken });
 ---
 
-{cloudflareToken && (
-  <script
-    is:inline
-    defer
-    src="https://static.cloudflareinsights.com/beacon.min.js"
-    data-cf-beacon={JSON.stringify({ token: cloudflareToken })}
-  ></script>
+{beacon && (
+  <script is:inline define:vars={{ beacon }}>
+    (function () {
+      function load() {
+        var script = document.createElement('script');
+        script.defer = true;
+        script.src = 'https://static.cloudflareinsights.com/beacon.min.js';
+        script.setAttribute('data-cf-beacon', beacon);
+        document.head.appendChild(script);
+      }
+      if (document.prerendering) {
+        document.addEventListener('prerenderingchange', load, { once: true });
+      } else {
+        load();
+      }
+    })();
+  </script>
 )}

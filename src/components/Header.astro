@@ -77,7 +77,6 @@ import { Icon } from 'astro-icon/components';
     notifyThemeChange();
   }
 
-  // Delegated listener survives ClientRouter navigations (bundled scripts run only once)
   document.addEventListener('click', (e) => {
     if (!(e.target as Element | null)?.closest('.theme-toggle')) return;
     const target: Theme = currentTheme() === 'dark' ? 'light' : 'dark';
@@ -105,5 +104,19 @@ import { Icon } from 'astro-icon/components';
     applyOverride(isTheme(e.newValue) ? e.newValue : null);
   });
 
-  document.addEventListener('astro:page-load', syncToggle);
+  // A page restored from the back/forward cache missed storage events while it was hidden
+  window.addEventListener('pageshow', (e) => {
+    if (!e.persisted) return;
+    let stored: string | null = null;
+    try {
+      stored = localStorage.getItem(STORAGE_KEY);
+    } catch {
+      // Storage unavailable: keep the current theme
+      return;
+    }
+    const override = isTheme(stored) ? stored : null;
+    if (override !== (document.documentElement.dataset.theme ?? null)) applyOverride(override);
+  });
+
+  syncToggle();
 </script>
