@@ -2,20 +2,24 @@
 import { Icon } from 'astro-icon/components';
 ---
 
-<div class="search-box">
+<!--
+  Full-screen native modal dialog: showModal() (HeaderInteractions.astro) makes the page inert,
+  traps focus, closes on Escape / Android back and restores focus to the search button.
+-->
+<dialog class="search-box" id="search-dialog" aria-label="Search">
   <div class="wrapper">
     <div class="search-grid">
       <div id="search-container">
         <div id="pagefind-search"></div>
       </div>
       <div class="icon-close-container">
-        <button class="search-icon-close" aria-label="Close search">
+        <button class="search-icon-close" type="button" aria-label="Close search">
           <Icon name="lucide:x" aria-hidden="true" />
         </button>
       </div>
     </div>
   </div>
-</div>
+</dialog>
 
 <script>
   function initPagefind() {

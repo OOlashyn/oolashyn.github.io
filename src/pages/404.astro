@@ -1,5 +1,20 @@
 ---
 import MissingLayout from '@/layouts/MissingLayout.astro';
+
+// Star field rendered at build time (stars created from a script wouldn't get this page's scoped
+// styles). Each star drifts right-to-left on the compositor (translate/opacity only), starting
+// part-way through its loop so the sky is full from the first frame.
+const random = (min: number, max: number): number => min + Math.random() * (max - min);
+const stars = Array.from({ length: 80 }, () => {
+  const duration = random(4, 8);
+  return {
+    top: random(0, 100).toFixed(1),
+    left: random(0, 100).toFixed(1),
+    duration: duration.toFixed(2),
+    delay: (-random(0, duration)).toFixed(2),
+    twinkleDelay: (-random(0, 3)).toFixed(2),
+  };
+});
 ---
 
 <MissingLayout title="Page Not Found" description="Page not found">
@@ -32,38 +47,69 @@ import MissingLayout from '@/layouts/MissingLayout.astro';
 
     .star {
       position: absolute;
+      top: var(--top);
+      right: 0;
       width: 2px;
       height: 2px;
       background: #fff;
-      right: 0;
-      animation: starTwinkle 3s infinite linear;
+      animation:
+        starFly var(--duration) linear var(--delay) infinite,
+        starTwinkle 3s linear var(--twinkle-delay) infinite;
     }
 
     .astronaut img {
       width: 100px;
       position: absolute;
       top: 55%;
+      left: 0;
       animation: astronautFly 6s infinite linear;
     }
 
-    @keyframes astronautFly {
-      0% { left: -100px; }
-      25% { top: 50%; transform: rotate(30deg); }
-      50% { transform: rotate(45deg); top: 55%; }
-      75% { top: 60%; transform: rotate(30deg); }
-      100% { left: 110%; transform: rotate(45deg); }
+    @keyframes starFly {
+      from { translate: 0 0; }
+      to { translate: calc(-100vw - 4px) 0; }
     }
 
     @keyframes starTwinkle {
-      0% { background: rgba(255, 255, 255, 0.4); }
-      25% { background: rgba(255, 255, 255, 0.8); }
-      50% { background: rgba(255, 255, 255, 1); }
-      75% { background: rgba(255, 255, 255, 0.8); }
-      100% { background: rgba(255, 255, 255, 0.4); }
+      0%, 100% { opacity: 0.4; }
+      25%, 75% { opacity: 0.8; }
+      50% { opacity: 1; }
+    }
+
+    /* Same path as before (top 50–60% of the 70vh box), as transforms instead of left/top */
+    @keyframes astronautFly {
+      0% { translate: -100px 0; rotate: 0deg; }
+      25% { translate: 25vw -3.5vh; rotate: 30deg; }
+      50% { translate: 50vw 0; rotate: 45deg; }
+      75% { translate: 75vw 3.5vh; rotate: 30deg; }
+      100% { translate: 110vw 0; rotate: 45deg; }
+    }
+
+    /* Reduced motion: a still sky, stars spread out, astronaut parked */
+    @media (prefers-reduced-motion: reduce) {
+      .star {
+        right: auto;
+        left: var(--left);
+        animation: none;
+        opacity: 0.8;
+      }
+
+      .astronaut img {
+        animation: none;
+        translate: 60vw 0;
+        rotate: 30deg;
+      }
     }
   </style>
 
-  <div class="message-content" id="message-content">
+  <div class="message-content">
+    {stars.map((star) => (
+      <div
+        class="star"
+        aria-hidden="true"
+        style={`--top: ${star.top}%; --left: ${star.left}%; --duration: ${star.duration}s; --delay: ${star.delay}s; --twinkle-delay: ${star.twinkleDelay}s`}
+      />
+    ))}
     <div class="text">
       <div>ERROR</div>
       <h1 class="error-code">404</h1>
@@ -79,40 +125,4 @@ import MissingLayout from '@/layouts/MissingLayout.astro';
     </div>
   </div>
 
-  <script>
-    const MAX_STARS = 80;
-    let starCount = 0;
-    const body = document.getElementById('message-content');
-    if (body) {
-      const creatorInterval = setInterval(createStar, 100);
-
-      function createStar() {
-        if (!body || starCount >= MAX_STARS) return;
-        starCount++;
-        const right = Math.random() * 500;
-        const top = Math.random() * screen.height;
-        const star = document.createElement('div');
-        star.classList.add('star');
-        body.appendChild(star);
-        star.style.top = top + 'px';
-        let pos = right;
-
-        const runInterval = setInterval(() => {
-          if (pos >= screen.width) {
-            clearInterval(runInterval);
-            star.remove();
-            starCount--;
-          } else {
-            pos += 3;
-            star.style.right = pos + 'px';
-          }
-        }, 10);
-      }
-
-      // Clean up on page unload (important for View Transitions)
-      document.addEventListener('astro:before-swap', () => {
-        clearInterval(creatorInterval);
-      }, { once: true });
-    }
-  </script>
 </MissingLayout>

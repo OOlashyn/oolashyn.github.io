@@ -1,8 +1,8 @@
 // Light / dark theme.
 //
-// An inline script in <head> (see Head.astro) sets <html data-theme="light|dark"> before
-// first paint, from the reader's saved choice or their OS preference. Without JS there is
-// no data-theme, so the OS preference applies through the media query fallbacks below.
+// By default the site follows the OS preference through the media queries below. When the
+// reader overrides it with the header toggle, an inline script in <head> (see Head.astro) sets
+// <html data-theme="light|dark"> before first paint. It also adds the `js` class.
 
 @mixin light-vars {
   --black: #000;
@@ -96,10 +96,17 @@
 // Variables
 :root {
   @include light-vars;
+  // Native UI (scrollbars, form controls, autofill, the search input) follows the theme
+  color-scheme: light dark;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
 }
 
 :root[data-theme="dark"] {
   @include dark-vars;
+  color-scheme: dark;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -173,7 +180,7 @@
 
 // Theme toggle button: show the icon for the theme you'd switch to
 .theme-toggle {
-  :root:not([data-theme]) & {
+  :root:not(.js) & {
     display: none; // no JS, nothing to toggle
   }
 

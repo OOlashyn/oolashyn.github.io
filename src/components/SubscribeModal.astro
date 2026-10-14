@@ -3,11 +3,16 @@ import SubscribeForm from '@/components/SubscribeForm.astro';
 import { Icon } from 'astro-icon/components';
 ---
 
-<div class="subscribe-modal" id="subscribe-modal" role="dialog" aria-modal="true" aria-labelledby="subscribe-modal-form-title">
+<!--
+  Native modal dialog: showModal() (HeaderInteractions.astro) puts it in the top layer, makes the
+  page inert, traps focus, closes on Escape and restores focus to the trigger. closedby="any" adds
+  light dismiss (backdrop click, Android back), with a script fallback where unsupported.
+-->
+<dialog class="subscribe-modal" id="subscribe-modal" closedby="any" aria-labelledby="subscribe-modal-form-title">
   <div class="subscribe-modal__card">
-    <button class="subscribe-modal__close" aria-label="Close subscribe dialog">
+    <button class="subscribe-modal__close" type="button" aria-label="Close subscribe dialog">
       <Icon name="lucide:x" aria-hidden="true" />
     </button>
-    <SubscribeForm formId="subscribe-modal-form" emailId="subscribe-modal-email" />
+    <SubscribeForm formId="subscribe-modal-form" emailId="subscribe-modal-email" autofocus />
   </div>
-</div>
+</dialog>

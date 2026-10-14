@@ -1,6 +1,10 @@
 ---
 ---
 
+<!-- Polite live region: screen readers announce the copy result, which is otherwise only shown
+     visually on the button -->
+<div class="visually-hidden" role="status" id="copy-status"></div>
+
 <script>
   // Delegated listener on document: bundled scripts run only once with ClientRouter,
   // but document survives page swaps, so this keeps working after navigation.
@@ -12,8 +16,17 @@
     const code = pre?.querySelector('code');
     if (!code) return;
 
-    await navigator.clipboard.writeText(code.textContent ?? '');
-    btn.classList.add('copied');
-    setTimeout(() => btn.classList.remove('copied'), 2000);
+    const copied = await navigator.clipboard.writeText(code.textContent ?? '').then(() => true, () => false);
+    const status = document.getElementById('copy-status');
+    if (status) {
+      // Clear first so copying twice in a row is announced again
+      status.textContent = '';
+      requestAnimationFrame(() => {
+        status.textContent = copied ? 'Code copied to clipboard' : 'Could not copy code';
+      });
+    }
+
+    btn.classList.add(copied ? 'copied' : 'copy-failed');
+    setTimeout(() => btn.classList.remove('copied', 'copy-failed'), 2000);
   });
 </script>
