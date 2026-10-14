@@ -22,12 +22,12 @@
     async function openDrawer(): Promise<void> {
       if (!drawer || !scroller) return;
       drawer.showPopover();
-      // Without scroll-initial-target the popover opens scrolled to the sheet: jump to the
-      // closed stop first so it slides in. Two frames let the jump commit before scrolling back.
-      if (!CSS.supports('scroll-initial-target', 'nearest')) {
-        scroller.scrollTo({ left: scroller.scrollWidth, behavior: 'instant' });
-        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-      }
+      // Start from the closed stop and let it commit (two frames) before sliding the sheet in.
+      // Done in every browser, not only those without scroll-initial-target: browsers differ in
+      // when they apply the initial scroll target, and one that applies it after our scroll
+      // below would leave the drawer open but parked off-screen.
+      scroller.scrollTo({ left: scroller.scrollWidth, behavior: 'instant' });
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
       // 'auto' defers to the CSS scroll-behavior: smooth unless reduced motion is preferred
       scroller.scrollTo({ left: 0, behavior: 'auto' });
     }
@@ -64,6 +64,17 @@
       }, { root: drawer, threshold: [visibleThreshold, 1] });
       observer.observe(sheet);
       signal.addEventListener('abort', () => observer.disconnect());
+
+      // Safety net for when a scroll settles somewhere unexpected while the drawer is open (e.g. a
+      // programmatic scroll interrupted by another): never leave an invisible or half-open layer
+      // blocking the page. Fully closed → hide the popover (the observer only reports changes, so
+      // it may not fire); stranded between the snap stops → settle on the nearest one.
+      scroller.addEventListener('scrollend', () => {
+        if (!isDrawerOpen()) return;
+        const closedAt = scroller.scrollWidth - scroller.clientWidth;
+        if (scroller.scrollLeft >= closedAt - 1) onDrawerClosed();
+        else if (scroller.scrollLeft > 1) scroller.scrollTo({ left: scroller.scrollLeft < closedAt / 2 ? 0 : closedAt, behavior: 'auto' });
+      });
 
       // Without scroll-driven animations, fade the backdrop from a scroll listener instead
       if (!CSS.supports('animation-timeline: scroll()')) {
