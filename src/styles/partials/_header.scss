@@ -7,17 +7,21 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    min-height: 70px;
   }
 
   .logo {
     display: flex;
     align-items: center;
     flex-shrink: 0;
+    margin: 0 1.25rem 0 0;
 
     .img-logo {
-      height: 70px;
+      height: 52px;
       width: auto;
       display: block;
+      // The wordmark's baseline sits at 66.6% of the SVG's height; lift it onto the nav links' baseline
+      translate: 0 -3px;
     }
   }
 }
@@ -121,10 +125,18 @@
   }
 
   .main-header {
+    .header-flex {
+      min-height: 56px;
+    }
+
     .logo {
+      margin: 0;
+
       .img-logo {
         // Shrinks on narrow phones so the wide wordmark fits beside the header icons
-        height: min(55px, 14vw);
+        height: min(44px, 12vw);
+        // No nav links beside it on mobile (they're in the drawer), so centre the whole logo
+        translate: none;
       }
     }
   }
