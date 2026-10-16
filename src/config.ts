@@ -3,7 +3,7 @@ export const siteConfig = {
   title: 'Dancing with CRM',
   description:
     "Oleksandr's Olashyn personal blog about Power Platform, Dynamics 365 and many more",
-  url: 'https://www.dancingwithcrm.com',
+  url: 'https://olashyn.dev',
   baseUrl: '',
 
   // Author
@@ -15,7 +15,7 @@ export const siteConfig = {
   email: 'oleksandr@dancingwithcrm.com',
 
   // Social / Contact
-  website: 'www.dancingwithcrm.com',
+  website: 'olashyn.dev',
   linkedin: 'dancingwithcrm',
   github: 'oolashyn',
   twitter: '@dancingwithcrm',
