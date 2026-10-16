@@ -1,8 +1,8 @@
 {
     "dir": "ltr",
     "lang": "en",
-    "name": "Dancing with CRM",
-    "short_name": "Dancing with CRM",
+    "name": "olashyn.dev",
+    "short_name": "olashyn.dev",
     "scope": "/",
     "display": "standalone",
     "start_url": "https://olashyn.dev/",

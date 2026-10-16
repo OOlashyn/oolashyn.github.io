@@ -1,4 +1,4 @@
-# Dancing with CRM
+# olashyn.dev
 
 Source of [olashyn.dev](https://olashyn.dev) (formerly dancingwithcrm.com), Oleksandr Olashyn's blog about
 Power Pages and the Power Platform.

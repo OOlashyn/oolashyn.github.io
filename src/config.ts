@@ -1,6 +1,6 @@
 export const siteConfig = {
-  name: 'Dancing with CRM',
-  title: 'Dancing with CRM',
+  name: 'olashyn.dev',
+  title: 'olashyn.dev',
   description:
     "Oleksandr's Olashyn personal blog about Power Platform, Dynamics 365 and many more",
   url: 'https://olashyn.dev',
