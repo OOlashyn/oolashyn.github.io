@@ -12,7 +12,7 @@ export const siteConfig = {
   authorPicFull: 'face.jpg',
   aboutAuthor:
     'My name is Oleksandr Olashyn. I am former Microsoft Business Application MVP (5x), MCT, certified Power Platform Architect with passion for coding and dancing.',
-  email: 'oleksandr@dancingwithcrm.com',
+  email: 'oleksandr@olashyn.dev',
 
   // Social / Contact
   website: 'olashyn.dev',
