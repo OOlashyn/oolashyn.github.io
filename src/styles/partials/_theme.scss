@@ -39,6 +39,9 @@
   --update-block-header-color: var(--dark-gray);
   --footer-bg-color: #efefef;
   --tag-date-color: var(--dark-purple);
+  --logo-ink: #311e3e;
+  --logo-muted: #6a5a75;
+  --logo-accent: #8b5cf6;
 }
 
 @mixin dark-vars {
@@ -76,6 +79,9 @@
   --update-block-header-color: #efd9fd;
   --footer-bg-color: hsl(200, 3%, 12%);
   --tag-date-color: #bbe1fa;
+  --logo-ink: #f4f3ef;
+  --logo-muted: #b9aec2;
+  --logo-accent: #8b5cf6;
 }
 
 // Scope rules to one theme: `.foo { @include when-dark { ... } }`
@@ -157,12 +163,6 @@
 .main-header {
   @include when-dark {
     border-bottom: 1px solid var(--light-brd-color);
-  }
-}
-
-.img-logo {
-  @include when-dark {
-    filter: invert(100%) sepia(0%) saturate(1848%) hue-rotate(47deg) brightness(111%) contrast(101%);
   }
 }
 

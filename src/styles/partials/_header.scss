@@ -16,6 +16,7 @@
 
     .img-logo {
       height: 70px;
+      width: auto;
       display: block;
     }
   }
@@ -122,7 +123,8 @@
   .main-header {
     .logo {
       .img-logo {
-        height: 55px;
+        // Shrinks on narrow phones so the wide wordmark fits beside the header icons
+        height: min(55px, 14vw);
       }
     }
   }
