@@ -1,9 +1,9 @@
 export const siteConfig = {
-  name: 'Dancing with CRM',
-  title: 'Dancing with CRM',
+  name: 'olashyn.dev',
+  title: 'olashyn.dev',
   description:
     "Oleksandr's Olashyn personal blog about Power Platform, Dynamics 365 and many more",
-  url: 'https://www.dancingwithcrm.com',
+  url: 'https://olashyn.dev',
   baseUrl: '',
 
   // Author
@@ -12,10 +12,10 @@ export const siteConfig = {
   authorPicFull: 'face.jpg',
   aboutAuthor:
     'My name is Oleksandr Olashyn. I am former Microsoft Business Application MVP (5x), MCT, certified Power Platform Architect with passion for coding and dancing.',
-  email: 'oleksandr@dancingwithcrm.com',
+  email: 'oleksandr@olashyn.dev',
 
   // Social / Contact
-  website: 'www.dancingwithcrm.com',
+  website: 'olashyn.dev',
   linkedin: 'dancingwithcrm',
   github: 'oolashyn',
   twitter: '@dancingwithcrm',

@@ -1,12 +1,12 @@
 {
     "dir": "ltr",
     "lang": "en",
-    "name": "Dancing with CRM",
-    "short_name": "Dancing with CRM",
+    "name": "olashyn.dev",
+    "short_name": "olashyn.dev",
     "scope": "/",
     "display": "standalone",
-    "start_url": "https://www.dancingwithcrm.com/",
-    "background_color": "#000000",
+    "start_url": "https://olashyn.dev/",
+    "background_color": "#F4F3EF",
     "theme_color": "#311e3e",
     "description": "Oleksandr's Olashyn personal blog about Power Platform, Dynamics 365 and many more",
     "orientation": "any",
@@ -24,5 +24,5 @@
             "type": "image/png"
         }
     ],
-    "url": "https://www.dancingwithcrm.com/"
+    "url": "https://olashyn.dev/"
 }

@@ -1,4 +1,5 @@
 ---
+import Logo from '@/components/Logo.astro';
 import SubscribeModal from '@/components/SubscribeModal.astro';
 import { Icon } from 'astro-icon/components';
 ---
@@ -11,9 +12,9 @@ import { Icon } from 'astro-icon/components';
           <Icon name="lucide:menu" aria-hidden="true" />
         </button>
       </div>
-      <p class="logo" style="margin:0;">
-        <a href="/" aria-label="Website Logo">
-          <img class="img-logo" src="/assets/img/logo_big.svg" alt="" />
+      <p class="logo">
+        <a href="/" aria-label="olashyn.dev home">
+          <Logo />
         </a>
       </p>
       <nav class="main-nav" aria-label="Main">

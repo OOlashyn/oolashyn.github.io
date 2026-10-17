@@ -1,6 +1,6 @@
-# Dancing with CRM
+# olashyn.dev
 
-Source of [dancingwithcrm.com](https://www.dancingwithcrm.com), Oleksandr Olashyn's blog about
+Source of [olashyn.dev](https://olashyn.dev) (formerly dancingwithcrm.com), Oleksandr Olashyn's blog about
 Power Pages and the Power Platform.
 
 Built with [Astro](https://astro.build) (static output), MDX, SCSS and TypeScript, with

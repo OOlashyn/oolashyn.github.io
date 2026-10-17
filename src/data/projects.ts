@@ -11,7 +11,7 @@ export interface Project {
 export const projects: Project[] = [
   {
     title: 'Power Pages Lookup to Select',
-    extLink: 'https://www.dancingwithcrm.com/power-pages-lookup-to-select',
+    extLink: '/power-pages-lookup-to-select/',
     videomp4: '2024-05-26-lts-full.mp4',
     content:
       'jQuery library to easily replace Power Pages lookup control with Select2 control',

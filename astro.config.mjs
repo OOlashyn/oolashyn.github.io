@@ -7,7 +7,7 @@ import rehypeExternalLinks from 'rehype-external-links';
 import rehypeCodeBar from './src/plugins/rehypeCodeBar.mjs';
 
 export default defineConfig({
-  site: 'https://www.dancingwithcrm.com',
+  site: 'https://olashyn.dev',
   output: 'static',
   trailingSlash: 'always',
   // Astro 7 defaults to 'jsx' whitespace stripping; keep v6's HTML-aware behaviour
