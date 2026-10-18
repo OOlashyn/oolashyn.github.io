@@ -8,7 +8,6 @@ export const siteConfig = {
 
   // Author
   author: 'Oleksandr Olashyn',
-  authorPic: 'face-min.jpg',
   authorPicFull: 'face.jpg',
   aboutAuthor:
     'My name is Oleksandr Olashyn. I am former Microsoft Business Application MVP (5x), MCT, certified Power Platform Architect with passion for coding and dancing.',

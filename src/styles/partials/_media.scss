@@ -67,28 +67,4 @@
       }
     }
   }
-
-  .author-box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-
-    .author-img {
-      height: 100px;
-      width: 100px;
-      margin: 0 0 10px;
-    }
-
-    .author-desc {
-      h2 {
-        margin: 0 0 10px;
-      }
-
-      p {
-        margin: 0 0 15px;
-      }
-    }
-  }
-
 }
