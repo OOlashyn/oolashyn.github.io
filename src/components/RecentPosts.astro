@@ -2,11 +2,14 @@
 import { getPostUrl, getSortedPosts } from '@/utils';
 import CoverImage from '@/components/CoverImage.astro';
 
-const recentPosts = (await getSortedPosts()).slice(0, 4);
+// Skip the post being read so it never links to itself
+const recentPosts = (await getSortedPosts())
+  .filter((post) => getPostUrl(post.id) !== Astro.url.pathname)
+  .slice(0, 4);
 ---
 
 <div class="recent-box" data-pagefind-ignore>
-  <h2 class="recent-title">Recent post</h2>
+  <h2 class="recent-title">Recent posts</h2>
   <div class="recent-list">
     {recentPosts.map((post) => (
       <a href={getPostUrl(post.id)} class="recent-item">
