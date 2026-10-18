@@ -70,7 +70,12 @@
     }
   }
   .page-share {
+    // Center the 18px icons on the 12px label instead of sitting them on its baseline
+    display: flex;
+    align-items: center;
+
     a {
+      display: inline-flex;
       text-decoration: none;
       color: var(--icon-color);
       margin-left: 10px;

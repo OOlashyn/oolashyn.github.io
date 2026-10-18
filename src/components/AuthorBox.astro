@@ -35,9 +35,9 @@ import { Icon } from 'astro-icon/components';
         </li>
       )}
       {siteConfig.twitter && (
-        <li class="twitter">
-          <a href={`https://twitter.com/${siteConfig.twitter}`} target="_blank" aria-label="Twitter">
-            <Icon name="simple-icons:twitter" aria-hidden="true" />
+        <li class="x">
+          <a href={`https://x.com/${siteConfig.twitter.replace(/^@/, '')}`} target="_blank" aria-label="X">
+            <Icon name="simple-icons:x" aria-hidden="true" />
           </a>
         </li>
       )}
