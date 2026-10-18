@@ -83,6 +83,37 @@
   }
 }
 
+// Section headings link to themselves (see rehypeHeadingAnchors.mjs); a "#" shows on hover/focus
+.heading-anchor {
+  color: inherit;
+  text-decoration: none;
+
+  &:hover {
+    color: inherit;
+  }
+
+  &::after {
+    content: "#";
+    content: "#" / ""; // decorative: keep it out of the heading's accessible name
+    margin-left: 0.35em;
+    color: var(--link-color);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  &:hover::after,
+  &:focus-visible::after {
+    opacity: 1;
+  }
+
+  // No hover on touch screens: keep the mark faintly visible so the link can be found
+  @media (hover: none) {
+    &::after {
+      opacity: 0.4;
+    }
+  }
+}
+
 .recent-box {
   margin-top: 30px;
   padding-bottom: 30px;
