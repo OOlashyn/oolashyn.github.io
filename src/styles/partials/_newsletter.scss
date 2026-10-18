@@ -13,9 +13,17 @@
     &_email{
         width:100%;
         padding: 10px;
+        // Replace the browser's default inset border, which shows a light edge in dark mode
+        border: 1px solid var(--light-brd-color);
+        border-right: none;
         border-radius: 0.25rem 0 0 0.25rem;
 
+        &:focus {
+            border-color: var(--purple);
+        }
+
         @media only screen and (max-width: 480px) {
+            border-right: 1px solid var(--light-brd-color);
             border-radius: 0.25rem;
         }
     }

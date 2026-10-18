@@ -94,7 +94,7 @@ import { Icon } from 'astro-icon/components';
   });
 
   // CSS already follows OS changes when there's no override; keep the toggle and listeners
-  // (e.g. Utterances) in step. An existing override is kept even if the OS now matches it.
+  // (e.g. Giscus) in step. An existing override is kept even if the OS now matches it.
   systemQuery.addEventListener('change', () => {
     if (!isTheme(document.documentElement.dataset.theme)) notifyThemeChange();
   });

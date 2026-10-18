@@ -2,7 +2,7 @@ export const siteConfig = {
   name: 'olashyn.dev',
   title: 'olashyn.dev',
   description:
-    "Oleksandr's Olashyn personal blog about Power Platform, Dynamics 365 and many more",
+    "Oleksandr Olashyn's personal blog about Power Platform, Dynamics 365 and many more",
   url: 'https://olashyn.dev',
   baseUrl: '',
 
@@ -34,11 +34,15 @@ export const siteConfig = {
   mailchimpU: '146d1df030bf451984f7700fb',
   mailchimpId: 'ba3c34cafb',
 
-  // Comments (Utterances). The theme follows the site's light/dark mode (see Utterances.astro).
-  utterances: {
+  // Comments (Giscus, backed by GitHub Discussions). Each post's thread is the discussion whose
+  // title is the post slug, so renaming the site or a post title never orphans it. The IDs come
+  // from https://giscus.app; while either is empty no comments are shown. The theme follows the
+  // site's light/dark mode (see Giscus.astro).
+  giscus: {
     repo: 'OOlashyn/oolashyn.github.io',
-    issueTerm: 'title',
-    label: 'Comment',
+    repoId: 'MDEwOlJlcG9zaXRvcnkxODc5MTE2MTI=',
+    category: 'Announcements',
+    categoryId: 'DIC_kwDOCzNNvM4DI1D5',
   },
 
   // Analytics (Cloudflare Web Analytics; empty token disables the beacon)

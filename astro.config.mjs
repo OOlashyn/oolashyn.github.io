@@ -2,9 +2,10 @@ import { defineConfig, fontProviders } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import icon from 'astro-icon';
-import { unified } from '@astrojs/markdown-remark';
+import { rehypeHeadingIds, unified } from '@astrojs/markdown-remark';
 import rehypeExternalLinks from 'rehype-external-links';
 import rehypeCodeBar from './src/plugins/rehypeCodeBar.mjs';
+import rehypeHeadingAnchors from './src/plugins/rehypeHeadingAnchors.mjs';
 
 export default defineConfig({
   site: 'https://olashyn.dev',
@@ -40,6 +41,9 @@ export default defineConfig({
       rehypePlugins: [
         [rehypeExternalLinks, { target: '_blank', rel: ['noopener', 'noreferrer'] }],
         rehypeCodeBar,
+        // Astro adds heading ids after these plugins; run it here so the anchors can use them
+        rehypeHeadingIds,
+        rehypeHeadingAnchors,
       ],
     }),
     shikiConfig: {

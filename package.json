@@ -1,8 +1,8 @@
 {
-  "name": "dancingwithcrm",
+  "name": "olashyn-dev",
   "type": "module",
   "version": "1.0.0",
-  "description": "Dancing with CRM - Oleksandr Olashyn's personal blog",
+  "description": "olashyn.dev - Oleksandr Olashyn's personal blog",
   "repository": "https://github.com/OOlashyn/oolashyn.github.io",
   "author": "Oleksandr Olashyn",
   "license": "MIT",

@@ -4,7 +4,7 @@ import Footer from '@/components/Footer.astro';
 import UkraineBanner from '@/components/UkraineBanner.astro';
 import Newsletter from '@/components/Newsletter.astro';
 import RecentPosts from '@/components/RecentPosts.astro';
-import Utterances from '@/components/Utterances.astro';
+import Giscus from '@/components/Giscus.astro';
 import CopyCode from '@/components/CopyCode.astro';
 import CoverImage from '@/components/CoverImage.astro';
 import { Icon } from 'astro-icon/components';
@@ -61,12 +61,12 @@ const dateStr = formatPostDate(date);
             <div class="page-share">
               <span>Share:</span>
               <a
-                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(fullUrl)}`}
-                title="Share on Twitter"
+                href={`https://x.com/intent/post?text=${encodeURIComponent(title)}&url=${encodeURIComponent(fullUrl)}`}
+                title="Share on X"
                 rel="noreferrer"
                 target="_blank"
               >
-                <Icon name="simple-icons:twitter" aria-hidden="true" />
+                <Icon name="simple-icons:x" aria-hidden="true" />
               </a>
               {/* Mastodon has no central share URL; Share₂Fedi lets readers pick their own instance */}
               <a
@@ -88,7 +88,7 @@ const dateStr = formatPostDate(date);
             </div>
           </div>
           <RecentPosts />
-          <Utterances />
+          <Giscus />
         </div>
       </div>
     </article>
