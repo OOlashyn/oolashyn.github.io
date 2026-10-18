@@ -1,0 +1,87 @@
+---
+import { siteConfig } from '@/config';
+
+const { repo, repoId, category, categoryId } = siteConfig.giscus;
+// The post slug, e.g. "power-pages-lookup-to-select" for /power-pages-lookup-to-select/
+const term = Astro.url.pathname.replace(/^\/|\/$/g, '');
+const enabled = Boolean(repoId && categoryId);
+
+if (!enabled && import.meta.env.DEV) {
+  console.warn('Giscus comments are off: set giscus.repoId and giscus.categoryId in src/config.ts');
+}
+---
+
+{enabled && (
+  <div
+    id="giscus-container"
+    class="giscus"
+    data-pagefind-ignore
+    data-repo={repo}
+    data-repo-id={repoId}
+    data-category={category}
+    data-category-id={categoryId}
+    data-term={term}
+  ></div>
+)}
+
+<script>
+  // <html data-theme> holds the reader's override (set in Head.astro, toggled in Header.astro);
+  // without one the site follows the OS preference
+  function getGiscusTheme(): string {
+    const override = document.documentElement.dataset.theme;
+    const dark = override ? override === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+    return dark ? 'dark' : 'light';
+  }
+
+  function loadGiscus(): void {
+    const container = document.getElementById('giscus-container');
+    if (!container) return;
+
+    const { repo, repoId, category, categoryId, term } = container.dataset;
+    if (!repo || !repoId || !category || !categoryId || !term) return;
+
+    const script = document.createElement('script');
+    script.src = 'https://giscus.app/client.js';
+    script.setAttribute('data-repo', repo);
+    script.setAttribute('data-repo-id', repoId);
+    script.setAttribute('data-category', category);
+    script.setAttribute('data-category-id', categoryId);
+    // Match the discussion titled with the post slug. Not strict: discussions converted from
+    // the old Utterances issues don't carry the hash that strict matching looks for.
+    script.setAttribute('data-mapping', 'specific');
+    script.setAttribute('data-term', term);
+    script.setAttribute('data-strict', '0');
+    script.setAttribute('data-reactions-enabled', '1');
+    script.setAttribute('data-emit-metadata', '0');
+    script.setAttribute('data-input-position', 'bottom');
+    script.setAttribute('data-theme', getGiscusTheme());
+    script.setAttribute('data-lang', 'en');
+    // The comments sit at the end of the post: the iframe loads only when it nears the viewport
+    script.setAttribute('data-loading', 'lazy');
+    script.setAttribute('crossorigin', 'anonymous');
+    script.async = true;
+
+    container.appendChild(script);
+  }
+
+  function sendThemeToIframe(): void {
+    const iframe = document.querySelector<HTMLIFrameElement>('iframe.giscus-frame');
+    iframe?.contentWindow?.postMessage(
+      { giscus: { setConfig: { theme: getGiscusTheme() } } },
+      'https://giscus.app',
+    );
+  }
+
+  loadGiscus();
+
+  document.addEventListener('themechange', sendThemeToIframe);
+
+  // The lazy iframe may load after the theme was toggled, when the message above had nowhere
+  // to go; Giscus messages the page once it has loaded, so sync the theme then
+  function onGiscusMessage(event: MessageEvent): void {
+    if (event.origin !== 'https://giscus.app') return;
+    window.removeEventListener('message', onGiscusMessage);
+    sendThemeToIframe();
+  }
+  window.addEventListener('message', onGiscusMessage);
+</script>
