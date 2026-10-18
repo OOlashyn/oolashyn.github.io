@@ -224,16 +224,20 @@ const isOpen = pageWrapper?.classList.toggle('active') ?? false;
   via Astro's `paginate()`).
 - Required frontmatter fields are validated by the Zod schema in `src/content.config.ts`, which
   also documents what each field is for. Some only look redundant: `description` (SEO, RSS and
-  the Mailchimp newsletter) and `cardDescription` (post cards); `img` (site cover) and `image`
-  (stable RSS/Open Graph URL) are separate on purpose. Don't merge them.
+  the Mailchimp newsletter) and `cardDescription` (post cards); `img` (site cover) and the
+  optional `image` (a hand-made RSS/Mailchimp image at a stable URL, kept by older posts) are
+  separate on purpose. Don't merge them.
 - Custom MDX components (code blocks, callouts, videos, etc.) are in `src/components/mdx/`.
   The RSS feed (`src/data/feeds.ts`) renders MDX itself: plain HTML tags pass through, callouts
   listed in `feedCallouts` become labelled blockquotes, and any other component is dropped. Add a
   new callout component to `feedCallouts` so its text reaches feed readers and Mailchimp.
 - Cover images (`img:`) live in `src/assets/covers/` and are referenced relative to the post
   (`img: ../../assets/covers/2026-10-06-cover.jpg`) so Astro optimizes them; render them with
-  `CoverImage.astro`. The RSS/Open Graph image (`image:`) stays in `public/assets/img/` because
-  it needs a stable URL.
+  `CoverImage.astro`. Share images are generated from the cover at build time by
+  `src/pages/[kind]/[slug].jpg.ts` (sizes in `src/data/socialImages.ts`): `/og/<slug>.jpg`
+  (1200×630) for link previews and `/rss/<slug>.jpg` (600×400, the size the newsletter layout
+  expects) for RSS and Mailchimp. A post's own `image:` (in `public/assets/img/`) replaces the
+  RSS one; new posts don't need it.
 
 ### Site Configuration
 

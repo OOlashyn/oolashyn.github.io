@@ -36,14 +36,15 @@ date: "2026-10-20 09:00:00 -0400"
 description: Summary for search engines, social previews, RSS and the newsletter.
 cardDescription: Optional shorter text for the post card on the home page.
 img: ../../assets/covers/2026-10-20-cover.jpg
-image: /assets/img/2026-10-20-cover-rss.jpg
 tags: ['PowerPages']
 ---
 ```
 
 - `img` is the cover shown on the site. Put the file in `src/assets/covers/`; Astro optimizes it.
-- `image` is the RSS / newsletter / social preview image. Put it in `public/assets/img/` so its
-  URL never changes.
+- The social preview (`/og/<slug>.jpg`, 1200×630) and the RSS / newsletter image
+  (`/rss/<slug>.jpg`, 600×400) are generated from the cover when the site is built.
+- `image` is optional: a hand-made RSS / newsletter image in `public/assets/img/` that replaces
+  the generated one. Older posts keep theirs so their feed items don't change.
 - Don't change `date` on a published post: the RSS feed's publish date drives the Mailchimp
   newsletter, and a new date can send the post to subscribers again.
 - The frontmatter is validated by the schema in `src/content.config.ts`; the build fails with a
@@ -59,6 +60,7 @@ src/
   components/      UI components (mdx/ holds components used inside posts)
   content/posts/   Blog posts
   data/feeds.ts    RSS feed (also used by the Mailchimp newsletter)
+  data/socialImages.ts  Share images generated from covers
   layouts/         Page layouts
   pages/           Routes
   styles/          SCSS (theme colors in partials/_theme.scss)

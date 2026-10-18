@@ -3,6 +3,7 @@ import PostLayout from '@/layouts/PostLayout.astro';
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import type { GetStaticPaths } from 'astro';
 import { getPostSlug } from '@/utils';
+import { getSocialImageUrl } from '@/data/socialImages';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const posts = await getCollection('posts');
@@ -25,7 +26,7 @@ const { Content } = await render(post);
   description={post.data.description}
   date={post.data.date}
   img={post.data.img}
-  image={post.data.image}
+  image={getSocialImageUrl('og', post.id)}
   tags={post.data.tags}
   url={Astro.url.pathname}
 >
