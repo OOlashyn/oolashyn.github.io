@@ -10,6 +10,10 @@ import rehypeHeadingAnchors from './src/plugins/rehypeHeadingAnchors.mjs';
 export default defineConfig({
   site: 'https://olashyn.dev',
   output: 'static',
+  // Build 4 pages at a time. Most of the build is the share images (src/pages/[kind]/), which
+  // sharp renders off the main thread, so this saves ~5s; the pages are too small for the
+  // memory use Astro warns about.
+  build: { concurrency: 4 },
   trailingSlash: 'always',
   // Astro 7 defaults to 'jsx' whitespace stripping; keep v6's HTML-aware behaviour
   compressHTML: true,
