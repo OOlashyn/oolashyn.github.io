@@ -25,6 +25,7 @@ const { page } = Astro.props;
 ---
 
 <HomeLayout
+  title={`Page ${page.currentPage}`}
   description={siteConfig.description}
   previousUrl={page.url.prev}
   nextUrl={page.url.next}

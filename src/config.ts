@@ -2,12 +2,16 @@ export const siteConfig = {
   name: 'olashyn.dev',
   title: 'olashyn.dev',
   description:
-    "Oleksandr Olashyn's personal blog about Power Platform, Dynamics 365 and many more",
+    "Oleksandr Olashyn's blog about web dev, Power Platform and beyond",
   url: 'https://olashyn.dev',
   baseUrl: '',
+  // Link preview image for pages without their own (posts use /og/<slug>.jpg). A 1200×630 card
+  // with the logo and a tagline, rendered once from the logo SVG.
+  shareImage: '/assets/img/og-default.jpg',
 
   // Author
   author: 'Oleksandr Olashyn',
+  authorJobTitle: 'Power Platform Architect',
   authorPicFull: 'face.jpg',
   aboutAuthor:
     'My name is Oleksandr Olashyn. I am former Microsoft Business Application MVP (5x), MCT, certified Power Platform Architect with passion for coding and dancing.',
@@ -19,6 +23,7 @@ export const siteConfig = {
   github: 'oolashyn',
   twitter: '@dancingwithcrm',
 
+  // Profiles listed as the author's sameAs in the home page's structured data (see Head.astro)
   social: {
     name: 'Oleksandr Olashyn',
     links: [
