@@ -7,7 +7,7 @@ export const siteConfig = {
   baseUrl: '',
   // Link preview image for pages without their own (posts use /og/<slug>.jpg). A 1200×630 card
   // with the logo and a tagline, rendered once from the logo SVG.
-  shareImage: '/assets/img/og-default.jpg',
+  shareImage: '/assets/img/og-default.png',
 
   // Author
   author: 'Oleksandr Olashyn',
