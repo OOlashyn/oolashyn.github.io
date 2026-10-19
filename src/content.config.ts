@@ -19,13 +19,15 @@ const posts = defineCollection({
     // Renamed to `cardDescription` — fail loudly instead of silently ignoring the old key.
     shortDescription: z.never({ error: 'shortDescription was renamed to cardDescription' }).optional(),
 
-    // Cover shown on the site, optimized by Astro.
+    // Cover shown on the site, optimized by Astro. The link preview (/og/<slug>.jpg) and the
+    // RSS / Mailchimp image (/rss/<slug>.jpg) are generated from it (see src/data/socialImages.ts).
     // Path relative to the post: ../../assets/covers/<file>
     img: image(),
-    // RSS / Mailchimp / Open Graph image. Stays in public/ so its URL never changes.
+    // Optional hand-made RSS / Mailchimp image, used instead of the generated one. Older posts
+    // keep theirs so their feed items don't change. Stays in public/ so its URL never changes.
     image: z.string().startsWith('/assets/img/', {
       message: 'image must be a /assets/img/... path in public/ (it needs a stable URL for RSS)',
-    }),
+    }).optional(),
 
     tags: z.array(z.string()).default([]),
   }),

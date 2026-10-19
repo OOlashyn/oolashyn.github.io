@@ -12,6 +12,7 @@ import { type Plugin, unified } from 'unified';
 import { SKIP, visit } from 'unist-util-visit';
 
 import { siteConfig } from '@/config';
+import { getSocialImageUrl } from '@/data/socialImages';
 import { getPostUrl, getSortedPosts } from '@/utils';
 
 type UrlLike = URL | string;
@@ -179,9 +180,8 @@ export async function generateFeed(context: APIContext): Promise<Feed> {
           link: site,
         },
       ],
-      ...(post.data.image
-        ? { image: new URL(post.data.image, site).href }
-        : {}),
+      // A post's own `image` wins, so older posts keep the image URL they were sent with
+      image: new URL(post.data.image ?? getSocialImageUrl('rss', post.id), site).href,
     });
   }
 
