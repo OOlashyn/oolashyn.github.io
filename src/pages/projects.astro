@@ -19,14 +19,6 @@ const sections = await Promise.all(
         .map(async (project: Project) => ({
           ...project,
           isExternal: !project.url.startsWith('/'),
-          posterUrl:
-            project.media.kind === 'video'
-              ? (await getImage({
-                  src: project.media.poster,
-                  width: Math.min(1280, project.media.poster.width),
-                  format: 'webp',
-                })).src
-              : undefined,
           // What the viewer dialog shows: the clip itself, or the screenshot at full size
           viewerSrc:
             project.media.kind === 'video'
@@ -92,7 +84,8 @@ const pictureWidths = (width: number): number[] => [400, 800, 1280].filter((w) =
                       : `Enlarge the ${project.title} screenshot`}
                     data-kind={project.media.kind}
                     data-src={project.viewerSrc}
-                    data-poster={project.posterUrl}
+                    data-width={(project.media.kind === 'video' ? project.media.poster : project.media.src).width}
+                    data-height={(project.media.kind === 'video' ? project.media.poster : project.media.src).height}
                     data-alt={project.media.alt}
                     data-title={project.title}
                     hidden
@@ -143,20 +136,26 @@ const pictureWidths = (width: number): number[] => [400, 800, 1280].filter((w) =
 
   const openViewer = (button: HTMLButtonElement): void => {
     if (!viewer || !viewerTitle || !viewerMedia) return;
-    const { kind, src, poster, alt, title } = button.dataset;
+    const { kind, src, width, height, alt, title } = button.dataset;
     if (!src) return;
+
+    // Size the media box before anything loads, or the dialog opens as a bare header and then
+    // jumps to full height once the clip's metadata or the image arrives
+    viewerMedia.style.setProperty('--ratio', String(Number(width) / Number(height) || 16 / 9));
+    // The card's still is already loaded, so it shows at once while the full media loads
+    const still = button.parentElement?.querySelector('img')?.currentSrc ?? '';
 
     viewerTitle.textContent = title ?? '';
     if (kind === 'video') {
       const video = document.createElement('video');
       // The reader asked for this clip, so it plays straight away (reduced motion included)
-      Object.assign(video, { src, muted: true, loop: true, playsInline: true, controls: true, autoplay: true });
-      if (poster) video.poster = poster;
+      Object.assign(video, { src, poster: still, muted: true, loop: true, playsInline: true, controls: true, autoplay: true });
       video.setAttribute('aria-label', alt ?? '');
       viewerMedia.replaceChildren(video);
     } else {
       const img = document.createElement('img');
-      Object.assign(img, { src, alt: alt ?? '', decoding: 'async' });
+      Object.assign(img, { src, alt: alt ?? '' });
+      if (still) img.style.backgroundImage = `url("${still}")`;
       viewerMedia.replaceChildren(img);
     }
 

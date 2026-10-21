@@ -271,12 +271,20 @@
   place-items: center;
   background-color: var(--black);
 
+  // --ratio (width / height) is set by the page script before the dialog opens, so the box has
+  // its final size while the media is still loading: as wide as fits, but never taller than
+  // the screen minus the header
   video,
   img {
     display: block;
-    max-inline-size: 100%;
-    max-block-size: calc(100dvh - 2rem - 62px);
-    inline-size: auto;
+    inline-size: min(100%, (100dvh - 2rem - 62px) * var(--ratio));
     block-size: auto;
+    aspect-ratio: var(--ratio);
+  }
+
+  // The card's still shows behind the full-size screenshot until it loads
+  img {
+    background-size: contain;
+    background-repeat: no-repeat;
   }
 }
