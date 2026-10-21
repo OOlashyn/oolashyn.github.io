@@ -128,7 +128,7 @@ const lazyVideo = { loading: 'lazy' };
                   <h3>
                     <a href={project.url}>
                       {project.title}
-                      {project.isExternal && <Icon name="lucide:arrow-up-right" aria-hidden="true" />}
+                      <Icon name={project.isExternal ? 'lucide:arrow-up-right' : 'lucide:arrow-right'} aria-hidden="true" />
                     </a>
                   </h3>
                   <p>{project.description}</p>

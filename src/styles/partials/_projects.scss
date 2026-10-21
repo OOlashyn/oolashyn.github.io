@@ -160,7 +160,7 @@
   h3 a {
     @include card.title-link;
 
-    // Marks links that leave the site
+    // Where the link goes: ↗ leaves the site, → stays on it
     svg {
       margin-left: 4px;
       vertical-align: -0.1em;
