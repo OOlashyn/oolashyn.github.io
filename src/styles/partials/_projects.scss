@@ -1,48 +1,182 @@
-.projects-container {
-    margin: 0 0 50px;
+@use "card";
+
+// Projects page: intro, then one card grid per category
+
+.projects-page {
+  margin-block: 80px 100px;
 }
 
-.projects-main-header{
-    display: flex;
-    justify-content: center;
+.projects-intro {
+  h1 {
+    margin: 0;
+    font-size: clamp(2rem, 6vw, 3rem);
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--main-h-color);
+  }
+
+  p {
+    margin: 16px 0 0;
+    max-inline-size: 60ch;
+    font-weight: 300;
+    line-height: 1.7;
+    color: var(--main-text-color);
+  }
 }
 
-.projects-video {
-    max-width: 100%;
+.projects-github {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+  font-family: var(--font-lato);
+  font-weight: 700;
+  color: var(--link-color);
+  text-decoration: none;
+
+  &:hover {
+    color: var(--link-hover-color);
+  }
+
+  svg {
+    font-size: 1.15rem;
+  }
 }
 
-.project-ext-link {
-    padding-left: 10px;
-    text-decoration: none;
+.projects-section {
+  margin-top: 64px;
+
+  h2 {
+    margin: 0 0 20px;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--main-h-color);
+  }
 }
 
-.projects-title {
-    margin-bottom: 10px;
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  gap: 20px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.projects-description {
-    padding-bottom: 20px;
+.project-card {
+  display: flex;
+  flex-direction: column;
+  overflow: clip;
+  @include card.surface;
 }
 
-.projects-card {
-    border-radius: 15px;
+// Clips and screenshots range from 16:9 to 5:1, so they're letterboxed in one frame size
+.project-card__media {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  border-bottom: 1px solid var(--light-brd-color);
+  background-color: color-mix(in srgb, var(--main-text-color) 6%, transparent);
 
-    padding: 15px 35px 35px 35px;
-    margin: 20px 0 40px 0;
-    /* Add shadows to create the "card" effect */
-    //box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    box-shadow: 0px 1px 8px 2px rgba(0,0,0,0.3);
-    transition: 0.3s;
+  video,
+  img {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: contain;
+  }
 }
 
-/* On mouse-over, add a deeper shadow */
-.projects-card:hover {
-    box-shadow: 0 2px 16px 4px rgba(0, 0, 0, 0.3);
+// Play/pause for the demo clip, shown by the page script in place of the native controls
+.project-card__toggle {
+  position: absolute;
+  inset-block-end: 10px;
+  inset-inline-end: 10px;
+  display: grid;
+  place-items: center;
+  inline-size: 36px;
+  block-size: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background-color: rgb(0 0 0 / 0.6);
+  color: var(--white);
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &[hidden] {
+    display: none;
+  }
+
+  &:hover {
+    background-color: var(--deep-purple);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--purple);
+    outline-offset: 2px;
+  }
+
+  .project-card__pause-icon,
+  &.is-playing .project-card__play-icon {
+    display: none;
+  }
+
+  &.is-playing .project-card__pause-icon {
+    display: block;
+  }
 }
 
+// Only the text is a link target: the video controls above stay usable
+.project-card__body {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 20px;
 
-// @media (prefers-color-scheme: dark) {
-// 	.projects-card {
-//         border: 1px solid var(--light-brd-color);
-// 	}
-// }
+  h3 {
+    margin: 0 0 8px;
+    font-size: 1.15rem;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  h3 a {
+    @include card.title-link;
+
+    // Marks links that leave the site
+    svg {
+      margin-left: 4px;
+      vertical-align: -0.1em;
+      color: var(--light-gray);
+    }
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--main-text-color);
+  }
+}
+
+.project-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: auto 0 0;
+  padding: 16px 0 0;
+  list-style: none;
+
+  li {
+    padding: 0.2rem 0.7rem;
+    border: 1px solid color-mix(in srgb, var(--purple) 35%, transparent);
+    border-radius: 999px;
+    background-color: color-mix(in srgb, var(--purple) 8%, transparent);
+    font-family: var(--font-lato);
+    font-size: 0.8rem;
+    color: var(--main-h-color);
+  }
+}

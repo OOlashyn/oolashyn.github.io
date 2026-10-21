@@ -1,3 +1,5 @@
+@use "card";
+
 // About page: split hero (photo beside name, role, intro and links), credential chips below.
 // Stacks when its own column gets narrow, so it's a container query rather than a media query.
 
@@ -238,19 +240,7 @@
 .about-project {
   position: relative;
   padding: 20px;
-  border: 1px solid var(--light-brd-color);
-  border-radius: 16px;
-  background-color: var(--card-bg-color);
-  transition: border-color 0.2s ease;
-
-  &:hover {
-    border-color: color-mix(in srgb, var(--purple) 60%, transparent);
-  }
-
-  &:has(a:focus-visible) {
-    outline: 2px solid var(--purple);
-    outline-offset: 2px;
-  }
+  @include card.surface;
 
   h3 {
     margin: 0 0 8px;
@@ -260,19 +250,7 @@
   }
 
   a {
-    color: var(--main-h-color);
-    text-decoration: none;
-
-    &::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-    }
-
-    &:focus-visible {
-      outline: none;
-    }
+    @include card.title-link;
   }
 
   p {
