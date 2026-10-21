@@ -14,7 +14,14 @@ export const siteConfig = {
   authorJobTitle: 'Power Platform Architect',
   authorPicFull: 'face.jpg',
   aboutAuthor:
-    'My name is Oleksandr Olashyn. I am former Microsoft Business Application MVP (5x), MCT, certified Power Platform Architect with passion for coding and dancing.',
+    'My name is Oleksandr Olashyn. I am a former Microsoft Business Applications MVP (5x) and certified Power Platform Architect with a passion for coding and dancing.',
+  // About page: the intro paragraphs under the name (aboutAuthor also feeds the structured
+  // data, so it repeats the name) and the chips under the job title
+  aboutIntro: [
+    "I build things on Power Platform for a living and dance for fun. Along the way I spent five years as a Microsoft MVP, created tools like Power Pages Lookup to Select, and kept writing down what I learned, so the next person doesn't have to learn it the hard way. Usually that next person is me, six months later.",
+    "I'm currently based in Ottawa, Canada, and love taking part in local and international tech events and conferences.",
+  ],
+  aboutHighlights: ['5x Microsoft MVP', 'Open-source maker', 'Dancer'],
   email: 'oleksandr@olashyn.dev',
 
   // Social / Contact

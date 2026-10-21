@@ -2,57 +2,122 @@
 import HomeLayout from '@/layouts/HomeLayout.astro';
 import { siteConfig } from '@/config';
 import { Icon } from 'astro-icon/components';
+import { projects } from '@/data/projects';
+import { formatPostDate, getPostUrl, getSortedPosts } from '@/utils';
+
+const featuredProjects = projects.slice(0, 3);
+const recentPosts = (await getSortedPosts()).slice(0, 3);
+
+const socialLinks = [
+  siteConfig.linkedin && {
+    label: 'LinkedIn',
+    href: `https://www.linkedin.com/in/${siteConfig.linkedin}`,
+    icon: 'simple-icons:linkedin',
+  },
+  siteConfig.github && {
+    label: 'GitHub',
+    href: `https://github.com/${siteConfig.github}`,
+    icon: 'simple-icons:github',
+  },
+  siteConfig.twitter && {
+    label: 'X',
+    href: `https://x.com/${siteConfig.twitter.replace(/^@/, '')}`,
+    icon: 'simple-icons:x',
+  },
+].filter((link): link is { label: string; href: string; icon: string } => Boolean(link));
 ---
 
 <HomeLayout title="About" description="About Oleksandr Olashyn Power Platform Architect">
   <div class="about-container">
-      <section class="about-header">
-        <div class="author-image-container">
-          <img
-            src={`/assets/img/${siteConfig.authorPicFull}`}
-            alt={siteConfig.author}
-          />
-        </div>
-        <p class="subtitle">{siteConfig.aboutAuthor}</p>
-      </section>
-      <section class="about-body">
-        <ul class="contact-list">
-          {siteConfig.email && (
-            <li class="email">
-              <a href={`mailto:${siteConfig.email}`} aria-label="Email">
-                <Icon name="lucide:mail" aria-hidden="true" />
-              </a>
-            </li>
-          )}
-          {siteConfig.website && (
-            <li class="website">
-              <a href={`https://${siteConfig.website}`} target="_blank" rel="noopener noreferrer" aria-label="Website">
-                <Icon name="lucide:globe" aria-hidden="true" />
-              </a>
-            </li>
-          )}
-          {siteConfig.linkedin && (
-            <li class="linkedin">
-              <a href={`https://www.linkedin.com/in/${siteConfig.linkedin}`} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-                <Icon name="simple-icons:linkedin" aria-hidden="true" />
-              </a>
-            </li>
-          )}
-          {siteConfig.github && (
-            <li class="github">
-              <a href={`https://github.com/${siteConfig.github}`} target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-                <Icon name="simple-icons:github" aria-hidden="true" />
-              </a>
-            </li>
-          )}
-          {siteConfig.twitter && (
-            <li class="x">
-              <a href={`https://x.com/${siteConfig.twitter.replace(/^@/, '')}`} target="_blank" rel="noopener noreferrer" aria-label="X">
-                <Icon name="simple-icons:x" aria-hidden="true" />
-              </a>
-            </li>
-          )}
+    <section class="about-hero" aria-labelledby="about-name">
+      <div class="about-photo">
+        <img
+          src={`/assets/img/${siteConfig.authorPicFull}`}
+          alt={siteConfig.author}
+          width="600"
+          height="600"
+          fetchpriority="high"
+        />
+      </div>
+      <div class="about-intro">
+        <p class="about-eyebrow">Hi, I'm</p>
+        <h1 id="about-name" class="about-name">{siteConfig.author}</h1>
+        <p class="about-role">{siteConfig.authorJobTitle}</p>
+        <ul class="about-highlights" aria-label="Highlights">
+          {siteConfig.aboutHighlights.map((highlight) => <li>{highlight}</li>)}
         </ul>
-      </section>
-    </div>
+        {siteConfig.aboutIntro.map((paragraph) => <p class="about-bio">{paragraph}</p>)}
+        <div class="about-actions">
+          {siteConfig.email && (
+            <a class="about-cta" href={`mailto:${siteConfig.email}`}>
+              <Icon name="lucide:mail" aria-hidden="true" />
+              Get in touch
+            </a>
+          )}
+          <ul class="contact-list">
+            {socialLinks.map((link) => (
+              <li>
+                <a href={link.href} target="_blank" rel="noopener noreferrer" aria-label={link.label}>
+                  <Icon name={link.icon} aria-hidden="true" />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-section" aria-labelledby="about-projects">
+      <div class="about-section-header">
+        <h2 id="about-projects">Things I've built</h2>
+        <a href="/projects/">All projects <Icon name="lucide:arrow-right" aria-hidden="true" /></a>
+      </div>
+      <ul class="about-projects">
+        {featuredProjects.map((project) => (
+          <li class="about-project">
+            <h3><a href={project.extLink}>{project.title}</a></h3>
+            <p>{project.content}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="about-section" aria-labelledby="about-posts">
+      <div class="about-section-header">
+        <h2 id="about-posts">Recently written</h2>
+        <a href="/">All posts <Icon name="lucide:arrow-right" aria-hidden="true" /></a>
+      </div>
+      <ul class="about-posts">
+        {recentPosts.map((post) => (
+          <li>
+            <a href={getPostUrl(post.id)}>{post.data.title}</a>
+            <time datetime={post.data.date.toISOString()}>{formatPostDate(post.data.date)}</time>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="about-subscribe" aria-labelledby="about-subscribe">
+      <div>
+        <h2 id="about-subscribe">Want the next post in your inbox?</h2>
+        <p>No spam, just new posts when they're out.</p>
+      </div>
+      <form action={siteConfig.mailchimp} method="post" class="about-subscribe-form" target="_blank" novalidate>
+        <input type="hidden" name="u" value={siteConfig.mailchimpU} />
+        <input type="hidden" name="id" value={siteConfig.mailchimpId} />
+        <div class="subscribe-modal__form-row">
+          <input
+            type="email"
+            name="MERGE0"
+            aria-label="Email address"
+            placeholder="Your email address"
+            autocomplete="email"
+            class="subscribe-modal__email"
+            required
+          />
+          <input type="submit" value="Subscribe" name="subscribe" class="subscribe-modal__submit" />
+        </div>
+      </form>
+    </section>
+  </div>
 </HomeLayout>
