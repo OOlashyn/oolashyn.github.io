@@ -1,0 +1,114 @@
+// "On this page" list of a post's sections (TableOfContents.astro). Collapsed above the content
+// on narrow screens; a sticky sidebar in the right gutter once there is room for one.
+
+@use "post-page";
+
+$toc-sidebar-min: 1420px; // keep in sync with the matchMedia query in TableOfContents.astro
+$toc-sidebar-width: 220px;
+
+.post-toc {
+  margin: 0 0 30px;
+  font-family: var(--font-lato);
+}
+
+.post-toc__details {
+  border-left: 3px solid var(--link-color);
+  border-radius: 0 8px 8px 0;
+  background-color: var(--card-bg-color);
+}
+
+.post-toc__summary {
+  padding: 12px 16px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--main-h-color);
+}
+
+.post-toc__list {
+  // Highlight the link of the section in view (scrollspy, see the component's script)
+  scroll-target-group: auto;
+  margin: 0;
+  padding: 0 16px 14px 16px;
+  list-style: none;
+  font-size: 15px;
+  line-height: 1.4;
+
+  ol {
+    margin: 4px 0 0;
+    padding-left: 14px;
+    list-style: none;
+    font-size: 14px;
+  }
+
+  li {
+    margin: 6px 0;
+  }
+
+  a {
+    display: block;
+    padding-left: 8px;
+    margin-left: -11px;
+    border-left: 3px solid transparent;
+    color: var(--main-text-color);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--link-color);
+    }
+
+    // :is() is forgiving, so browsers without :target-current still apply the fallback class
+    &:is(:target-current, .\:target-current) {
+      border-left-color: var(--link-color);
+      color: var(--link-color);
+      font-weight: 700;
+    }
+  }
+}
+
+@media (min-width: $toc-sidebar-min) {
+  .page-content {
+    position: relative;
+  }
+
+  // Spans the whole post, so the list inside can stick while the reader scrolls through it.
+  // Starts below the cover image, which the post card overlaps at the top.
+  .post-toc {
+    position: absolute;
+    top: post-page.$cover-overlap + 30px;
+    bottom: 0;
+    left: calc(100% + 24px);
+    width: $toc-sidebar-width;
+    margin: 0;
+  }
+
+  .post-toc__details {
+    position: sticky;
+    top: 24px;
+    max-height: calc(100vh - 48px);
+    overflow-y: auto;
+    border-left: 0;
+    border-radius: 8px;
+    background-color: transparent;
+  }
+
+  // Always open here; the heading is a label, not a toggle
+  .post-toc__summary {
+    pointer-events: none;
+    list-style: none;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+  }
+
+  .post-toc__list {
+    font-size: 14px;
+
+    ol {
+      font-size: 13px;
+    }
+  }
+}

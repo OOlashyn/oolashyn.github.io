@@ -1,0 +1,103 @@
+---
+import type { MarkdownHeading } from 'astro';
+
+interface Props {
+  headings: MarkdownHeading[];
+}
+
+interface TocEntry {
+  heading: MarkdownHeading;
+  children: MarkdownHeading[];
+}
+
+// Short posts don't need one: show it only when there are enough sections to navigate
+const minSections = 3;
+
+const { headings } = Astro.props;
+
+// Nest each h3 under the h2 before it; deeper levels are left out to keep the list scannable
+const entries = headings
+  .filter((heading) => heading.depth === 2 || heading.depth === 3)
+  .reduce<TocEntry[]>((list, heading) => {
+    const parent = list.at(-1);
+    if (heading.depth === 3 && parent) parent.children.push(heading);
+    else list.push({ heading, children: [] });
+    return list;
+  }, []);
+---
+
+{entries.length >= minSections && (
+  <nav class="post-toc" aria-labelledby="post-toc-title" data-pagefind-ignore>
+    <details class="post-toc__details">
+      <summary class="post-toc__summary">
+        <span id="post-toc-title">On this page</span>
+      </summary>
+      <ol class="post-toc__list">
+        {entries.map(({ heading, children }) => (
+          <li>
+            <a href={`#${heading.slug}`}>{heading.text}</a>
+            {children.length > 0 && (
+              <ol>
+                {children.map((child) => (
+                  <li><a href={`#${child.slug}`}>{child.text}</a></li>
+                ))}
+              </ol>
+            )}
+          </li>
+        ))}
+      </ol>
+    </details>
+  </nav>
+)}
+
+<script>
+  const toc = document.querySelector<HTMLElement>('.post-toc');
+  const details = toc?.querySelector('details');
+
+  // Wide screens show the list as a sidebar beside the post, always open; narrower ones keep it
+  // collapsed above the content. Matches the breakpoint in _toc.scss.
+  const sidebar = matchMedia('(min-width: 1420px)');
+  const syncOpen = (): void => {
+    if (details) details.open = sidebar.matches;
+  };
+  syncOpen();
+  sidebar.addEventListener('change', syncOpen);
+
+  // On phones, close the list after a jump so it doesn't sit over the section just opened
+  toc?.addEventListener('click', (event) => {
+    if (!sidebar.matches && (event.target as HTMLElement).closest('a') && details) {
+      details.open = false;
+    }
+  });
+
+  const links = [...(toc?.querySelectorAll<HTMLAnchorElement>('a') ?? [])];
+  const setCurrent = (current: Element | null): void => {
+    links.forEach((link) => {
+      if (link === current) link.setAttribute('aria-current', 'true');
+      else link.removeAttribute('aria-current');
+    });
+  };
+
+  // Scrollspy: browsers with scroll-target-group highlight the link natively (:target-current);
+  // mirror it into aria-current for screen readers once scrolling stops
+  if (CSS.supports('scroll-target-group: auto')) {
+    const syncAriaCurrent = (): void => setCurrent(toc?.querySelector('a:target-current') ?? null);
+    syncAriaCurrent();
+    // Capture: the page scrolls on <body> here, and scrollend doesn't bubble up from elements
+    document.addEventListener('scrollend', syncAriaCurrent, { capture: true });
+  } else if (links.length > 0) {
+    // Fallback: the current section is the last heading that has scrolled into the top third
+    const headings = links
+      .map((link) => document.getElementById(decodeURIComponent(link.hash.slice(1))))
+      .filter((heading): heading is HTMLElement => heading !== null);
+    const update = (): void => {
+      const line = innerHeight / 3;
+      const index = headings.findLastIndex((heading) => heading.getBoundingClientRect().top < line);
+      const current = links[index] ?? null;
+      links.forEach((link) => link.classList.toggle(':target-current', link === current));
+      setCurrent(current);
+    };
+    const observer = new IntersectionObserver(update, { rootMargin: '0px 0px -66% 0px' });
+    headings.forEach((heading) => observer.observe(heading));
+  }
+</script>
