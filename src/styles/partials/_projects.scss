@@ -17,8 +17,9 @@
 
   p {
     margin: 16px 0 0;
-    max-inline-size: 60ch;
     font-weight: 300;
+    // One line on desktop; where it has to wrap, split it into even lines
+    text-wrap: balance;
     line-height: 1.7;
     color: var(--main-text-color);
   }
