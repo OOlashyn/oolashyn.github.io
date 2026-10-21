@@ -7,9 +7,10 @@ import RecentPosts from '@/components/RecentPosts.astro';
 import Giscus from '@/components/Giscus.astro';
 import CopyCode from '@/components/CopyCode.astro';
 import CoverImage from '@/components/CoverImage.astro';
+import TableOfContents from '@/components/TableOfContents.astro';
 import { Icon } from 'astro-icon/components';
 import { formatPostDate, getTagUrl } from '@/utils';
-import type { ImageMetadata } from 'astro';
+import type { ImageMetadata, MarkdownHeading } from 'astro';
 
 interface Props {
   title: string;
@@ -18,10 +19,11 @@ interface Props {
   img?: ImageMetadata;
   image?: string;
   tags?: string[];
+  headings?: MarkdownHeading[];
   url: string;
 }
 
-const { title, description, date, img, image, tags = [], url } = Astro.props;
+const { title, description, date, img, image, tags = [], headings = [], url } = Astro.props;
 const fullUrl = new URL(url, Astro.site).href;
 const dateStr = formatPostDate(date);
 ---
@@ -48,6 +50,7 @@ const dateStr = formatPostDate(date);
               <time datetime={date.toISOString()}>{dateStr}</time>
             </div>
           </div>
+          <TableOfContents headings={headings} />
           <UkraineBanner />
           <slot />
           <Newsletter />

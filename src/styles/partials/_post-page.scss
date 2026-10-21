@@ -14,8 +14,11 @@
   }
 }
 
+// How far the post card rises over the bottom of the cover image
+$cover-overlap: 80px;
+
 .page-content {
-  margin-top: -80px;
+  margin-top: -$cover-overlap;
   margin-bottom: 100px;
   background-color: var(--main-bg-color);
   padding: 30px;

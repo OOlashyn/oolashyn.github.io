@@ -18,7 +18,7 @@ interface Props {
 }
 
 const { post } = Astro.props;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
 ---
 
 <PostLayout
@@ -28,6 +28,7 @@ const { Content } = await render(post);
   img={post.data.img}
   image={getSocialImageUrl('og', post.id)}
   tags={post.data.tags}
+  headings={headings}
   url={Astro.url.pathname}
 >
   <Content />
