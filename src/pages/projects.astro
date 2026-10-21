@@ -27,6 +27,15 @@ const sections = await Promise.all(
                   format: 'webp',
                 })).src
               : undefined,
+          // What the viewer dialog shows: the clip itself, or the screenshot at full size
+          viewerSrc:
+            project.media.kind === 'video'
+              ? `/assets/videos/${project.media.src}`
+              : (await getImage({
+                  src: project.media.src,
+                  width: Math.min(1920, project.media.src.width),
+                  format: 'webp',
+                })).src,
         })),
     ),
   })),
@@ -82,10 +91,6 @@ const lazyVideo = { loading: 'lazy' };
                       >
                         <source src={`/assets/videos/${project.media.src}`} type="video/mp4" />
                       </video>
-                      <button type="button" class="project-card__toggle" aria-label="Play demo" hidden>
-                        <Icon name="lucide:play" class="project-card__play-icon" aria-hidden="true" />
-                        <Icon name="lucide:pause" class="project-card__pause-icon" aria-hidden="true" />
-                      </button>
                     </Fragment>
                   ) : (
                     <Picture
@@ -97,6 +102,27 @@ const lazyVideo = { loading: 'lazy' };
                       loading={isFirst ? 'eager' : 'lazy'}
                     />
                   )}
+                  {/* Shown by the page script, which both buttons need */}
+                  <div class="project-card__controls" hidden>
+                    {project.media.kind === 'video' && (
+                      <button type="button" class="project-card__toggle" aria-label="Play demo">
+                        <Icon name="lucide:play" class="project-card__play-icon" aria-hidden="true" />
+                        <Icon name="lucide:pause" class="project-card__pause-icon" aria-hidden="true" />
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      class="project-card__expand"
+                      aria-label={`Enlarge the ${project.title} ${project.media.kind === 'video' ? 'demo' : 'screenshot'}`}
+                      data-kind={project.media.kind}
+                      data-src={project.viewerSrc}
+                      data-poster={project.posterUrl}
+                      data-alt={project.media.alt}
+                      data-title={project.title}
+                    >
+                      <Icon name="lucide:maximize-2" aria-hidden="true" />
+                    </button>
+                  </div>
                 </div>
                 <div class="project-card__body">
                   <h3>
@@ -117,6 +143,20 @@ const lazyVideo = { loading: 'lazy' };
       </section>
     ))}
   </div>
+
+  <!-- One viewer for every card: a native modal dialog, so it traps focus, closes on Escape and
+       light dismiss (closedby, with a fallback in the script) and returns focus to the button -->
+  <dialog class="project-viewer" id="project-viewer" closedby="any" aria-labelledby="project-viewer-title">
+    <figure class="project-viewer__figure">
+      <figcaption class="project-viewer__header">
+        <h2 id="project-viewer-title" class="project-viewer__title"></h2>
+        <button type="button" class="project-viewer__close" aria-label="Close">
+          <Icon name="lucide:x" aria-hidden="true" />
+        </button>
+      </figcaption>
+      <div class="project-viewer__media"></div>
+    </figure>
+  </dialog>
 </HomeLayout>
 
 <script>
@@ -163,7 +203,6 @@ const lazyVideo = { loading: 'lazy' };
     const toggle = video.parentElement?.querySelector<HTMLButtonElement>('.project-card__toggle');
     if (toggle) {
       video.controls = false;
-      toggle.hidden = false;
       toggle.addEventListener('click', () => {
         if (video.paused) {
           video.play().catch(() => {});
@@ -201,5 +240,72 @@ const lazyVideo = { loading: 'lazy' };
         play(video);
       }
     }
+  });
+
+  // Viewer: the cards are too small to make out the details, so any card's media opens large
+  const viewer = document.querySelector<HTMLDialogElement>('#project-viewer');
+  const viewerTitle = viewer?.querySelector<HTMLElement>('.project-viewer__title');
+  const viewerMedia = viewer?.querySelector<HTMLElement>('.project-viewer__media');
+
+  const openViewer = (button: HTMLButtonElement): void => {
+    if (!viewer || !viewerTitle || !viewerMedia) return;
+    const { kind, src, poster, alt, title } = button.dataset;
+    if (!src) return;
+
+    viewerTitle.textContent = title ?? '';
+    if (kind === 'video') {
+      const video = document.createElement('video');
+      Object.assign(video, { src, muted: true, loop: true, playsInline: true, controls: true });
+      if (poster) video.poster = poster;
+      video.setAttribute('aria-label', alt ?? '');
+      // Carry on from where the card's clip is
+      const cardVideo = button.closest('.project-card__media')?.querySelector('video');
+      if (cardVideo) video.currentTime = cardVideo.currentTime;
+      video.autoplay = !reducedMotion.matches;
+      viewerMedia.replaceChildren(video);
+    } else {
+      const img = document.createElement('img');
+      Object.assign(img, { src, alt: alt ?? '', decoding: 'async' });
+      viewerMedia.replaceChildren(img);
+    }
+
+    // Only one clip plays at a time
+    for (const video of visible) pause(video);
+    viewer.showModal();
+  };
+
+  for (const controls of document.querySelectorAll<HTMLElement>('.project-card__controls')) {
+    controls.hidden = false;
+    const expand = controls.querySelector<HTMLButtonElement>('.project-card__expand');
+    if (!expand) continue;
+    expand.addEventListener('click', () => openViewer(expand));
+    // A click on the media itself opens it too; keyboard users have the expand button
+    controls.parentElement?.classList.add('is-expandable');
+    controls.parentElement?.querySelector('video, img')?.addEventListener('click', () => openViewer(expand));
+  }
+
+  viewer?.querySelector('.project-viewer__close')?.addEventListener('click', () => viewer.close());
+
+  viewer?.addEventListener('close', () => {
+    // Drop the clip so it stops downloading, then resume the cards that were playing
+    viewerMedia?.replaceChildren();
+    for (const video of visible) play(video);
+  });
+
+  // Light dismiss where closedby isn't supported (Safari): a click on the backdrop targets the
+  // dialog itself, outside its box
+  if (viewer && !('closedBy' in HTMLDialogElement.prototype)) {
+    viewer.addEventListener('click', (e) => {
+      if (e.target !== viewer) return;
+      const rect = viewer.getBoundingClientRect();
+      const inside = rect.top <= e.clientY && e.clientY <= rect.bottom
+        && rect.left <= e.clientX && e.clientX <= rect.right;
+      if (!inside) viewer.close();
+    });
+  }
+
+  // A page restored from the back/forward cache starts with the viewer closed
+  window.addEventListener('pageshow', (e) => {
+    if (e.persisted) viewer?.close();
   });
 </script>

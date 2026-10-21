@@ -85,13 +85,29 @@
     block-size: 100%;
     object-fit: contain;
   }
+
+  // Set by the page script once a click opens the viewer
+  &.is-expandable :is(video, img) {
+    cursor: zoom-in;
+  }
 }
 
-// Play/pause for the demo clip, shown by the page script in place of the native controls
-.project-card__toggle {
+// Play/pause and enlarge, shown by the page script (the clip's native controls are the no-JS
+// fallback)
+.project-card__controls {
   position: absolute;
   inset-block-end: 10px;
   inset-inline-end: 10px;
+  display: flex;
+  gap: 6px;
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+.project-card__toggle,
+.project-card__expand {
   display: grid;
   place-items: center;
   inline-size: 36px;
@@ -105,10 +121,6 @@
   cursor: pointer;
   transition: background-color 0.2s ease;
 
-  &[hidden] {
-    display: none;
-  }
-
   &:hover {
     background-color: var(--deep-purple);
   }
@@ -117,7 +129,9 @@
     outline: 2px solid var(--purple);
     outline-offset: 2px;
   }
+}
 
+.project-card__toggle {
   .project-card__pause-icon,
   &.is-playing .project-card__play-icon {
     display: none;
@@ -179,5 +193,104 @@
     font-family: var(--font-lato);
     font-size: 0.8rem;
     color: var(--main-h-color);
+  }
+}
+
+// Viewer dialog (projects.astro): the card's clip or screenshot as large as the screen allows.
+// Entry fades in like the subscribe modal (_subscribe-modal.scss); closing is instant.
+.project-viewer {
+  inline-size: min(1400px, 100% - 2rem);
+  max-inline-size: none;
+  max-block-size: calc(100dvh - 2rem);
+  margin: auto;
+  padding: 0;
+  border: 1px solid var(--light-brd-color);
+  border-radius: 16px;
+  background-color: var(--card-bg-color);
+  color: var(--main-text-color);
+  // Scroll gestures over the viewer or its backdrop don't move the page underneath
+  overscroll-behavior: contain;
+
+  &::backdrop {
+    overflow: hidden;
+    overscroll-behavior: contain;
+    background-color: rgb(0 0 0 / 0.75);
+  }
+
+  &[open] {
+    transition: opacity 0.25s ease-out, scale 0.25s ease-out;
+
+    @starting-style {
+      opacity: 0;
+      scale: 0.97;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &[open] {
+      transition-property: opacity;
+    }
+  }
+}
+
+.project-viewer__figure {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
+.project-viewer__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 10px 10px 20px;
+  border-bottom: 1px solid var(--light-brd-color);
+}
+
+.project-viewer__title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--main-h-color);
+}
+
+.project-viewer__close {
+  display: grid;
+  place-items: center;
+  inline-size: 40px;
+  block-size: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--main-text-color);
+  font-size: 22px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--main-text-color) 10%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--purple);
+    outline-offset: 2px;
+  }
+}
+
+// The header (about 61px) and the dialog's 2rem of margin come off the screen height
+.project-viewer__media {
+  display: grid;
+  place-items: center;
+  background-color: var(--black);
+
+  video,
+  img {
+    display: block;
+    max-inline-size: 100%;
+    max-block-size: calc(100dvh - 2rem - 62px);
+    inline-size: auto;
+    block-size: auto;
   }
 }
