@@ -1,67 +1,365 @@
-.small-wrapper {
-  width: 700px;
-  max-width: 90%;
-  margin: 0 auto;
-}
+// About page: split hero (photo beside name, role, intro and links), credential chips below.
+// Stacks when its own column gets narrow, so it's a container query rather than a media query.
 
 .about-container {
-  margin: 100px 0 100px;
+  container-type: inline-size;
+  margin-block: 80px 100px;
 }
 
-.about-header {
+.about-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  align-items: center;
+  gap: 56px;
+
+  @container (width < 640px) {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    gap: 32px;
+    text-align: center;
+  }
+}
+
+.about-photo {
   position: relative;
-  text-align: center;
-  padding-bottom: 30px;
-  margin-bottom: 30px;
-  &:after {
+  inline-size: 100%;
+  max-inline-size: 340px;
+  justify-self: end;
+
+  // Offset accent frame behind the photo
+  &::before {
     content: "";
     position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
+    inset: 16px -16px -16px 16px;
+    border-radius: 24px;
+    background-color: color-mix(in srgb, var(--purple) 22%, transparent);
+  }
+
+  img {
+    position: relative;
     display: block;
-    height: 1px;
-    width: 80px;
-    background-color: var(--main-h-color);
+    inline-size: 100%;
+    block-size: auto;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 24px;
   }
-  .author-image-container {
-    width: 300px;
-    height: 300px;
-    border-radius: 100%;
-    overflow: hidden;
-    margin: 0 auto 30px;
-  }
-  .subtitle {
-    color: var(--main-text-color);
-    font-weight: 300;
-    margin: 0;
+
+  @container (width < 640px) {
+    max-inline-size: 240px;
+    justify-self: center;
   }
 }
 
-.about-body {
-  .contact-list {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    text-align: center;
-    li {
-      display: inline-block;
-      margin-left: 10px;
-      &:first-child {
-        margin-left: 0;
-      }
-      a {
-        display: block;
-        color: var(--icon-color);
-        font-size: 21px;
-        text-decoration: none;
-        padding: 5px;
-        transition: all 350ms cubic-bezier(0.13, 0.43, 0.54, 1.82);
-        &:hover {
-          color: var(--icon-hover-color);
-          transform: scale(1.3);
-        }
-      }
+.about-intro {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  @container (width < 640px) {
+    align-items: center;
+  }
+}
+
+.about-eyebrow {
+  margin: 0 0 4px;
+  font-family: var(--font-lato);
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+  color: var(--light-gray);
+}
+
+.about-name {
+  margin: 0;
+  font-size: clamp(2rem, 6cqi, 3.25rem);
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--main-h-color);
+}
+
+.about-role {
+  margin: 10px 0 0;
+  font-family: var(--font-lato);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--link-color);
+}
+
+.about-bio {
+  margin: 20px 0 0;
+  max-inline-size: 52ch;
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--main-text-color);
+
+  & + & {
+    margin-top: 12px;
+  }
+}
+
+.about-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 20px;
+  margin-top: 28px;
+
+  @container (width < 640px) {
+    justify-content: center;
+  }
+}
+
+.about-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.7rem 1.4rem;
+  border-radius: 999px;
+  // Same colors and type as the header's Subscribe button (.nav-subscribe-btn)
+  background-color: var(--deep-purple);
+  color: var(--white);
+  font-family: var(--font-lato);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+
+  // Keep the text white: the global link hover color would otherwise tint it
+  &:hover {
+    background-color: var(--dark-purple);
+    color: var(--white);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--deep-purple);
+    outline-offset: 3px;
+  }
+
+  svg {
+    font-size: 1.1rem;
+  }
+}
+
+.contact-list {
+  display: flex;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  a {
+    display: grid;
+    place-items: center;
+    inline-size: 40px;
+    block-size: 40px;
+    border-radius: 50%;
+    color: var(--icon-color);
+    font-size: 20px;
+    transition: color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+
+    &:hover {
+      color: var(--icon-hover-color);
+      background-color: var(--card-bg-color);
     }
+  }
+}
+
+.about-highlights {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+
+  @container (width < 640px) {
+    justify-content: center;
+  }
+
+  li {
+    padding: 0.3rem 0.85rem;
+    border: 1px solid color-mix(in srgb, var(--purple) 35%, transparent);
+    border-radius: 999px;
+    background-color: color-mix(in srgb, var(--purple) 8%, transparent);
+    font-family: var(--font-lato);
+    font-size: 0.85rem;
+    color: var(--main-h-color);
+  }
+}
+
+// Projects and recent posts under the hero
+
+.about-section {
+  margin-top: 72px;
+}
+
+.about-section-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin-bottom: 20px;
+
+  h2 {
+    margin: 0;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--main-h-color);
+  }
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-lato);
+    font-weight: 700;
+    color: var(--link-color);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--link-hover-color);
+    }
+  }
+}
+
+.about-projects {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+// The whole card is clickable through the title link's ::after
+.about-project {
+  position: relative;
+  padding: 20px;
+  border: 1px solid var(--light-brd-color);
+  border-radius: 16px;
+  background-color: var(--card-bg-color);
+  transition: border-color 0.2s ease;
+
+  &:hover {
+    border-color: color-mix(in srgb, var(--purple) 60%, transparent);
+  }
+
+  &:has(a:focus-visible) {
+    outline: 2px solid var(--purple);
+    outline-offset: 2px;
+  }
+
+  h3 {
+    margin: 0 0 8px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  a {
+    color: var(--main-h-color);
+    text-decoration: none;
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+    }
+
+    &:focus-visible {
+      outline: none;
+    }
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--main-text-color);
+  }
+}
+
+.about-posts {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 4px 24px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--light-brd-color);
+
+    &:first-child {
+      border-top: 1px solid var(--light-brd-color);
+    }
+  }
+
+  a {
+    flex: 1 1 320px;
+    font-family: var(--font-lato);
+    font-size: 1.1rem;
+    color: var(--main-h-color);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--link-color);
+    }
+  }
+
+  time {
+    flex: none;
+    font-size: 0.9rem;
+    color: var(--light-gray);
+  }
+}
+
+// Closing call to action: the Mailchimp form inline, styled like the subscribe modal's
+// (.subscribe-modal__form-row and friends in _subscribe-modal.scss)
+.about-subscribe {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 32px;
+  margin-top: 72px;
+  padding: 32px;
+  border-radius: 16px;
+  background-color: color-mix(in srgb, var(--purple) 12%, transparent);
+
+  h2 {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--main-h-color);
+  }
+
+  p {
+    margin: 6px 0 0;
+    font-weight: 300;
+    color: var(--main-text-color);
+  }
+
+  .subscribe-modal__form-row {
+    margin-bottom: 0;
+  }
+}
+
+.about-subscribe-form {
+  flex: 1 1 340px;
+  max-inline-size: 440px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .contact-list a:hover {
+    transform: translateY(-2px);
   }
 }
