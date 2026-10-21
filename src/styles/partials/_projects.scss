@@ -71,14 +71,18 @@
   @include card.surface;
 }
 
-// Clips and screenshots range from 16:9 to 5:1, so they're letterboxed in one frame size
+// Clip stills and screenshots range from 16:9 to 5:1, so they're letterboxed in one frame size
 .project-card__media {
   position: relative;
   aspect-ratio: 16 / 10;
   border-bottom: 1px solid var(--light-brd-color);
   background-color: color-mix(in srgb, var(--main-text-color) 6%, transparent);
 
-  video,
+  // <picture> takes no box, so the img sizes against the frame
+  picture {
+    display: contents;
+  }
+
   img {
     display: block;
     inline-size: 100%;
@@ -87,39 +91,32 @@
   }
 
   // Set by the page script once a click opens the viewer
-  &.is-expandable :is(video, img) {
+  &.is-expandable img {
     cursor: zoom-in;
   }
 }
 
-// Play/pause and enlarge, shown by the page script (the clip's native controls are the no-JS
-// fallback)
-.project-card__controls {
+// Plays the demo (or enlarges the screenshot) in the viewer; shown by the page script
+.project-card__open {
   position: absolute;
   inset-block-end: 10px;
   inset-inline-end: 10px;
-  display: flex;
-  gap: 6px;
-
-  &[hidden] {
-    display: none;
-  }
-}
-
-.project-card__toggle,
-.project-card__expand {
   display: grid;
   place-items: center;
-  inline-size: 36px;
-  block-size: 36px;
+  inline-size: 40px;
+  block-size: 40px;
   padding: 0;
   border: 0;
   border-radius: 50%;
   background-color: rgb(0 0 0 / 0.6);
   color: var(--white);
-  font-size: 18px;
+  font-size: 20px;
   cursor: pointer;
   transition: background-color 0.2s ease;
+
+  &[hidden] {
+    display: none;
+  }
 
   &:hover {
     background-color: var(--deep-purple);
@@ -131,18 +128,7 @@
   }
 }
 
-.project-card__toggle {
-  .project-card__pause-icon,
-  &.is-playing .project-card__play-icon {
-    display: none;
-  }
-
-  &.is-playing .project-card__pause-icon {
-    display: block;
-  }
-}
-
-// Only the text is a link target: the video controls above stay usable
+// Only the text is a link target: the button above stays usable
 .project-card__body {
   position: relative;
   display: flex;
@@ -285,12 +271,20 @@
   place-items: center;
   background-color: var(--black);
 
+  // --ratio (width / height) is set by the page script before the dialog opens, so the box has
+  // its final size while the media is still loading: as wide as fits, but never taller than
+  // the screen minus the header
   video,
   img {
     display: block;
-    max-inline-size: 100%;
-    max-block-size: calc(100dvh - 2rem - 62px);
-    inline-size: auto;
+    inline-size: min(100%, (100dvh - 2rem - 62px) * var(--ratio));
     block-size: auto;
+    aspect-ratio: var(--ratio);
+  }
+
+  // The card's still shows behind the full-size screenshot until it loads
+  img {
+    background-size: contain;
+    background-repeat: no-repeat;
   }
 }

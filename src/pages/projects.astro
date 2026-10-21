@@ -19,14 +19,6 @@ const sections = await Promise.all(
         .map(async (project: Project) => ({
           ...project,
           isExternal: !project.url.startsWith('/'),
-          posterUrl:
-            project.media.kind === 'video'
-              ? (await getImage({
-                  src: project.media.poster,
-                  width: Math.min(1280, project.media.poster.width),
-                  format: 'webp',
-                })).src
-              : undefined,
           // What the viewer dialog shows: the clip itself, or the screenshot at full size
           viewerSrc:
             project.media.kind === 'video'
@@ -45,9 +37,6 @@ const sections = await Promise.all(
 const firstProject = sections[0]?.projects[0];
 
 const pictureWidths = (width: number): number[] => [400, 800, 1280].filter((w) => w <= width);
-
-// Lazy-loading media (Chrome 150+) defers the poster; Astro's types don't list it on <video> yet
-const lazyVideo = { loading: 'lazy' };
 ---
 
 <HomeLayout
@@ -75,54 +64,34 @@ const lazyVideo = { loading: 'lazy' };
             return (
               <li class="project-card">
                 <div class="project-card__media">
-                  {project.media.kind === 'video' ? (
-                    <Fragment>
-                      <video
-                        muted
-                        loop
-                        playsinline
-                        controls
-                        preload="none"
-                        {...(isFirst ? {} : lazyVideo)}
-                        poster={project.posterUrl}
-                        width={project.media.poster.width}
-                        height={project.media.poster.height}
-                        aria-label={project.media.alt}
-                      >
-                        <source src={`/assets/videos/${project.media.src}`} type="video/mp4" />
-                      </video>
-                    </Fragment>
-                  ) : (
-                    <Picture
-                      src={project.media.src}
-                      alt={project.media.alt}
-                      formats={['avif', 'webp']}
-                      widths={pictureWidths(project.media.src.width)}
-                      sizes={mediaSizes}
-                      loading={isFirst ? 'eager' : 'lazy'}
-                    />
-                  )}
-                  {/* Shown by the page script, which both buttons need */}
-                  <div class="project-card__controls" hidden>
-                    {project.media.kind === 'video' && (
-                      <button type="button" class="project-card__toggle" aria-label="Play demo">
-                        <Icon name="lucide:play" class="project-card__play-icon" aria-hidden="true" />
-                        <Icon name="lucide:pause" class="project-card__pause-icon" aria-hidden="true" />
-                      </button>
+                  {/* A still: at card size a clip is too small to follow, so it plays in the viewer */}
+                  <Picture
+                    src={project.media.kind === 'video' ? project.media.poster : project.media.src}
+                    alt={project.media.alt}
+                    formats={['avif', 'webp']}
+                    widths={pictureWidths(
+                      (project.media.kind === 'video' ? project.media.poster : project.media.src).width,
                     )}
-                    <button
-                      type="button"
-                      class="project-card__expand"
-                      aria-label={`Enlarge the ${project.title} ${project.media.kind === 'video' ? 'demo' : 'screenshot'}`}
-                      data-kind={project.media.kind}
-                      data-src={project.viewerSrc}
-                      data-poster={project.posterUrl}
-                      data-alt={project.media.alt}
-                      data-title={project.title}
-                    >
-                      <Icon name="lucide:maximize-2" aria-hidden="true" />
-                    </button>
-                  </div>
+                    sizes={mediaSizes}
+                    loading={isFirst ? 'eager' : 'lazy'}
+                  />
+                  {/* The viewer needs the page script, so the button shows only once it runs */}
+                  <button
+                    type="button"
+                    class="project-card__open"
+                    aria-label={project.media.kind === 'video'
+                      ? `Play the ${project.title} demo`
+                      : `Enlarge the ${project.title} screenshot`}
+                    data-kind={project.media.kind}
+                    data-src={project.viewerSrc}
+                    data-width={(project.media.kind === 'video' ? project.media.poster : project.media.src).width}
+                    data-height={(project.media.kind === 'video' ? project.media.poster : project.media.src).height}
+                    data-alt={project.media.alt}
+                    data-title={project.title}
+                    hidden
+                  >
+                    <Icon name={project.media.kind === 'video' ? 'lucide:play' : 'lucide:maximize-2'} aria-hidden="true" />
+                  </button>
                 </div>
                 <div class="project-card__body">
                   <h3>
@@ -160,88 +129,6 @@ const lazyVideo = { loading: 'lazy' };
 </HomeLayout>
 
 <script>
-  // Demo clips play only while on screen, and never for readers who prefer reduced motion.
-  // There's no autoplay attribute, so with preload="none" nothing downloads until a clip plays.
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const videos = document.querySelectorAll<HTMLVideoElement>('.project-card__media video');
-  const visible = new Set<HTMLVideoElement>();
-  // Pauses made here, so they can be told apart from the reader pausing a clip
-  const autoPaused = new WeakSet<HTMLVideoElement>();
-  const pausedByReader = new WeakSet<HTMLVideoElement>();
-
-  const play = (video: HTMLVideoElement): void => {
-    if (reducedMotion.matches || pausedByReader.has(video) || !video.paused) return;
-    // The browser may refuse to autoplay (e.g. in data saver mode); the poster and button remain
-    video.play().catch(() => {});
-  };
-
-  const pause = (video: HTMLVideoElement): void => {
-    if (video.paused) return;
-    autoPaused.add(video);
-    video.pause();
-  };
-
-  const observer = new IntersectionObserver(
-    (entries) => {
-      for (const entry of entries) {
-        const video = entry.target as HTMLVideoElement;
-        if (entry.isIntersecting) {
-          visible.add(video);
-          play(video);
-        } else {
-          visible.delete(video);
-          pause(video);
-        }
-      }
-    },
-    { threshold: 0.5 },
-  );
-
-  for (const video of videos) {
-    // Swap the native controls (the no-JS fallback) for one play/pause button, which doesn't
-    // cover the clip and is the pause control autoplaying motion needs
-    const toggle = video.parentElement?.querySelector<HTMLButtonElement>('.project-card__toggle');
-    if (toggle) {
-      video.controls = false;
-      toggle.addEventListener('click', () => {
-        if (video.paused) {
-          video.play().catch(() => {});
-        } else {
-          video.pause();
-        }
-      });
-    }
-
-    const syncToggle = (): void => {
-      toggle?.setAttribute('aria-label', video.paused ? 'Play demo' : 'Pause demo');
-      toggle?.classList.toggle('is-playing', !video.paused);
-    };
-
-    video.addEventListener('pause', () => {
-      if (autoPaused.has(video)) {
-        autoPaused.delete(video);
-      } else {
-        pausedByReader.add(video);
-      }
-      syncToggle();
-    });
-    video.addEventListener('play', () => {
-      pausedByReader.delete(video);
-      syncToggle();
-    });
-    observer.observe(video);
-  }
-
-  reducedMotion.addEventListener('change', () => {
-    for (const video of visible) {
-      if (reducedMotion.matches) {
-        pause(video);
-      } else {
-        play(video);
-      }
-    }
-  });
-
   // Viewer: the cards are too small to make out the details, so any card's media opens large
   const viewer = document.querySelector<HTMLDialogElement>('#project-viewer');
   const viewerTitle = viewer?.querySelector<HTMLElement>('.project-viewer__title');
@@ -249,48 +136,44 @@ const lazyVideo = { loading: 'lazy' };
 
   const openViewer = (button: HTMLButtonElement): void => {
     if (!viewer || !viewerTitle || !viewerMedia) return;
-    const { kind, src, poster, alt, title } = button.dataset;
+    const { kind, src, width, height, alt, title } = button.dataset;
     if (!src) return;
+
+    // Size the media box before anything loads, or the dialog opens as a bare header and then
+    // jumps to full height once the clip's metadata or the image arrives
+    viewerMedia.style.setProperty('--ratio', String(Number(width) / Number(height) || 16 / 9));
+    // The card's still is already loaded, so it shows at once while the full media loads
+    const still = button.parentElement?.querySelector('img')?.currentSrc ?? '';
 
     viewerTitle.textContent = title ?? '';
     if (kind === 'video') {
       const video = document.createElement('video');
-      Object.assign(video, { src, muted: true, loop: true, playsInline: true, controls: true });
-      if (poster) video.poster = poster;
+      // The reader asked for this clip, so it plays straight away (reduced motion included)
+      Object.assign(video, { src, poster: still, muted: true, loop: true, playsInline: true, controls: true, autoplay: true });
       video.setAttribute('aria-label', alt ?? '');
-      // Carry on from where the card's clip is
-      const cardVideo = button.closest('.project-card__media')?.querySelector('video');
-      if (cardVideo) video.currentTime = cardVideo.currentTime;
-      video.autoplay = !reducedMotion.matches;
       viewerMedia.replaceChildren(video);
     } else {
       const img = document.createElement('img');
-      Object.assign(img, { src, alt: alt ?? '', decoding: 'async' });
+      Object.assign(img, { src, alt: alt ?? '' });
+      if (still) img.style.backgroundImage = `url("${still}")`;
       viewerMedia.replaceChildren(img);
     }
 
-    // Only one clip plays at a time
-    for (const video of visible) pause(video);
     viewer.showModal();
   };
 
-  for (const controls of document.querySelectorAll<HTMLElement>('.project-card__controls')) {
-    controls.hidden = false;
-    const expand = controls.querySelector<HTMLButtonElement>('.project-card__expand');
-    if (!expand) continue;
-    expand.addEventListener('click', () => openViewer(expand));
-    // A click on the media itself opens it too; keyboard users have the expand button
-    controls.parentElement?.classList.add('is-expandable');
-    controls.parentElement?.querySelector('video, img')?.addEventListener('click', () => openViewer(expand));
+  for (const button of document.querySelectorAll<HTMLButtonElement>('.project-card__open')) {
+    button.hidden = false;
+    button.addEventListener('click', () => openViewer(button));
+    // A click on the still opens it too; keyboard users have the button
+    button.parentElement?.classList.add('is-expandable');
+    button.parentElement?.querySelector('img')?.addEventListener('click', () => openViewer(button));
   }
 
   viewer?.querySelector('.project-viewer__close')?.addEventListener('click', () => viewer.close());
 
-  viewer?.addEventListener('close', () => {
-    // Drop the clip so it stops downloading, then resume the cards that were playing
-    viewerMedia?.replaceChildren();
-    for (const video of visible) play(video);
-  });
+  // Drop the clip so it stops playing and downloading
+  viewer?.addEventListener('close', () => viewerMedia?.replaceChildren());
 
   // Light dismiss where closedby isn't supported (Safari): a click on the backdrop targets the
   // dialog itself, outside its box
