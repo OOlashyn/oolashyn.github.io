@@ -1,0 +1,35 @@
+// Shared card surface for the about page's project list and the projects page.
+// The whole card (or its text, when the card also holds a video with its own controls)
+// is clickable through the title link's ::after; `$overlay` is the element it covers.
+
+@mixin surface {
+  border: 1px solid var(--light-brd-color);
+  border-radius: 16px;
+  background-color: var(--card-bg-color);
+  transition: border-color 0.2s ease;
+
+  &:hover {
+    border-color: color-mix(in srgb, var(--purple) 60%, transparent);
+  }
+
+  &:has(h3 a:focus-visible) {
+    outline: 2px solid var(--purple);
+    outline-offset: 2px;
+  }
+}
+
+@mixin title-link {
+  color: var(--main-h-color);
+  text-decoration: none;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
+}

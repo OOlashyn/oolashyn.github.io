@@ -5,7 +5,7 @@ import { Icon } from 'astro-icon/components';
 import { projects } from '@/data/projects';
 import { formatPostDate, getPostUrl, getSortedPosts } from '@/utils';
 
-const featuredProjects = projects.slice(0, 3);
+const featuredProjects = projects.filter((project) => project.featured);
 const recentPosts = (await getSortedPosts()).slice(0, 3);
 
 const socialLinks = [
@@ -75,8 +75,8 @@ const socialLinks = [
       <ul class="about-projects">
         {featuredProjects.map((project) => (
           <li class="about-project">
-            <h3><a href={project.extLink}>{project.title}</a></h3>
-            <p>{project.content}</p>
+            <h3><a href={project.url}>{project.title}</a></h3>
+            <p>{project.description}</p>
           </li>
         ))}
       </ul>

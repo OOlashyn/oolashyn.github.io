@@ -1,47 +1,311 @@
 ---
 import HomeLayout from '@/layouts/HomeLayout.astro';
-import { projects } from '@/data/projects';
+import { getImage, Picture } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
+import { siteConfig } from '@/config';
+import { projectCategories, projects } from '@/data/projects';
+import type { Project } from '@/data/projects';
+
+// Three 300px+ columns fit the 960px wrapper, two below that, one on phones (see _projects.scss)
+const mediaSizes = '(min-width: 1045px) 307px, (min-width: 700px) 44vw, 90vw';
+
+const sections = await Promise.all(
+  projectCategories.map(async (category) => ({
+    category,
+    id: category.toLowerCase().replace(/\s+/g, '-'),
+    projects: await Promise.all(
+      projects
+        .filter((project) => project.category === category)
+        .map(async (project: Project) => ({
+          ...project,
+          isExternal: !project.url.startsWith('/'),
+          posterUrl:
+            project.media.kind === 'video'
+              ? (await getImage({
+                  src: project.media.poster,
+                  width: Math.min(1280, project.media.poster.width),
+                  format: 'webp',
+                })).src
+              : undefined,
+          // What the viewer dialog shows: the clip itself, or the screenshot at full size
+          viewerSrc:
+            project.media.kind === 'video'
+              ? `/assets/videos/${project.media.src}`
+              : (await getImage({
+                  src: project.media.src,
+                  width: Math.min(1920, project.media.src.width),
+                  format: 'webp',
+                })).src,
+        })),
+    ),
+  })),
+);
+
+// Only the first card can be above the fold
+const firstProject = sections[0]?.projects[0];
+
+const pictureWidths = (width: number): number[] => [400, 800, 1280].filter((w) => w <= width);
+
+// Lazy-loading media (Chrome 150+) defers the poster; Astro's types don't list it on <video> yet
+const lazyVideo = { loading: 'lazy' };
 ---
 
-<HomeLayout title="Projects">
-  <div>
-    <div class="projects-main-header">
-      <h1 style="margin-bottom: 5px;">PROJECTS</h1>
-    </div>
-    <div class="projects-container">
-      {projects.map((project) => (
-        <div class="projects-card">
-          <div class="projects-header">
-            <h2 class="projects-title">
-              {project.title}
-              <a class="project-ext-link" href={project.extLink} aria-label={`View ${project.title}`}>
-                <Icon name="lucide:external-link" aria-hidden="true" />
-              </a>
-            </h2>
-          </div>
-          <div class="projects-description">
-            {project.content}
-          </div>
-          {project.extImgLink && (
-            <img class="projects-video" src={project.extImgLink} alt="" />
-          )}
-          {project.imgLink && (
-            <img class="projects-video" src={`/assets/img/${project.imgLink}`} alt="" />
-          )}
-          {project.videowebm && project.videomp4 && (
-            <video autoplay loop muted playsinline controls class="video">
-              <source src={`/assets/videos/${project.videowebm}`} type="video/webm" />
-              <source src={`/assets/videos/${project.videomp4}`} type="video/mp4" />
-            </video>
-          )}
-          {!project.videowebm && project.videomp4 && (
-            <video autoplay loop muted playsinline controls class="video">
-              <source src={`/assets/videos/${project.videomp4}`} type="video/mp4" />
-            </video>
-          )}
-        </div>
-      ))}
-    </div>
+<HomeLayout
+  title="Projects"
+  description="Open-source Power Pages tools and Power Apps (PCF) components I've built and maintain."
+>
+  <div class="projects-page">
+    <header class="projects-intro">
+      <h1>Projects</h1>
+      <p>Open-source tools and components I've built for Power Pages and Power Apps.</p>
+      {siteConfig.github && (
+        <a class="projects-github" href={`https://github.com/${siteConfig.github}`}>
+          <Icon name="simple-icons:github" aria-hidden="true" />
+          More on GitHub
+        </a>
+      )}
+    </header>
+
+    {sections.map((section) => (
+      <section class="projects-section" aria-labelledby={section.id}>
+        <h2 id={section.id}>{section.category}</h2>
+        <ul class="projects-grid">
+          {section.projects.map((project) => {
+            const isFirst = project === firstProject;
+            return (
+              <li class="project-card">
+                <div class="project-card__media">
+                  {project.media.kind === 'video' ? (
+                    <Fragment>
+                      <video
+                        muted
+                        loop
+                        playsinline
+                        controls
+                        preload="none"
+                        {...(isFirst ? {} : lazyVideo)}
+                        poster={project.posterUrl}
+                        width={project.media.poster.width}
+                        height={project.media.poster.height}
+                        aria-label={project.media.alt}
+                      >
+                        <source src={`/assets/videos/${project.media.src}`} type="video/mp4" />
+                      </video>
+                    </Fragment>
+                  ) : (
+                    <Picture
+                      src={project.media.src}
+                      alt={project.media.alt}
+                      formats={['avif', 'webp']}
+                      widths={pictureWidths(project.media.src.width)}
+                      sizes={mediaSizes}
+                      loading={isFirst ? 'eager' : 'lazy'}
+                    />
+                  )}
+                  {/* Shown by the page script, which both buttons need */}
+                  <div class="project-card__controls" hidden>
+                    {project.media.kind === 'video' && (
+                      <button type="button" class="project-card__toggle" aria-label="Play demo">
+                        <Icon name="lucide:play" class="project-card__play-icon" aria-hidden="true" />
+                        <Icon name="lucide:pause" class="project-card__pause-icon" aria-hidden="true" />
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      class="project-card__expand"
+                      aria-label={`Enlarge the ${project.title} ${project.media.kind === 'video' ? 'demo' : 'screenshot'}`}
+                      data-kind={project.media.kind}
+                      data-src={project.viewerSrc}
+                      data-poster={project.posterUrl}
+                      data-alt={project.media.alt}
+                      data-title={project.title}
+                    >
+                      <Icon name="lucide:maximize-2" aria-hidden="true" />
+                    </button>
+                  </div>
+                </div>
+                <div class="project-card__body">
+                  <h3>
+                    <a href={project.url}>
+                      {project.title}
+                      <Icon name={project.isExternal ? 'lucide:arrow-up-right' : 'lucide:arrow-right'} aria-hidden="true" />
+                    </a>
+                  </h3>
+                  <p>{project.description}</p>
+                  <ul class="project-card__tags" aria-label="Built with">
+                    {project.tags.map((tag) => <li>{tag}</li>)}
+                  </ul>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+    ))}
   </div>
+
+  <!-- One viewer for every card: a native modal dialog, so it traps focus, closes on Escape and
+       light dismiss (closedby, with a fallback in the script) and returns focus to the button -->
+  <dialog class="project-viewer" id="project-viewer" closedby="any" aria-labelledby="project-viewer-title">
+    <figure class="project-viewer__figure">
+      <figcaption class="project-viewer__header">
+        <h2 id="project-viewer-title" class="project-viewer__title"></h2>
+        <button type="button" class="project-viewer__close" aria-label="Close">
+          <Icon name="lucide:x" aria-hidden="true" />
+        </button>
+      </figcaption>
+      <div class="project-viewer__media"></div>
+    </figure>
+  </dialog>
 </HomeLayout>
+
+<script>
+  // Demo clips play only while on screen, and never for readers who prefer reduced motion.
+  // There's no autoplay attribute, so with preload="none" nothing downloads until a clip plays.
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const videos = document.querySelectorAll<HTMLVideoElement>('.project-card__media video');
+  const visible = new Set<HTMLVideoElement>();
+  // Pauses made here, so they can be told apart from the reader pausing a clip
+  const autoPaused = new WeakSet<HTMLVideoElement>();
+  const pausedByReader = new WeakSet<HTMLVideoElement>();
+
+  const play = (video: HTMLVideoElement): void => {
+    if (reducedMotion.matches || pausedByReader.has(video) || !video.paused) return;
+    // The browser may refuse to autoplay (e.g. in data saver mode); the poster and button remain
+    video.play().catch(() => {});
+  };
+
+  const pause = (video: HTMLVideoElement): void => {
+    if (video.paused) return;
+    autoPaused.add(video);
+    video.pause();
+  };
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        const video = entry.target as HTMLVideoElement;
+        if (entry.isIntersecting) {
+          visible.add(video);
+          play(video);
+        } else {
+          visible.delete(video);
+          pause(video);
+        }
+      }
+    },
+    { threshold: 0.5 },
+  );
+
+  for (const video of videos) {
+    // Swap the native controls (the no-JS fallback) for one play/pause button, which doesn't
+    // cover the clip and is the pause control autoplaying motion needs
+    const toggle = video.parentElement?.querySelector<HTMLButtonElement>('.project-card__toggle');
+    if (toggle) {
+      video.controls = false;
+      toggle.addEventListener('click', () => {
+        if (video.paused) {
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      });
+    }
+
+    const syncToggle = (): void => {
+      toggle?.setAttribute('aria-label', video.paused ? 'Play demo' : 'Pause demo');
+      toggle?.classList.toggle('is-playing', !video.paused);
+    };
+
+    video.addEventListener('pause', () => {
+      if (autoPaused.has(video)) {
+        autoPaused.delete(video);
+      } else {
+        pausedByReader.add(video);
+      }
+      syncToggle();
+    });
+    video.addEventListener('play', () => {
+      pausedByReader.delete(video);
+      syncToggle();
+    });
+    observer.observe(video);
+  }
+
+  reducedMotion.addEventListener('change', () => {
+    for (const video of visible) {
+      if (reducedMotion.matches) {
+        pause(video);
+      } else {
+        play(video);
+      }
+    }
+  });
+
+  // Viewer: the cards are too small to make out the details, so any card's media opens large
+  const viewer = document.querySelector<HTMLDialogElement>('#project-viewer');
+  const viewerTitle = viewer?.querySelector<HTMLElement>('.project-viewer__title');
+  const viewerMedia = viewer?.querySelector<HTMLElement>('.project-viewer__media');
+
+  const openViewer = (button: HTMLButtonElement): void => {
+    if (!viewer || !viewerTitle || !viewerMedia) return;
+    const { kind, src, poster, alt, title } = button.dataset;
+    if (!src) return;
+
+    viewerTitle.textContent = title ?? '';
+    if (kind === 'video') {
+      const video = document.createElement('video');
+      Object.assign(video, { src, muted: true, loop: true, playsInline: true, controls: true });
+      if (poster) video.poster = poster;
+      video.setAttribute('aria-label', alt ?? '');
+      // Carry on from where the card's clip is
+      const cardVideo = button.closest('.project-card__media')?.querySelector('video');
+      if (cardVideo) video.currentTime = cardVideo.currentTime;
+      video.autoplay = !reducedMotion.matches;
+      viewerMedia.replaceChildren(video);
+    } else {
+      const img = document.createElement('img');
+      Object.assign(img, { src, alt: alt ?? '', decoding: 'async' });
+      viewerMedia.replaceChildren(img);
+    }
+
+    // Only one clip plays at a time
+    for (const video of visible) pause(video);
+    viewer.showModal();
+  };
+
+  for (const controls of document.querySelectorAll<HTMLElement>('.project-card__controls')) {
+    controls.hidden = false;
+    const expand = controls.querySelector<HTMLButtonElement>('.project-card__expand');
+    if (!expand) continue;
+    expand.addEventListener('click', () => openViewer(expand));
+    // A click on the media itself opens it too; keyboard users have the expand button
+    controls.parentElement?.classList.add('is-expandable');
+    controls.parentElement?.querySelector('video, img')?.addEventListener('click', () => openViewer(expand));
+  }
+
+  viewer?.querySelector('.project-viewer__close')?.addEventListener('click', () => viewer.close());
+
+  viewer?.addEventListener('close', () => {
+    // Drop the clip so it stops downloading, then resume the cards that were playing
+    viewerMedia?.replaceChildren();
+    for (const video of visible) play(video);
+  });
+
+  // Light dismiss where closedby isn't supported (Safari): a click on the backdrop targets the
+  // dialog itself, outside its box
+  if (viewer && !('closedBy' in HTMLDialogElement.prototype)) {
+    viewer.addEventListener('click', (e) => {
+      if (e.target !== viewer) return;
+      const rect = viewer.getBoundingClientRect();
+      const inside = rect.top <= e.clientY && e.clientY <= rect.bottom
+        && rect.left <= e.clientX && e.clientX <= rect.right;
+      if (!inside) viewer.close();
+    });
+  }
+
+  // A page restored from the back/forward cache starts with the viewer closed
+  window.addEventListener('pageshow', (e) => {
+    if (e.persisted) viewer?.close();
+  });
+</script>
