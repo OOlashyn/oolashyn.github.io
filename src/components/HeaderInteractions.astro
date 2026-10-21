@@ -42,6 +42,11 @@
     function onDrawerClosed(): void {
       if (!drawer || !isDrawerOpen()) return;
       const hadFocus = drawer.contains(document.activeElement);
+      // The sheet may still be a sub-pixel short of the closed stop (a swipe can settle at
+      // 299.2 of 300). Park it exactly there before hiding: otherwise the next openDrawer's
+      // jump to the closed stop is a real scroll, and its scrollend makes the safety net below
+      // close the drawer again right after it opens.
+      scroller?.scrollTo({ left: scroller.scrollWidth, behavior: 'instant' });
       drawer.hidePopover();
       if (pageWrapper) pageWrapper.inert = false;
       menuButton?.setAttribute('aria-expanded', 'false');
@@ -49,8 +54,11 @@
     }
 
     if (drawer && scroller && sheet) {
-      // Any visible pixel of the sheet counts as "not closed"
-      const visibleThreshold = 1 / window.innerWidth;
+      // Any visible pixel of the sheet counts as "not closed": one pixel of the widest sheet
+      // (--drawer-width caps it at 300px). A constant, because a ratio from window.innerWidth
+      // is Infinity while the viewport has no width (e.g. in a hidden pane), and
+      // IntersectionObserver throws on a non-finite threshold.
+      const visibleThreshold = 1 / 300;
       const observer = new IntersectionObserver((entries) => {
         // Only the latest entry describes the current position
         const entry = entries.at(-1);
