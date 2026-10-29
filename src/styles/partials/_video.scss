@@ -1,4 +1,6 @@
 .video{
+    display: block;
+    margin-inline: auto;
     max-width: 100%;
     // width/height attributes give the aspect ratio; let the box scale down with it
     height: auto;
