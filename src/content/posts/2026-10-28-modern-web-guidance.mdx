@@ -1,0 +1,185 @@
+---
+title: Modern Web Guidance on a real site - what it fixed and what it broke
+date: "2026-10-28 21:55:28 -0500"
+description: When I refreshed my blog, Claude Code kept polishing old code instead of modernizing it. So I installed Modern Web Guidance - Chrome’s agent skill for modern web best practices - and let it loose on a real, existing site. In this post, I share what it changed, the bugs it uncovered along the way, where it caused new problems, and where it fits in Power Platform development. Check it out to find out more.
+cardDescription: When I refreshed my blog, Claude Code kept polishing old code instead of modernizing it. So I let Chrome’s Modern Web Guidance skill loose on a real site. Here is what it changed, the bugs it uncovered, where it caused new problems, and where it fits in Power Platform.
+img: ../../assets/covers/2026-10-28-cover.jpg
+tags: ['AI', 'WebDevelopment', 'PowerPlatform']
+---
+
+import ImportantBlock from "@/components/mdx/ImportantBlock.astro";
+import Video from "@/components/mdx/Video.astro";
+
+Recently, I rebranded my blog from dancingwithcrm.com to olashyn.dev. As part of the rebrand, I also wanted to refresh the site itself - modernize old pages like [About](/about/) and [Projects](/projects/), simplify the styling and improve accessibility. Even though I had already [moved the site to Astro](/switching-from-jekyll-to-astro/) earlier this year, a lot of the code was still the same old code from before the migration.
+
+At first, I just pointed Claude Code at different parts of the site to update them or find issues. The results were good, but most of the time it only optimized what was already there. It didn't try to upgrade anything to modern web practices.
+
+That's when I remembered a [Google I/O talk](https://youtu.be/bo3i0FzDUYo) I watched on YouTube this summer about a skill built for exactly this - **Modern Web Guidance**. In this post, I share how I used it on my site, where it helped, where it caused new problems, and where it fits in Power Platform development.
+
+## What is Modern Web Guidance
+
+Modern Web Guidance (MWG) is an agent skill from the Chrome team with more than 100 guides on modern web development. It helps to steer the agent from legacy patterns towards newer supported standards and common scenarios.
+
+Instead of loading one big file, the agent searches the guides for what it needs to build, picks the best match and pulls in only that guide. For example, here is what a search for dismissing a modal dialog returns (trimmed):
+
+```json
+{ "id": "light-dismiss-a-dialog", "similarity": 0.68, "tokenCount": 1095 }
+{ "id": "dialog", "similarity": 0.67, "tokenCount": 3794 }
+{ "id": "platform-controls-dismiss-dialog", "similarity": 0.63, "tokenCount": 728 }
+```
+
+This architecture allows Modern Web Guidance to evolve and update based on the newly released features without the need to overload your agent's memory.
+
+<ImportantBlock>
+As of writing this post, MWG project is still in **Early Preview**. It is being actively developed, and things can shift moving forward. Also, a lot of scenarios might not be covered, so use MWG as a reference first and foremost.
+</ImportantBlock>
+
+See the official [MWG documentation](https://developer.chrome.com/docs/modern-web-guidance/get-started) for more details and installation for the agent of your choice.
+
+## How I used it on my site
+
+### Starting with a drawer
+
+It all started with the mobile navigation drawer. I wanted it to feel more native: close with a swipe, follow the finger, and drag properly, instead of just fully opening or closing. At first, I asked Claude to rebuild it that way. It worked, but I didn't like the result - the implementation added more than 130 lines of JavaScript to the header script to track pointer events, measure the distance and speed of the swipe, animate the drawer to its final position and trap keyboard focus inside. That is a lot of code to maintain for one menu and it seemed a little excessive.
+
+This was exactly the case the MWG YouTube video was talking about. So I asked Claude to install Modern Web Guidance and rerun the same task through the skill: check what we built against the guidance and rework it if necessary. And MWG has exactly the guide for my scenario - the `navigation-drawer` guide, but with a completely different approach. The drawer became a `popover` with a horizontal CSS scroll-snap container inside, so the browser itself handles the swipe, the momentum and the speed. Compared to the hand-written version, the header script got about 70 lines shorter. It still grew a bit overall, but by about 60 lines instead of 130.
+
+You can try it yourself - open this site on your phone and swipe the navigation drawer.
+
+<Video mp4="2026-10-28-drawer-demo.mp4" />
+
+### Optimizing the site
+
+The next order of business was to use the skill to review some of the existing pages and try to refine/optimize/fix them. 
+
+First I pointed the agent to review the subscribe modal - since it was created way back as a custom-built `div` that used a bunch of JS to make it work (handwritten focus trap, custom background dimming, etc.). And guess what? There is a whole set of guides just for dialogs, since custom-built modals are still everywhere - and agents often still write them with custom code. The guides’ main suggestion was to switch to the native `<dialog>` element. The markup change itself is tiny:
+
+```html
+<!-- Before: a div pretending to be a dialog, plus ~75 lines of JS -->
+<div class="subscribe-modal" role="dialog" aria-modal="true">
+
+<!-- After: a real dialog -->
+<dialog class="subscribe-modal" closedby="any">
+```
+
+Now the browser makes the rest of the page inert, closes the dialog on Escape and returns focus to the button that opened it.
+
+The modal's own script went from about 75 lines to about 15. But the total didn't shrink: the fallbacks for Safari and Firefox moved into a dialog helper of about 70 lines, which the search overlay now shares. What I gained wasn't less code, it was the browser doing the hard parts.
+
+After that, I asked the agent to analyze my blog and review what else we can run through the skill.
+
+The agent found quite a few things. My biggest surprise was about the search functionality. Apparently, the old approach I used for search overlay (hiding it by scaling it to zero) still left it reachable, so keyboard users could Tab into links they couldn't see. And the overlay had no focus trap at all.
+
+Fix: just use the same `<dialog>` approach, with some style adjustments. Much easier with better results.
+
+Another bug (a bit smaller this time) was on [my 404 page](/404/) - the stars around the astronaut had never rendered at all. Honestly, not sure how I missed that one. Fun fact - if you play with the size of my 404 page in responsive mode, you will see the astronaut is flying faster or slower based on how wide the screen is.
+
+The skill also suggested dropping Astro's client-side router. Following the cross-document transitions guides, I replaced it with native view transitions and speculation rules, which let the browser prerender a page when you hover over a link. Page transitions are now a few lines of CSS:
+
+```css
+@view-transition {
+  navigation: auto;
+}
+```
+
+And prerendering is one block of JSON in the page head (simplified - mine also excludes the feed and the search files):
+
+```html
+<script type="speculationrules">
+  {
+    "prerender": [{
+      "where": { "href_matches": "/*" },
+      "eagerness": "moderate"
+    }]
+  }
+</script>
+```
+
+Dropping the router also let me delete the workarounds it needed, like re-running scripts after every navigation. To be honest, a lot of those were added to test how Astro would behave as an SPA for Power Pages. And [Astro's own docs](https://docs.astro.build/en/guides/view-transitions/) say the ClientRouter will become less necessary as browsers catch up, and suggest checking whether you still need it.
+
+## Downsides
+
+MWG helped a lot, but it isn't magic. Here is what I ran into.
+
+### You have to make the agent use it
+
+Installing the skill is not enough, as the agent decides by itself whether it needs to use the skill. After installing it, I asked for some changes, and Claude just wrote the code directly without calling the skill. When I pointed this out, the agent suggested adding a rule to the `AGENTS.md` file in my repo, which every session reads. The core of it is simple: search Modern Web Guidance first, and only build something by hand if it has nothing that fits.
+
+```md
+- Before building or changing UI, interaction, motion or other client-side HTML/CSS/JS, search
+  Chrome's modern-web-guidance skill for an existing pattern and follow it.
+- Search first, not after.
+```
+
+I also pre-approved the skill's `npx modern-web-guidance` command in the Claude Code settings, so the search doesn't stop and wait for my permission every time.
+
+### Native doesn't always mean less code
+
+I expected that moving to native features would remove a lot of code. In practice, the drawer was the only change that ended up smaller than the code it replaced. Here is how the main changes from this post turned out (net lines of code and styles):
+
+| Change | Lines | Where the lines went |
+|---|:-:|---|
+| Navigation drawer | <span class="diff-removed">−23</span> | Compared to the hand-written version: swipe code replaced by a `popover` and CSS scroll snap |
+| Subscribe modal | <span class="diff-added">+62</span> | Open/close animations, plus fallbacks for Safari and Firefox |
+| Search overlay | <span class="diff-added">+17</span> | Same `<dialog>` setup, now shared with the modal and on every page |
+| View transitions | <span class="diff-added">+37</span> | Page fade, prerendering, the analytics fix and back/forward cache handling, minus the router workarounds |
+
+The main reason is fallbacks. Many of these features are new, so some of the guides come with fallbacks for browsers that don't support them yet - a click handler for Safari, an exit animation for Firefox, a scroll listener for browsers without scroll-driven animations. What you gain is behaviour and accessibility, not a smaller codebase.
+
+That said, you don't always need to ship those fallbacks or polyfills, especially if you are targeting newer or specific versions of the browsers. However, having them helps to ensure that behaviour is consistent across the board.
+
+### New features, new edge cases
+
+New features also have edge cases the guides don't cover yet. Claude found two bugs in the new drawer while testing later changes, after it was already live. In some Chrome versions, the drawer opened invisibly and swallowed taps on the page. And when the page had no width (like a hidden browser pane), the drawer script crashed and took the rest of the header with it.
+
+### The guide doesn't know your build
+
+The drawer's backdrop fades with a scroll-driven animation, which needs the `animation-timeline` CSS property. In the source, the animation properties were written separately, and it worked fine in dev. However, in the production build, the CSS minifier merged those properties into the `animation` shorthand. The shorthand can't hold a timeline, so the browser dropped the whole declaration.
+
+The fix is simple - keep them as separate longhand properties. But it is exactly the kind of problem a general guide can't know about, because it depends on your build pipeline. It is now one more rule in my `AGENTS.md`.
+
+### The guide doesn't know your third parties
+
+Speculation rules let the browser prerender a page when you hover over a link. Great for speed, but my site uses Cloudflare Web Analytics, and a prerendered page runs its scripts before anyone sees it. So every hover would have counted as a visit, even if the reader never clicked.
+
+The agent caught this one, not the guide. The fix was to load analytics only once the page is actually shown:
+
+```js
+if (document.prerendering) {
+  document.addEventListener('prerenderingchange', load, { once: true });
+} else {
+  load();
+}
+```
+
+But if you have analytics, ads or any other third-party scripts, check them yourself when you add speculation rules.
+
+### Chrome's view of the web
+
+MWG is a great product, but it is built by the Chrome team, and it has Chrome-specific biases. The default target is Baseline Widely available, which is cross-browser. Still, several of the guides lean on features Chrome shipped first, and some, like speculation rules, only work in Chromium-based browsers.
+
+That's why you should treat the findings and proposals from MWG as suggestions and references first. At the end of the day, you decide which features you actually need. And don't forget to test in different browsers.
+
+## Usage in Power Platform
+
+So far, I've only talked about my blog. However, MWG isn't tied to a specific framework or platform - it applies to web development as a whole. And a huge chunk of Power Platform development is web development: Power Pages (both traditional and SPA), Power Apps Code Apps, and PCF controls (which are just HTML, CSS and TypeScript at the end of the day). Wherever you write front-end code, the same guides apply.
+
+In my opinion, the developers who will benefit the most are those building external-facing apps, which in Power Platform mostly means Power Pages developers. Your users come from any device and browser, so code with more native features and potentially better accessibility is exactly what you want.
+
+I have already used MWG in two of those places - a new Power Pages SPA site and a new Power Apps Code App. In both cases, I invoked the skill before implementing each new feature. For Power Pages it was modals, similar to the ones I described earlier. For Code Apps it was custom timelines animated with scroll-driven animation (scrollytelling). And in both cases the results were good - mostly native code and CSS properties instead of custom JavaScript.
+
+Next, I plan to try MWG with PCF controls and traditional Power Pages sites (since we can just download a traditional site locally with PAC CLI, we can add new features with an agent and MWG the same way as with a code site).
+
+The lessons from my blog apply here as well. Add the "search first" rule so your agent actually uses the skill, and test what it builds in your own setup - especially traditional Power Pages sites, which have a bunch of custom Bootstrap styling directly from Microsoft, and the guides don't know about those either.
+
+## Conclusion
+
+Should you install Modern Web Guidance? Definitely. It gives your agent a great baseline - native, supported features instead of piles of custom JavaScript.
+
+It also teaches you along the way. So many new things are becoming the norm on the web that it is hard to keep track of all of them. With MWG, you don't just apply best practices - you also learn which new features are now widely available and ready to use.
+
+However, treat it as good guidance and a reference, not the final verdict. The guides don't know your local setup and process. Depending on them, a recommended pattern might not work at all, or it might introduce new and unexpected issues - just like my CSS minifier did.
+
+## Credits
+
+Cover image by [Ghinzo](https://pixabay.com/users/ghinzo-10938903/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=5137269) from [Pixabay](https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=5137269)

@@ -190,6 +190,21 @@ table {
   border-collapse: collapse;
 }
 
+// Line counts in post tables, coloured like a diff; the +/− sign carries the meaning too
+.diff-added,
+.diff-removed {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.diff-added {
+  color: var(--diff-added-color);
+}
+
+.diff-removed {
+  color: var(--diff-removed-color);
+}
+
 // <picture> wrapper from CoverImage: let the inner <img> size against the parent
 .cover-picture {
   display: contents;
