@@ -6,6 +6,7 @@ import { rehypeHeadingIds, unified } from '@astrojs/markdown-remark';
 import rehypeExternalLinks from 'rehype-external-links';
 import rehypeCodeBar from './src/plugins/rehypeCodeBar.mjs';
 import rehypeHeadingAnchors from './src/plugins/rehypeHeadingAnchors.mjs';
+import rehypeImageSize from './src/plugins/rehypeImageSize.mjs';
 
 export default defineConfig({
   site: 'https://olashyn.dev',
@@ -45,6 +46,7 @@ export default defineConfig({
       rehypePlugins: [
         [rehypeExternalLinks, { target: '_blank', rel: ['noopener', 'noreferrer'] }],
         rehypeCodeBar,
+        rehypeImageSize,
         // Astro adds heading ids after these plugins; run it here so the anchors can use them
         rehypeHeadingIds,
         rehypeHeadingAnchors,
