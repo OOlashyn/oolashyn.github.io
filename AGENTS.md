@@ -231,6 +231,10 @@ const isOpen = pageWrapper?.classList.toggle('active') ?? false;
   The RSS feed (`src/data/feeds.ts`) renders MDX itself: plain HTML tags pass through, callouts
   listed in `feedCallouts` become labelled blockquotes, and any other component is dropped. Add a
   new callout component to `feedCallouts` so its text reaches feed readers and Mailchimp.
+- Images inside posts (`![alt](/assets/img/...)`) are served from `public/` as-is, so their URLs
+  stay stable for the RSS feed and sent newsletters. `src/plugins/rehypeImageSize.mjs` adds
+  their `width`/`height` (read with sharp at build time) and `loading="lazy"`. Raw `<img>` JSX
+  in MDX isn't processed: give it `width`/`height` by hand.
 - Cover images (`img:`) live in `src/assets/covers/` and are referenced relative to the post
   (`img: ../../assets/covers/2026-10-06-cover.jpg`) so Astro optimizes them; render them with
   `CoverImage.astro`. Share images are generated from the cover at build time by
